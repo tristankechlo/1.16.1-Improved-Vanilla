@@ -1,4 +1,4 @@
-#Improved Vanilla 
+#Improved Vanilla
 
 ###I made some small changes to Vanilla Minecraft to make the gameplay a little better
 
