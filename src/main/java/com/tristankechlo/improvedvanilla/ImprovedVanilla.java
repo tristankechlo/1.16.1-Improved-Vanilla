@@ -17,16 +17,19 @@ import net.minecraftforge.fml.common.Mod;
 public class ImprovedVanilla
 {
     public static ImprovedVanilla instance;
-    public static final Logger LOGGER;
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "improvedvanilla";
     
     public ImprovedVanilla() {
         ImprovedVanilla.instance = this;
+        
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        
         MinecraftForge.EVENT_BUS.register((Object)new SpawnerHandler());
         MinecraftForge.EVENT_BUS.register((Object)new CropRightClickHandler());
         MinecraftForge.EVENT_BUS.register((Object)new MobDropHandler());
+        
         MinecraftForge.EVENT_BUS.register((Object)this);
     }
     
@@ -40,7 +43,4 @@ public class ImprovedVanilla
     public void onServerStarting(final FMLServerStartingEvent event) {
     }
     
-    static {
-        LOGGER = LogManager.getLogger();
-    }
 }
