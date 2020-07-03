@@ -23,8 +23,8 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
-public class SpawnerHandler
-{
+public class SpawnerHandler {
+	
     @SubscribeEvent
     public void onBlockBreackEvent(final BlockEvent.BreakEvent event) {
         final PlayerEntity player = event.getPlayer();

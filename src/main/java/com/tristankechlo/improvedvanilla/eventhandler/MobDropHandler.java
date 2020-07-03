@@ -12,8 +12,8 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
-public class MobDropHandler
-{
+public class MobDropHandler {
+	
     @SubscribeEvent
     public void onMobDrop(final LivingDropsEvent event) {
         final Entity entity = event.getEntity();

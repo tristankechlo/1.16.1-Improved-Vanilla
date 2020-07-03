@@ -23,8 +23,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
-public class CropRightClickHandler
-{
+public class CropRightClickHandler {
+	
     @SubscribeEvent
     public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
         final World world = event.getWorld();
