@@ -25,6 +25,7 @@ LICENSE.txt
 README.txt
 changelog.txt
 .gitignore
+*.launch
 
 # Files from Forge MDK
 forge*changelog.txt
