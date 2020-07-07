@@ -8,6 +8,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
@@ -36,14 +39,27 @@ public class SpawnerHandler {
                     final int silkTouchLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand());
                     if (silkTouchLevel >= 1) {
                         event.setExpToDrop(0);
-                        final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
-                        final ItemEntity entity = new ItemEntity((World)event.getWorld(), (double)event.getPos().getX(), (double)event.getPos().getY(), (double)event.getPos().getZ(), stack);
-                        event.getWorld().addEntity((Entity)entity);
-                        this.dropMonsterEgg(event.getPos(), (World)event.getWorld());
+                        
+                        final int spawnerDropChance = ImprovedVanillaConfig.GENERAL.spawnerDropChance.get();
+                        if(spawnerDropChance >= 1 && spawnerDropChance <= 100) {
+                            if (Math.random() < (spawnerDropChance / 100) ) {
+                                final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
+                                final ItemEntity entity = new ItemEntity((World)event.getWorld(), (double)event.getPos().getX(), (double)event.getPos().getY(), (double)event.getPos().getZ(), stack);
+                                event.getWorld().addEntity((Entity)entity);
+                            }
+                        }
+                        
+                        final int eggDropChance = ImprovedVanillaConfig.GENERAL.spawnEggDropChanceOnSpawnerDestroyed.get();
+                        if(eggDropChance >= 1 && eggDropChance <= 100) {
+                            if (Math.random() < (eggDropChance / 100) ) {
+                                this.dropMonsterEgg(event.getPos(), (World)event.getWorld());
+                            }
+                        }
+                        
                     }
                     else if (silkTouchLevel == 0 && fortuneLevel >= 1) {
                         int exp = event.getExpToDrop();
-                        exp += fortuneLevel * 15;
+                        exp += fortuneLevel * 10;
                         event.setExpToDrop(exp);
                     }
                 }
@@ -62,7 +78,7 @@ public class SpawnerHandler {
         String entity_string = nbt.getCompound("SpawnData").toString();
         entity_string = entity_string.substring(entity_string.indexOf("\"") + 1);
         entity_string = entity_string.substring(0, entity_string.indexOf("\""));
-        if (entity_string.equalsIgnoreCase(EntityType.AREA_EFFECT_CLOUD.getRegistryName().toString())) {
+        if (entity_string.equalsIgnoreCase(EntityType.PIG.getRegistryName().toString())) {
             return;
         }
         final ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity_string + "_spawn_egg")), 1);

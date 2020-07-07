@@ -46,12 +46,10 @@ public class CropRightClickHandler {
             block = targetBlock;
             if (targetBlock instanceof BeetrootBlock) {
                 age = BeetrootBlock.BEETROOT_AGE;
-            }
-            else {
+            } else {
                 age = CropsBlock.AGE;
             }
-        }
-        else {
+        } else {
             if (!(targetBlock instanceof CocoaBlock)) {
                 return;
             }

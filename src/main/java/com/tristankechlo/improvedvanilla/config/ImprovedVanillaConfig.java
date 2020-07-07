@@ -1,0 +1,59 @@
+package com.tristankechlo.improvedvanilla.config;
+
+import org.apache.logging.log4j.LogManager;
+
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+
+@Mod.EventBusSubscriber(modid = ImprovedVanilla.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ImprovedVanillaConfig {
+	
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final General GENERAL = new General(BUILDER);
+    public static final ForgeConfigSpec spec = BUILDER.build();
+    
+	public static class General {
+
+		public final IntValue spawnerDropChance;
+		
+		public final IntValue spawnEggDropChanceOnSpawnerDestroyed;
+		
+		public final IntValue mobSpawnEggDropChance;
+		
+		General(ForgeConfigSpec.Builder builder){
+            builder.comment("Server configuration settings")
+                   .push("server");            
+            
+            spawnerDropChance = builder
+            		.comment("Drop-chance for the spawner to drop itself when mined with a silk-touch pickaxe (default 100, 100 -> always, 0 -> never)")
+            		.defineInRange("spawnerDropChance", 100, 0, 100);
+            
+            spawnEggDropChanceOnSpawnerDestroyed = builder
+            		.comment("Drop-chance for the spawner to drop its egg in % (default 100, 100 -> always, 0 -> never)")
+            		.defineInRange("spawnEggDropChanceOnSpawnerDestroyed", 100, 0, 100);         
+                        
+            mobSpawnEggDropChance = builder
+            		.comment("Drop-chance for all mobs to drop their spawn-egg in % (default 1, 100 -> always, 0 -> never)")
+            		.defineInRange("mobSpawnEggDropChance", 1, 0, 100);
+            
+            builder.pop();
+		}
+	}
+
+    @SubscribeEvent
+    public static void onLoad(final ModConfig.Loading configEvent) {
+        LogManager.getLogger().debug(FORGEMOD, "Loaded config file {}", configEvent.getConfig().getFileName());
+    }
+
+    @SubscribeEvent
+    public static void onFileChange(final ModConfig.Reloading configEvent) {
+        LogManager.getLogger().debug(FORGEMOD, "Config just got changed on the file system!");
+    }
+	
+}

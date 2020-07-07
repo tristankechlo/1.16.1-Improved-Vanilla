@@ -2,6 +2,9 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.entity.EntityType;
+
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -18,9 +21,13 @@ public class MobDropHandler {
     public void onMobDrop(final LivingDropsEvent event) {
         final Entity entity = event.getEntity();
         final EntityType<?> type = (EntityType<?>)entity.getType();
-        if (Math.random() < 0.01) {
-            final ItemStack stack = new ItemStack((IItemProvider)ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg")));
-            event.getDrops().add(new ItemEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), stack));
+        final int dropchance = ImprovedVanillaConfig.GENERAL.mobSpawnEggDropChance.get();
+        
+        if(dropchance >= 1 && dropchance <= 100) {
+            if (Math.random() < ((double)dropchance / 100)) {
+                final ItemStack stack = new ItemStack((IItemProvider)ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg")));
+                event.getDrops().add(new ItemEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), stack));
+            }
         }
     }
 }
