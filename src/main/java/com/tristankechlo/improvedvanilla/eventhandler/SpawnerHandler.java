@@ -40,7 +40,7 @@ public class SpawnerHandler {
                     if (silkTouchLevel >= 1) {
                         event.setExpToDrop(0);
                         
-                        final int spawnerDropChance = ImprovedVanillaConfig.GENERAL.spawnerDropChance.get();
+                        final int spawnerDropChance = ImprovedVanillaConfig.SERVER.spawnerDropChance.get();
                         if(spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                             if (Math.random() < (spawnerDropChance / 100) ) {
                                 final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
@@ -49,7 +49,7 @@ public class SpawnerHandler {
                             }
                         }
                         
-                        final int eggDropChance = ImprovedVanillaConfig.GENERAL.spawnEggDropChanceOnSpawnerDestroyed.get();
+                        final int eggDropChance = ImprovedVanillaConfig.SERVER.spawnEggDropChanceOnSpawnerDestroyed.get();
                         if(eggDropChance >= 1 && eggDropChance <= 100) {
                             if (Math.random() < (eggDropChance / 100) ) {
                                 this.dropMonsterEgg(event.getPos(), (World)event.getWorld());

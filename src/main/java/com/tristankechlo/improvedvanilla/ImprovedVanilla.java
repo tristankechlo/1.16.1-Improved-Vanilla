@@ -18,8 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 
 @Mod("improvedvanilla")
-public class ImprovedVanilla
-{
+public class ImprovedVanilla {
+	
     public static ImprovedVanilla instance;
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "improvedvanilla";

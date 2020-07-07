@@ -21,7 +21,7 @@ public class MobDropHandler {
     public void onMobDrop(final LivingDropsEvent event) {
         final Entity entity = event.getEntity();
         final EntityType<?> type = (EntityType<?>)entity.getType();
-        final int dropchance = ImprovedVanillaConfig.GENERAL.mobSpawnEggDropChance.get();
+        final int dropchance = ImprovedVanillaConfig.SERVER.mobSpawnEggDropChance.get();
         
         if(dropchance >= 1 && dropchance <= 100) {
             if (Math.random() < ((double)dropchance / 100)) {
