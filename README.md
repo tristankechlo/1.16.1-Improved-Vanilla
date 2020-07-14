@@ -11,5 +11,4 @@
    
   
   
-config-file can be found in path-to-Minecraft-Folder/'Save-Name'/serverconfig/improvedvanilla-server.toml 
-for Server-Hosters: needs to be installed on the server-side only
+config-file can be found in path-to-Minecraft-Folder/'Save-Name'/serverconfig/improvedvanilla-server.toml
