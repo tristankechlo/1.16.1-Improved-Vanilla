@@ -12,3 +12,7 @@
   
   
 config-file can be found in path-to-Minecraft-Folder/'Save-Name'/serverconfig/improvedvanilla-server.toml
+
+
+
+[Download the mod here](https://www.curseforge.com/minecraft/mc-mods/improved-vanilla)
