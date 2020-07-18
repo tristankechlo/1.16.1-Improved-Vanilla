@@ -26,7 +26,7 @@ public class MobDropHandler {
         if(dropchance >= 1 && dropchance <= 100) {
             if (Math.random() < ((double)dropchance / 100)) {
                 final ItemStack stack = new ItemStack((IItemProvider)ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg")));
-                event.getDrops().add(new ItemEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), stack));
+                event.getDrops().add(new ItemEntity(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack));
             }
         }
     }

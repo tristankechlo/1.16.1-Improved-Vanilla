@@ -39,10 +39,9 @@ public class SpawnerHandler {
                     final int silkTouchLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand());
                     if (silkTouchLevel >= 1) {
                         event.setExpToDrop(0);
-                        
                         final int spawnerDropChance = ImprovedVanillaConfig.SERVER.spawnerDropChance.get();
                         if(spawnerDropChance >= 1 && spawnerDropChance <= 100) {
-                            if (Math.random() < (spawnerDropChance / 100) ) {
+                            if (Math.random() < ((double)spawnerDropChance / 100) ) {
                                 final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
                                 final ItemEntity entity = new ItemEntity((World)event.getWorld(), (double)event.getPos().getX(), (double)event.getPos().getY(), (double)event.getPos().getZ(), stack);
                                 event.getWorld().addEntity((Entity)entity);
@@ -51,7 +50,7 @@ public class SpawnerHandler {
                         
                         final int eggDropChance = ImprovedVanillaConfig.SERVER.spawnEggDropChanceOnSpawnerDestroyed.get();
                         if(eggDropChance >= 1 && eggDropChance <= 100) {
-                            if (Math.random() < (eggDropChance / 100) ) {
+                            if (Math.random() < ((double)eggDropChance / 100) ) {
                                 this.dropMonsterEgg(event.getPos(), (World)event.getWorld());
                             }
                         }

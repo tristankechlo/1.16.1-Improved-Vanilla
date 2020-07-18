@@ -57,7 +57,7 @@ public class CropRightClickHandler {
             age = CocoaBlock.AGE;
         }
         if (this.spawnDropsAndResetBlock(world, pos, block, (Property<Integer>)age)) {
-            player.swing(Hand.MAIN_HAND, true);
+            player.swingArm(Hand.MAIN_HAND);
             event.setCanceled(true);
         }
     }

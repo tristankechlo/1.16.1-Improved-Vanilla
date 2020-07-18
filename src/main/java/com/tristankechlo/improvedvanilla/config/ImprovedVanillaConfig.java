@@ -47,7 +47,7 @@ public class ImprovedVanillaConfig {
     }
 
     @SubscribeEvent
-    public static void onFileChange(final ModConfig.Reloading configEvent) {
+    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
     	ImprovedVanilla.LOGGER.debug("Config just got changed on the file system!");
     }
 	
