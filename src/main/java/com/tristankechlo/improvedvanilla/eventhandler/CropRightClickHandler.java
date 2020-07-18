@@ -2,6 +2,7 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 
 import net.minecraft.item.ItemStack;
 import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.block.BlockState;
@@ -20,9 +21,7 @@ import net.minecraft.block.BeetrootBlock;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class CropRightClickHandler {
 	
     @SubscribeEvent

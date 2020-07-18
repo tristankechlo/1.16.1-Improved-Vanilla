@@ -31,9 +31,9 @@ public class ImprovedVanilla {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         
-        MinecraftForge.EVENT_BUS.register((Object)new SpawnerHandler());
-        MinecraftForge.EVENT_BUS.register((Object)new CropRightClickHandler());
-        MinecraftForge.EVENT_BUS.register((Object)new MobDropHandler());
+        MinecraftForge.EVENT_BUS.register(new SpawnerHandler());
+        MinecraftForge.EVENT_BUS.register(new CropRightClickHandler());
+        MinecraftForge.EVENT_BUS.register(new MobDropHandler());
         
         MinecraftForge.EVENT_BUS.register((Object)this);
     }

@@ -23,15 +23,15 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraftforge.common.ToolType;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class SpawnerHandler {
 	
     @SubscribeEvent
     public void onBlockBreackEvent(final BlockEvent.BreakEvent event) {
         final PlayerEntity player = event.getPlayer();
         final Block targetBlock = event.getState().getBlock();
+        final World world = (World) event.getWorld();
+
         if (targetBlock == Blocks.SPAWNER) {
             if (player.getHeldItemMainhand().getToolTypes().contains(ToolType.PICKAXE)) {
                 if (!player.isCreative() && !player.isSpectator()) {
@@ -44,15 +44,15 @@ public class SpawnerHandler {
                         if(spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                             if (Math.random() < ((double)spawnerDropChance / 100) ) {
                                 final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
-                                final ItemEntity entity = new ItemEntity((World)event.getWorld(), (double)event.getPos().getX(), (double)event.getPos().getY(), (double)event.getPos().getZ(), stack);
-                                event.getWorld().addEntity((Entity)entity);
+                                final ItemEntity entity = new ItemEntity(world, (double)event.getPos().getX(), (double)event.getPos().getY(), (double)event.getPos().getZ(), stack);
+                                world.addEntity((Entity)entity);
                             }
                         }
                         
                         final int eggDropChance = ImprovedVanillaConfig.SERVER.spawnEggDropChanceOnSpawnerDestroyed.get();
                         if(eggDropChance >= 1 && eggDropChance <= 100) {
                             if (Math.random() < ((double)eggDropChance / 100) ) {
-                                this.dropMonsterEgg(event.getPos(), (World)event.getWorld());
+                                this.dropMonsterEgg(event.getPos(), world);
                             }
                         }
                         
@@ -67,7 +67,7 @@ public class SpawnerHandler {
             else {
                 event.setExpToDrop(0);
             }
-        }
+        }        
     }
     
     private void dropMonsterEgg(final BlockPos pos, final World world) {
