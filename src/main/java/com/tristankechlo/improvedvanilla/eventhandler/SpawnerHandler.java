@@ -78,6 +78,9 @@ public class SpawnerHandler {
         String entity_string = nbt.getCompound("SpawnData").toString();
         entity_string = entity_string.substring(entity_string.indexOf("\"") + 1);
         entity_string = entity_string.substring(0, entity_string.indexOf("\""));
+        if (entity_string.equalsIgnoreCase(EntityType.AREA_EFFECT_CLOUD.getRegistryName().toString())) {
+            return;
+        }
         if (entity_string.equalsIgnoreCase(EntityType.PIG.getRegistryName().toString())) {
             return;
         }
