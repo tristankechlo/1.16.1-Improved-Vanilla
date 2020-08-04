@@ -8,12 +8,16 @@
 - right-click crops to harvest them
 - mobs can drop their spawn-egg at a 1% chance
 - (1.16 only) right-click spawner to open GUI and edit the potential spawns
-  - number of spawn-eggs inside is the chance that this spawn gets picked next, in comparison to other spawn-eggs
-  - same number of spawn-eggs means: the entities have the same chance to be spawned next
-  - number of spawn-eggs A is twice as high as number of spawn-eggs B means: entity A has chance twice as high as entity B  
+  - number of spawn-eggs inside is the chance that this spawn gets picked next, in comparison to other spawn-eggs 
   - number of spawn-eggs won't effect the number of spawned entities
-   
-   
+    
+    
+### More explanation to Spawn-Potentials
+#### Example 1 - same chance:
+![same](https://i.imgur.com/KVUDrlp.png)
+ 
+#### Example 2 - chance twice as high:
+![same](https://i.imgur.com/g1QJ2Kc.png)
   
   
 config-file can be found in path-to-Minecraft-Folder/'Save-Name'/serverconfig/improvedvanilla-server.toml
