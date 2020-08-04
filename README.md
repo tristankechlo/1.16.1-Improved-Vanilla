@@ -7,7 +7,7 @@
 - spawners are mineable with silk-touch pickaxes
 - right-click crops to harvest them
 - mobs can drop their spawn-egg at a 1% chance
-- (1.16 only) right-click spawner to open GUI and edit the potential spawns
+- (since 1.16.1) right-click spawner to open GUI and edit the potential spawns
   - number of spawn-eggs inside is the chance that this spawn gets picked next, in comparison to other spawn-eggs 
   - number of spawn-eggs won't effect the number of spawned entities
 
