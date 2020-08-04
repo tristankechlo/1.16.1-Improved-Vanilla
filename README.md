@@ -10,8 +10,9 @@
 - (1.16 only) right-click spawner to open GUI and edit the potential spawns
   - number of spawn-eggs inside is the chance that this spawn gets picked next, in comparison to other spawn-eggs 
   - number of spawn-eggs won't effect the number of spawned entities
-    
-    
+
+<br/><br/>
+   
 ### More explanation to Spawn-Potentials
 #### Example 1 - same chance:
 ![same](https://i.imgur.com/KVUDrlp.png)
