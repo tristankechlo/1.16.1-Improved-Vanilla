@@ -30,7 +30,7 @@ public class ImprovedVanillaConfig {
             		.defineInRange("spawnerDropChance", 100, 0, 100);
             
             spawnEggDropChanceOnSpawnerDestroyed = builder
-            		.comment("Drop-chance for the spawner to drop its egg in % (default 100, 100 -> always, 0 -> never)")
+            		.comment("Drop-chance for each stack, in a spawner, in % (default 100, 100 -> always, 0 -> never)")
             		.defineInRange("spawnEggDropChanceOnSpawnerDestroyed", 100, 0, 100);         
                         
             mobSpawnEggDropChance = builder
