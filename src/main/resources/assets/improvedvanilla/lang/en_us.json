@@ -1,0 +1,16 @@
+{
+	"container.spawner" : "Spawner",
+	
+	"container.spawner.speedButton.low" : "Speed: Low",
+	"container.spawner.speedButton.default" : "Speed: Default",
+	"container.spawner.speedButton.high" : "Speed: High",
+	
+	"container.spawner.countButton.low" : "Amount: Low",
+	"container.spawner.countButton.default" : "Amount: Default",
+	"container.spawner.countButton.high" : "Amount: High",
+		
+	"container.spawner.rangeButton.low" : "Range: Low",
+	"container.spawner.rangeButton.default" : "Range: Default",
+	"container.spawner.rangeButton.high" : "Range: High",
+	"container.spawner.rangeButton.highest" : "Range: Highest"
+}
