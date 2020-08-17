@@ -4,7 +4,7 @@ loaderVersion="[32,)" #mandatory This is typically bumped every Minecraft versio
 #issueTrackerURL="http://my.issue.tracker/" #optional
 [[mods]] #mandatory
 modId="improvedvanilla" #mandatory
-version="1.16.1 - 1.2.0" #mandatory
+version="1.16.1 - 1.2.1" #mandatory
 displayName="Improved Vanilla" #mandatory
 #updateJSONURL="http://myurl.me/" #optional
 #displayURL="http://example.com/" #optional
@@ -14,8 +14,8 @@ authors="Buecher_wurm" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Small changes to Minecraft Vanilla
-'''
+Small changes to Minecraft Vanilla'''
+
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.improvedvanilla]] #optional
     # the modid of the dependency
