@@ -1,47 +1,41 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
-import net.minecraft.util.Hand;
-import net.minecraft.util.Tuple;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.Mutable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-import com.tristankechlo.improvedvanilla.container.SpawnerContainer;
-import com.tristankechlo.improvedvanilla.helper.SpawnerHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.world.World;
-import net.minecraft.item.BlockItem;
+import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.SpawnEggItem;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraftforge.common.ToolType;
 import net.minecraft.block.Blocks;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
 public class SpawnerHandler {
-
-	private static final ITextComponent name = new TranslationTextComponent("container.spawner");
 	
 	@SubscribeEvent
 	public void onSpawnerPlaced(final BlockEvent.NeighborNotifyEvent event) {
+		if(ImprovedVanilla.SpawnerSettingsLoaded) {
+			return;
+		}
 		final World world = (World) event.getWorld();
 		final BlockPos pos = event.getPos();
 
@@ -64,47 +58,18 @@ public class SpawnerHandler {
 	}
 
 	@SubscribeEvent
-	public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
-		final PlayerEntity player = event.getPlayer();
-		final World world = event.getWorld();
-
-		if (player == null || world == null) {
-			return;
-		}
-		if (world.isRemote || player.isSpectator() || player.getActiveHand() != Hand.MAIN_HAND) {
-			return;
-		}
-		
-		final BlockPos pos = event.getPos();
-		final Block targetblock = world.getBlockState(pos).getBlock();
-		
-		if (targetblock == Blocks.SPAWNER) {
-			Item item = player.getHeldItemMainhand().getItem();
-			if (item instanceof SpawnEggItem) {
-				event.setCanceled(true);
-				return;
-			} else if(item instanceof Item && !(item instanceof BlockItem)) {
-				Inventory inv = SpawnerHelper.getInvfromSpawner(world, pos);
-				NetworkHooks.openGui((ServerPlayerEntity) player, this.getContainer(inv,
-						new Tuple<World, Mutable>(world, new Mutable(pos.getX(), pos.getY(), pos.getZ()))));
-			} else {
-				return;
-			}
-		}
-	}
-
-	private INamedContainerProvider getContainer(Inventory inv, Tuple<World, Mutable> worldPos) {
-		return new SimpleNamedContainerProvider((windowID, playerInv, playerEntity) -> {
-			return new SpawnerContainer(windowID, playerInv, inv, worldPos);
-		}, name);
-	}
-
-	@SubscribeEvent
 	public void onBlockBreackEvent(final BlockEvent.BreakEvent event) {
+		if(ImprovedVanilla.SpawnerSettingsLoaded) {
+			return;
+		}
 		final PlayerEntity player = event.getPlayer();
 		final Block targetBlock = event.getState().getBlock();
 		final World world = (World) event.getWorld();
 		final BlockPos pos = event.getPos();
+		
+		if(world.isRemote) {
+			return;
+		}
 
 		if (targetBlock == Blocks.SPAWNER) {
 			if (player.getHeldItemMainhand().getToolTypes().contains(ToolType.PICKAXE)) {
@@ -124,16 +89,21 @@ public class SpawnerHandler {
 								final ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 								world.addEntity(entity);
 							}
+						} else {
+							int exp = event.getExpToDrop();
+							exp += (exp + 1) * world.rand.nextInt(4) * world.rand.nextInt(4);
+							event.setExpToDrop(exp);
 						}
 
 						int eggDropChance = ImprovedVanillaConfig.SERVER.spawnEggDropChanceOnSpawnerDestroyed.get();
-						SpawnerHelper.dropMonsterEggs(world, pos, eggDropChance);
+						this.dropMonsterEggs(world, pos, eggDropChance);
 						
-						SpawnerHelper.resetSpawner(world, pos);
+						//if other mods prevent the block breack, atleast the spawner is disabled
+						this.resetSpawner(world, pos);
 
 					} else if (silkTouchLevel == 0 && fortuneLevel >= 1) {
 						int exp = event.getExpToDrop();
-						exp += fortuneLevel * 10;
+						exp += (exp + 1) * world.rand.nextInt(fortuneLevel) * world.rand.nextInt(fortuneLevel);
 						event.setExpToDrop(exp);
 					}
 				}
@@ -142,5 +112,91 @@ public class SpawnerHandler {
 			}
 		}
 	}
+	
 
+	private void resetSpawner(final World world, final BlockPos pos) {
+		if(world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
+			world.removeTileEntity(pos);
+			world.setBlockState(pos, Blocks.SPAWNER.getDefaultState(), 2);
+			MobSpawnerTileEntity tile = (MobSpawnerTileEntity) world.getTileEntity(pos);
+			
+			CompoundNBT entity = new CompoundNBT();
+			entity.putString("id", "minecraft:area_effect_cloud");
+			
+			CompoundNBT nbt = new CompoundNBT();
+			nbt.put("Entity", entity);
+			nbt.putInt("Weight", 1);
+			
+			final WeightedSpawnerEntity nextSpawnData = new WeightedSpawnerEntity(nbt);
+			tile.getSpawnerBaseLogic().setNextSpawnData(nextSpawnData);
+			tile.getSpawnerBaseLogic().setEntityType(EntityType.AREA_EFFECT_CLOUD);
+			tile.markDirty();
+	    	world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		}
+	}
+	
+	private void dropMonsterEggs(final World world, final BlockPos pos, int eggDropChance) {
+		if(eggDropChance <= 0) {
+			return;
+		}
+		if(world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
+			
+			final Inventory inv = getInvfromSpawner(world, pos);
+						
+			if (eggDropChance > 100) {
+				eggDropChance = 100;
+			}
+			
+			for (int i = 0; i < inv.getSizeInventory(); i++) {
+				
+				Item item = inv.getStackInSlot(i).getItem();
+				int weight = inv.getStackInSlot(i).getCount();
+				
+				if(item == Items.AIR || weight < 1) {
+					continue;
+				}
+
+				if (Math.random() < ((double) eggDropChance / 100)) {
+					final ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(), inv.getStackInSlot(i));
+					world.addEntity(entityItem);
+				}
+			}
+		}
+	}
+	
+	private static Inventory getInvfromSpawner (final World world, final BlockPos pos) {
+		
+		Inventory inv = new Inventory(11);
+
+		if(world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
+			
+			final TileEntity tile = world.getTileEntity(pos);
+			if(!(tile instanceof MobSpawnerTileEntity)) {
+				return inv;
+			}
+			final AbstractSpawner logic = ((MobSpawnerTileEntity)tile).getSpawnerBaseLogic();
+			CompoundNBT nbt = new CompoundNBT();
+			nbt = logic.write(nbt);
+
+		    if (nbt.contains("SpawnPotentials", 9)) {
+		    	ListNBT listnbt = nbt.getList("SpawnPotentials", 10);
+		    	int min = Math.min(11, listnbt.size());
+		    	
+		        for(int i = 0; i < min; ++i) {
+		        	CompoundNBT entry = listnbt.getCompound(i);
+		        	String entity = entry.getCompound("Entity").toString();
+		        	entity = entity.substring(entity.indexOf("\"") + 1);
+		    		entity = entity.substring(0, entity.indexOf("\""));
+		        	int weight = entry.getShort("Weight");
+		    		if (entity.equalsIgnoreCase(EntityType.AREA_EFFECT_CLOUD.getRegistryName().toString())) {
+		    			continue;
+		    		}
+		    		final ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), weight);
+		    		inv.setInventorySlotContents(i, itemStack);
+		        }
+		    }
+		}
+		
+		return inv;
+	}
 }
