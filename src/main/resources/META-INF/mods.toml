@@ -1,31 +1,25 @@
-modLoader="javafml" #mandatory
-loaderVersion="[32,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-license="All rights reserved"
+modLoader="javafml"
+loaderVersion="[32,)"
+license="CC BY-NC-ND 4.0"
 showAsResourcePack=false
 
-#issueTrackerURL="http://my.issue.tracker/" #optional
-[[mods]] #mandatory
-modId="improvedvanilla" #mandatory
-version="1.16.3 - 1.3.0" #mandatory
-displayName="Improved Vanilla" #mandatory
-#updateJSONURL="http://myurl.me/" #optional
-#displayURL="http://example.com/" #optional
-#logoFile="improvedvanilla.png" #optional
-#credits="Thanks for this example mod goes to Java" #optional
-authors="Buecher_wurm" #optional
+[[mods]]
+modId="improvedvanilla"
+version="1.16.3 - 1.3.0"
+displayName="Improved Vanilla"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
+#logoFile="examplemod.png"
+#credits="Thanks for this example mod goes to Java"
+authors="Buecher_wurm"
+description='''Small changes to Minecraft Vanilla'''
 
-# The description text for the mod (multi line!) (#mandatory)
-description='''
-Small changes to Minecraft Vanilla'''
-
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.improvedvanilla]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[32,)" #mandatory
+[[dependencies.improvedvanilla]]
+    modId="forge"
+    mandatory=true
+    versionRange="[32,)"
     ordering="NONE"
     side="BOTH"
-# Here's another dependency
+	
 [[dependencies.improvedvanilla]]
     modId="minecraft"
     mandatory=true
