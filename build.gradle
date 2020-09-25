@@ -17,7 +17,6 @@ archivesBaseName = 'improvedvanilla'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     mappings channel: 'snapshot', version: project.mappings
     
@@ -59,6 +58,10 @@ minecraft {
             }
         }
     }
+}
+
+repositories {
+    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {    
