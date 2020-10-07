@@ -18,7 +18,6 @@ import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.world.World;
 import net.minecraft.item.Item;

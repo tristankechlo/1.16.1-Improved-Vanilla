@@ -1,9 +1,6 @@
 package com.tristankechlo.improvedvanilla;
 
 import org.apache.logging.log4j.LogManager;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import com.tristankechlo.improvedvanilla.eventhandler.MobDropHandler;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
