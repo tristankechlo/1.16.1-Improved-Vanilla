@@ -164,7 +164,7 @@ public class SpawnerHandler {
 		}
 	}
 	
-	private static Inventory getInvfromSpawner (final World world, final BlockPos pos) {
+	private Inventory getInvfromSpawner (final World world, final BlockPos pos) {
 		
 		Inventory inv = new Inventory(11);
 

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.eventhandler.CropRightClickHandler;
+import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.MobDropHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.SpawnerHandler;
 
@@ -33,11 +34,12 @@ public class ImprovedVanilla {
     	FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
     			
         MinecraftForge.EVENT_BUS.register(new CropRightClickHandler());
+        MinecraftForge.EVENT_BUS.register(new EasyPlantingHandler());
         MinecraftForge.EVENT_BUS.register(new MobDropHandler());
         MinecraftForge.EVENT_BUS.register(new SpawnerHandler());
 
         ImprovedVanilla.instance = this;
-        MinecraftForge.EVENT_BUS.register((Object)this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     
 
