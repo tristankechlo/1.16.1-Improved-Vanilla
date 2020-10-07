@@ -2,6 +2,9 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 
 import net.minecraft.item.ItemStack;
 import java.util.List;
+
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.block.BlockState;
@@ -33,8 +36,11 @@ public class CropRightClickHandler {
         if (player == null || world == null) {
             return;
         }
-        if (world.isRemote || player.isCreative() || player.isSneaking() || player.isSpectator()) {
+        if (world.isRemote || player.isCreative() || player.isSneaking() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
             return;
+        }
+        if(ImprovedVanillaConfig.SERVER.enableRightClickCrops.get() == false) {
+        	return;
         }
         if (player.getHeldItemMainhand().getItem() != Items.AIR) {
             return;
