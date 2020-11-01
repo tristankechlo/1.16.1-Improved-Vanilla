@@ -7,33 +7,35 @@ import java.util.List;
 import java.util.Queue;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.SoulSandBlock;
 import net.minecraft.block.StemBlock;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class EasyPlantingHandler {
-	
+
 	//for easier access, all vanilla crops
     private final List<Item> vanillaSeeds = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
 	
@@ -56,14 +58,18 @@ public class EasyPlantingHandler {
         final Item item = player.getHeldItemMainhand().getItem();
         final int radius = ImprovedVanillaConfig.SERVER.easyPlantingRadius.get();
         
-        if ((vanillaSeeds.contains(item) || isSeedItemForCrop(item)) && (targetBlock instanceof FarmlandBlock) && (item instanceof BlockNamedItem)) {
+        if(radius <= 0 || !(item instanceof BlockNamedItem)) {
+        	return;
+        }
+        
+        if ((vanillaSeeds.contains(item) || isSeedItemForCrop(item)) && (targetBlock instanceof FarmlandBlock)) {
         	event.setCanceled(true);
         	if(world.isRemote) {
         		return;
         	}
         	this.setCropsInRadius(radius, pos, Blocks.FARMLAND, (ServerWorld) world, player);
         	return;
-        } else if((item == Items.NETHER_WART) && (targetBlock instanceof SoulSandBlock) && (item instanceof BlockNamedItem)) {
+        } else if((item == Items.NETHER_WART) && (targetBlock instanceof SoulSandBlock)) {
         	event.setCanceled(true);
         	if(world.isRemote) {
         		return;
@@ -82,8 +88,8 @@ public class EasyPlantingHandler {
      */
     private void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerWorld world, PlayerEntity player) {
 
-		List<BlockPos> targetBlocks = getTargetBlocks(world, startPos, target, radius);
-		final Item item = player.getHeldItemMainhand().getItem();
+		List<BlockPos> targetBlocks = getTargetBlocks(radius, world, startPos, target);
+		final Item seedItem = player.getHeldItemMainhand().getItem();
     	boolean playPlantingSound = false;
 		
     	for(BlockPos pos : targetBlocks) {
@@ -92,12 +98,12 @@ public class EasyPlantingHandler {
     			continue;
     		}
     		//if player has seeds -> plant the seeds
-			if(playerHasOneSeed(player, item)) {
+			if(playerHasOneSeed(player, seedItem)) {
 								
-        		Block seed = ForgeRegistries.BLOCKS.getValue(((BlockNamedItem)item).getBlock().getRegistryName());		//get the block to place
-        		world.setBlockState(pos.up(), seed.getDefaultState());													//set the block
-        		removeOneSeedFromPlayer(player, item);																	//shrink player inv
-                ((ServerPlayerEntity)player).addStat(Stats.ITEM_USED.get(item));										//increase vanilla counter
+        		Block blockFromSeed = ForgeRegistries.BLOCKS.getValue(((BlockNamedItem)seedItem).getBlock().getRegistryName());		//get the block to place
+        		world.setBlockState(pos.up(), blockFromSeed.getDefaultState());														//set the block
+        		removeOneSeedFromPlayer(player, seedItem);																			//shrink player inv
+                ((ServerPlayerEntity)player).addStat(Stats.ITEM_USED.get(seedItem));												//increase vanilla item-use-counter
         		
                 //play sound when atleast one seed was planted
         		playPlantingSound = true;
@@ -105,10 +111,10 @@ public class EasyPlantingHandler {
     	}
     	
     	//play the planting sounds
-    	if(vanillaSeeds.contains(player.getHeldItemMainhand().getItem()) && playPlantingSound) {
-    		world.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F);
-    	} else if(playPlantingSound) {
+    	if(player.getHeldItemMainhand().getItem().equals(Items.NETHER_WART) && playPlantingSound) {
     		world.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.ITEM_NETHER_WART_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    	} else if(playPlantingSound) {
+    		world.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1.0F, 1.0F);
     	}
     }
     
@@ -120,7 +126,7 @@ public class EasyPlantingHandler {
      * @param radius
      * @return
      */
-    private List<BlockPos> getTargetBlocks(ServerWorld world, BlockPos startPos, Block target, int radius){
+    private List<BlockPos> getTargetBlocks(int radius, ServerWorld world, BlockPos startPos, Block target){
     	List<BlockPos> targetBlocks = new ArrayList<BlockPos>();
         Queue<Point> queue = new LinkedList<Point>();
         queue.add(new Point(startPos.getX(), startPos.getZ()));
@@ -149,7 +155,7 @@ public class EasyPlantingHandler {
         	}        	
         }
         
-		return targetBlocks;    	
+		return targetBlocks;
     }
     
     /**
@@ -171,9 +177,7 @@ public class EasyPlantingHandler {
      * @return
      */
     private boolean playerHasOneSeed(PlayerEntity player, Item seed) {
-    	int index = player.inventory.getSlotFor(new ItemStack(seed));
-    	int count = player.inventory.getStackInSlot(index).getCount();
-		return (count >= 1);    	
+    	return player.inventory.hasAny(ImmutableSet.of(seed));
     }
     
     /**
@@ -185,10 +189,12 @@ public class EasyPlantingHandler {
     	if(player.isCreative()) {
     		return;
     	}
-    	int index = player.inventory.getSlotFor(new ItemStack(seed));
-    	int count = player.inventory.getStackInSlot(index).getCount();
-    	player.inventory.setInventorySlotContents(index, new ItemStack(seed, count - 1));
-    	return;
+    	int slot = player.inventory.findSlotMatchingUnusedItem(new ItemStack(seed));
+    	player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+    		.ifPresent(handler -> {
+    			handler.extractItem(slot, 1, false);
+    			return;
+    		});
     }
     
     /**
