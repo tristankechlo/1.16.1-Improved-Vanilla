@@ -5,7 +5,7 @@ showAsResourcePack=false
 
 [[mods]]
 modId="improvedvanilla"
-version="1.14.4 - 1.4.0"
+version="1.14.4 - 1.4.1"
 displayName="Improved Vanilla"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
 #logoFile="examplemod.png"
