@@ -191,10 +191,10 @@ public class EasyPlantingHandler {
     	}
     	int slot = player.inventory.findSlotMatchingUnusedItem(new ItemStack(seed));
     	player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-    			.map(playerInventory -> {
-    				playerInventory.extractItem(slot, 1, false);
-    				return true;
-    			});
+			.ifPresent(handler -> {
+				handler.extractItem(slot, 1, false);
+				return;
+			});
     }
     
     /**

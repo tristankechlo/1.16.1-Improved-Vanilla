@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.CropsBlock;
+import net.minecraft.block.NetherWartBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
@@ -44,12 +45,14 @@ public class CropRightClickHandler {
         IntegerProperty age;
         if (targetBlock instanceof CropsBlock) {
         	age = ((CropsBlock)targetBlock).getAgeProperty();
-        } else {
-            if (!targetBlock.equals(Blocks.COCOA)) {
-                return;
-            }
+        } else if (targetBlock.equals(Blocks.COCOA)) {
             age = CocoaBlock.AGE;
+        } else if (targetBlock.equals(Blocks.NETHER_WART)) {
+            age = NetherWartBlock.AGE;
+        } else {
+            return;
         }
+        
         if (this.spawnDropsAndResetBlock(world, pos, age)) {
             player.swing(Hand.MAIN_HAND, true);
             event.setCanceled(true);
