@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = "${minecraft_version}-${mod_version}"
+version = "${mod_version}"
 group = 'com.tristankechlo.improvedvanilla'
 archivesBaseName = 'improvedvanilla'
 
@@ -65,7 +65,7 @@ repositories {
 }
 
 dependencies {    
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft "net.minecraftforge:forge:${forge_version}"
 }
 
 jar {
