@@ -2,76 +2,81 @@ package com.tristankechlo.improvedvanilla.config;
 
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.RangeInt;
+import net.minecraftforge.common.config.Config.Type;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber
+@Config(modid = ImprovedVanilla.MOD_ID, type = Type.INSTANCE, name = ImprovedVanilla.MOD_ID)
 public class ImprovedVanillaConfig {
 
-	private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-	public static final Server SERVER = new Server(BUILDER);
-	public static final ForgeConfigSpec spec = BUILDER.build();
+	@Name("Farming")
+	@Comment("farming related stuff")
+	public static Farming FARMING = new Farming();
 
-	public static class Server {
+	@Name("Spawner")
+	@Comment("Spawner related settings")
+	public static Spawner SPAWNER = new Spawner();
 
-		public final BooleanValue enableRightClickCrops;		
-		public final BooleanValue enableEasyPlanting;
-		public final ConfigValue<Integer> easyPlantingRadius;
-		public final BooleanValue easyPlantingCircle;
+	@Name("Mob-Drops")
+	@Comment("Mob-Drop related settings")
+	public static Drops DROPS = new Drops();
 
-		public final IntValue spawnerDropChance;
-		public final IntValue spawnEggDropChanceOnSpawnerDestroyed;
+	public static class Farming {
 
-		public final BooleanValue dropOnlyWhenKilledByPlayer;
-		public final BooleanValue lootingAffective;
-		public final IntValue mobSpawnEggDropChance;
+		@Comment("If set to true, Crops can be collected by rightclicking them")
+		public boolean enableRightClickCrops = true;
 
-		Server(ForgeConfigSpec.Builder builder) {
-			builder.comment("farming related configs").push("Farming");
-			enableRightClickCrops = builder.comment("If set to true, Crops can be collected by rightclicking them").define("enableRightClickCrops", true);
-			enableEasyPlanting = builder.comment("If set to true, seeds will be planted in a radius when right clicked on a farm land").define("enableEasyPlanting", true);
-			easyPlantingRadius = builder.comment("the radius in which the seeds will be placed").define("easyPlantingRadius", 4);			
-			easyPlantingCircle = builder.comment("if set to true, the seeds will be planted in acircle instead of a square").define("easyPlantingCircle", true);
-			builder.pop();
-			
+		@Comment("If set to true, seeds will be planted in a radius when right clicked on a farm land")
+		public boolean enableEasyPlanting = true;
 
-			builder.comment("Spawner related settings (not affective when mod \"SpawnerSettings\" is present)").push("Spawner");
-			spawnerDropChance = builder
-					.comment("Drop-chance for the spawner to drop itself when mined with a silk-touch pickaxe (default 100, 100 -> always, 0 -> never)")
-					.defineInRange("spawnerDropChance", 100, 0, 100);
-			spawnEggDropChanceOnSpawnerDestroyed = builder
-					.comment("Drop-chance for each stack, in a spawner, in % (default 100, 100 -> always, 0 -> never)")
-					.defineInRange("spawnEggDropChanceOnSpawnerDestroyed", 100, 0, 100);
-			builder.pop();
+		@RangeInt(min = 0)
+		@Comment("the radius in which the seeds will be placed")
+		public int easyPlantingRadius = 4;
 
-			
-			builder.comment("").push("Mob-Drops");
-			dropOnlyWhenKilledByPlayer = builder
-					.comment("If set to true, SpawnEggs only drop when the mob was killed by a player")
-					.define("dropOnlyWhenKilledByPlayer", true);
-			lootingAffective = builder
-					.comment("If set to true, then foreach looting level on the players tool, there will by another possibility to drop the egg")
-					.define("lootingAffective", true);
-			mobSpawnEggDropChance = builder
-					.comment("Drop-chance for all mobs to drop their spawn-egg in % (default 2, 100 -> always, 0 -> never)")
-					.defineInRange("mobSpawnEggDropChance", 2, 0, 100);
-			builder.pop();
+		@Comment("if set to true, the seeds will be planted in a circle instead of a square")
+		public boolean easyPlantingCircle = true;
+	}
+
+	public static class Spawner {
+
+		@RangeInt(min = 0, max = 100)
+		@Comment("Drop-chance for the spawner to drop itself when mined with a silk-touch pickaxe (default 100, 100 -> always, 0 -> never)")
+		public int spawnerDropChance = 100;
+
+		@RangeInt(min = 0, max = 100)
+		@Comment("Drop-chance for each stack, in a spawner, in % (default 100, 100 -> always, 0 -> never)")
+		public int spawnEggDropChanceOnSpawnerDestroyed = 100;
+	}
+
+	public static class Drops {
+
+		@Comment("If set to true, SpawnEggs only drop when the mob was killed by a player")
+		public boolean dropOnlyWhenKilledByPlayer = true;
+
+		@Comment("If set to true, then foreach looting level on the players tool, there will by another possibility to drop the egg")
+		public boolean lootingAffective = true;
+
+		@RangeInt(min = 0, max = 100)
+		@Comment("Drop-chance for all mobs to drop their spawn-egg in % (default 2, 100 -> always, 0 -> never)")
+		public int mobSpawnEggDropChance = 2;
+	}
+
+	@Mod.EventBusSubscriber(modid = ImprovedVanilla.MOD_ID)
+	private static class EventHandler {
+
+		@SubscribeEvent
+		public static void onConfigChangedEvent(OnConfigChangedEvent event) {
+			ImprovedVanilla.LOGGER.debug(event.getModID());
+			if (event.getModID().equalsIgnoreCase(ImprovedVanilla.MOD_ID)) {
+				ConfigManager.sync(ImprovedVanilla.MOD_ID, Type.INSTANCE);
+			}
 		}
-	}
-
-	@SubscribeEvent
-	public static void onLoad(final ModConfig.Loading configEvent) {
-		ImprovedVanilla.LOGGER.debug("Loaded config file {}", configEvent.getConfig().getFileName());
-	}
-
-	@SubscribeEvent
-	public static void onFileChange(final ModConfig.Reloading configEvent) {
-		ImprovedVanilla.LOGGER.debug("Config just got changed on the file system!");
 	}
 
 }

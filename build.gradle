@@ -5,76 +5,64 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
     }
 }
+        
 apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
-version = "${minecraft_version}-${mod_version}"
+version = '1.12.2-1.4.1'
 group = 'com.tristankechlo.improvedvanilla'
 archivesBaseName = 'improvedvanilla'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: project.mappings
-    
+    mappings channel: 'snapshot', version: '20171003-1.12'
+
     runs {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                improvedvanilla {
-                    source sourceSets.main
-                }
-            }
         }
 
         server {
-            workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                improvedvanilla {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                improvedvanilla {
-                    source sourceSets.main
-                }
-            }
         }
     }
 }
 
-repositories {
-    maven { url 'https://maven.blamejared.com' }
-}
-
-dependencies {    
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": "improvedvanilla",
+            "Specification-Title": "Improved Vanilla",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+}
+
+jar.finalizedBy('reobfJar') 
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
     }
 }
