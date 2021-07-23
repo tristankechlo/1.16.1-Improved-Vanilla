@@ -20,31 +20,30 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod(ImprovedVanilla.MOD_ID)
 public class ImprovedVanilla {
-	
-    public static ImprovedVanilla instance;
-    public static final Logger LOGGER = LogManager.getLogger();
-    public static final String MOD_ID = "improvedvanilla";
-    
+
+	public static ImprovedVanilla instance;
+	public static final Logger LOGGER = LogManager.getLogger();
+	public static final String MOD_ID = "improvedvanilla";
+
 	public static boolean SpawnerSettingsLoaded = false;
-    
-    public ImprovedVanilla() {
-    	
-    	ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ImprovedVanillaConfig.spec);
 
-    	FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-    			
-        MinecraftForge.EVENT_BUS.register(new CropRightClickHandler());
-        MinecraftForge.EVENT_BUS.register(new EasyPlantingHandler());
-        MinecraftForge.EVENT_BUS.register(new MobDropHandler());
-        MinecraftForge.EVENT_BUS.register(new SpawnerHandler());
+	public ImprovedVanilla() {
 
-        ImprovedVanilla.instance = this;
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-    
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ImprovedVanillaConfig.spec);
 
-    private void commonSetup(FMLCommonSetupEvent evt) {
-    	ImprovedVanilla.SpawnerSettingsLoaded = ModList.get().isLoaded("spawnersettings");
-    }
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+
+		MinecraftForge.EVENT_BUS.register(new CropRightClickHandler());
+		MinecraftForge.EVENT_BUS.register(new EasyPlantingHandler());
+		MinecraftForge.EVENT_BUS.register(new MobDropHandler());
+		MinecraftForge.EVENT_BUS.register(new SpawnerHandler());
+
+		ImprovedVanilla.instance = this;
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	private void commonSetup(FMLCommonSetupEvent evt) {
+		ImprovedVanilla.SpawnerSettingsLoaded = ModList.get().isLoaded("spawnersettings");
+	}
 
 }
