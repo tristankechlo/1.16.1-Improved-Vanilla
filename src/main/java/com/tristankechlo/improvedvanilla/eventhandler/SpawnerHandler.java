@@ -1,6 +1,5 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
-import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 
 import net.minecraft.core.BlockPos;
@@ -32,9 +31,6 @@ public class SpawnerHandler {
 
 	@SubscribeEvent
 	public void onSpawnerPlaced(final BlockEvent.NeighborNotifyEvent event) {
-		if (ImprovedVanilla.SpawnerSettingsLoaded) {
-			return;
-		}
 		final Level world = (Level) event.getWorld();
 		final BlockPos pos = event.getPos();
 
@@ -58,9 +54,6 @@ public class SpawnerHandler {
 
 	@SubscribeEvent
 	public void onBlockBreackEvent(final BlockEvent.BreakEvent event) {
-		if (ImprovedVanilla.SpawnerSettingsLoaded) {
-			return;
-		}
 		final Player player = event.getPlayer();
 		final Block targetBlock = event.getState().getBlock();
 		final Level world = (Level) event.getWorld();
