@@ -32,13 +32,13 @@ public class CropRightClickHandler {
         if (player == null || world == null) {
             return;
         }
-        if (world.isRemote || player.isSneaking() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
+        if (world.isClientSide || player.isShiftKeyDown() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
             return;
         }
         if(ImprovedVanillaConfig.SERVER.enableRightClickCrops.get() == false) {
         	return;
         }
-        if (!player.getHeldItemMainhand().isEmpty()) {
+        if (!player.getMainHandItem().isEmpty()) {
             return;
         }
         final Block targetBlock = world.getBlockState(pos).getBlock();
@@ -64,15 +64,15 @@ public class CropRightClickHandler {
         if (blockState == null) {
             return false;
         }
-        final int maximumAge = Collections.max(property.getAllowedValues());
-        final int currentAge = blockState.get(property);
+        final int maximumAge = Collections.max(property.getPossibleValues());
+        final int currentAge = blockState.getValue(property);
         if (currentAge < maximumAge) {
             return false;
         }
-        final BlockState newState = blockState.with(property, 0);
-        world.setBlockState(pos, newState, 3);
+        final BlockState newState = blockState.setValue(property, 0);
+        world.setBlock(pos, newState, 3);
         final List<ItemStack> drops = Block.getDrops(blockState, (ServerWorld)world, pos, (TileEntity)null);
-        drops.forEach(stack -> Block.spawnAsEntity(world, pos, stack));
+        drops.forEach(stack -> Block.popResource(world, pos, stack));
         return true;
     }
 }

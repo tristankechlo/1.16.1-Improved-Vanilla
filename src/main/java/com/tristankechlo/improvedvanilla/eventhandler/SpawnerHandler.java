@@ -39,7 +39,7 @@ public class SpawnerHandler {
 		final World world = (World) event.getWorld();
 		final BlockPos pos = event.getPos();
 
-		if (world.isRemote) {
+		if (world.isClientSide) {
 			return;
 		}
 		
@@ -47,11 +47,11 @@ public class SpawnerHandler {
 		
 		if (targetblock == Blocks.SPAWNER) {
 			
-	    	world.setBlockState(pos, Blocks.SPAWNER.getDefaultState(), 2);
-	    	TileEntity tileentity = world.getTileEntity(pos);	    	
-	    	((MobSpawnerTileEntity) tileentity).getSpawnerBaseLogic().setEntityType(EntityType.AREA_EFFECT_CLOUD);
-	    	tileentity.markDirty();
-	    	world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+	    	world.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
+	    	TileEntity tileentity = world.getBlockEntity(pos);	    	
+	    	((MobSpawnerTileEntity) tileentity).getSpawner().setEntityId(EntityType.AREA_EFFECT_CLOUD);
+	    	tileentity.setChanged();
+	    	world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 	    	
 		}
 		
@@ -67,16 +67,16 @@ public class SpawnerHandler {
 		final World world = (World) event.getWorld();
 		final BlockPos pos = event.getPos();
 		
-		if(world.isRemote) {
+		if(world.isClientSide) {
 			return;
 		}
 
 		if (targetBlock == Blocks.SPAWNER) {
-			if (player.getHeldItemMainhand().getToolTypes().contains(ToolType.PICKAXE)) {
+			if (player.getMainHandItem().getToolTypes().contains(ToolType.PICKAXE)) {
 				if (!player.isCreative() && !player.isSpectator()) {
 					
-					final int fortuneLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, player.getHeldItemMainhand());
-					final int silkTouchLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand());
+					final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
+					final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
 					
 					if (silkTouchLevel >= 1) {
 						
@@ -87,11 +87,11 @@ public class SpawnerHandler {
 							if (Math.random() < ((double) spawnerDropChance / 100)) {
 								final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
 								final ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-								world.addEntity(entity);
+								world.addFreshEntity(entity);
 							}
 						} else {
 							int exp = event.getExpToDrop();
-							exp += (exp + 1) * world.rand.nextInt(4) * world.rand.nextInt(4);
+							exp += (exp + 1) * world.random.nextInt(4) * world.random.nextInt(4);
 							event.setExpToDrop(exp);
 						}
 
@@ -103,7 +103,7 @@ public class SpawnerHandler {
 
 					} else if (silkTouchLevel == 0 && fortuneLevel >= 1) {
 						int exp = event.getExpToDrop();
-						exp += (exp + 1) * world.rand.nextInt(fortuneLevel) * world.rand.nextInt(fortuneLevel);
+						exp += (exp + 1) * world.random.nextInt(fortuneLevel) * world.random.nextInt(fortuneLevel);
 						event.setExpToDrop(exp);
 					}
 				}
@@ -116,9 +116,9 @@ public class SpawnerHandler {
 
 	private void resetSpawner(final World world, final BlockPos pos) {
 		if(world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
-			world.removeTileEntity(pos);
-			world.setBlockState(pos, Blocks.SPAWNER.getDefaultState(), 2);
-			MobSpawnerTileEntity tile = (MobSpawnerTileEntity) world.getTileEntity(pos);
+			world.removeBlockEntity(pos);
+			world.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
+			MobSpawnerTileEntity tile = (MobSpawnerTileEntity) world.getBlockEntity(pos);
 			
 			CompoundNBT entity = new CompoundNBT();
 			entity.putString("id", "minecraft:area_effect_cloud");
@@ -128,10 +128,10 @@ public class SpawnerHandler {
 			nbt.putInt("Weight", 1);
 			
 			final WeightedSpawnerEntity nextSpawnData = new WeightedSpawnerEntity(nbt);
-			tile.getSpawnerBaseLogic().setNextSpawnData(nextSpawnData);
-			tile.getSpawnerBaseLogic().setEntityType(EntityType.AREA_EFFECT_CLOUD);
-			tile.markDirty();
-	    	world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+			tile.getSpawner().setNextSpawnData(nextSpawnData);
+			tile.getSpawner().setEntityId(EntityType.AREA_EFFECT_CLOUD);
+			tile.setChanged();
+	    	world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 		}
 	}
 	
@@ -147,18 +147,18 @@ public class SpawnerHandler {
 				eggDropChance = 100;
 			}
 			
-			for (int i = 0; i < inv.getSizeInventory(); i++) {
+			for (int i = 0; i < inv.getContainerSize(); i++) {
 				
-				Item item = inv.getStackInSlot(i).getItem();
-				int weight = inv.getStackInSlot(i).getCount();
+				Item item = inv.getItem(i).getItem();
+				int weight = inv.getItem(i).getCount();
 				
 				if(item == Items.AIR || weight < 1) {
 					continue;
 				}
 
 				if (Math.random() < ((double) eggDropChance / 100)) {
-					final ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(), inv.getStackInSlot(i));
-					world.addEntity(entityItem);
+					final ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(), inv.getItem(i));
+					world.addFreshEntity(entityItem);
 				}
 			}
 		}
@@ -170,13 +170,13 @@ public class SpawnerHandler {
 
 		if(world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
 			
-			final TileEntity tile = world.getTileEntity(pos);
+			final TileEntity tile = world.getBlockEntity(pos);
 			if(!(tile instanceof MobSpawnerTileEntity)) {
 				return inv;
 			}
-			final AbstractSpawner logic = ((MobSpawnerTileEntity)tile).getSpawnerBaseLogic();
+			final AbstractSpawner logic = ((MobSpawnerTileEntity)tile).getSpawner();
 			CompoundNBT nbt = new CompoundNBT();
-			nbt = logic.write(nbt);
+			nbt = logic.save(nbt);
 
 		    if (nbt.contains("SpawnPotentials", 9)) {
 		    	ListNBT listnbt = nbt.getList("SpawnPotentials", 10);
@@ -192,7 +192,7 @@ public class SpawnerHandler {
 		    			continue;
 		    		}
 		    		final ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), weight);
-		    		inv.setInventorySlotContents(i, itemStack);
+		    		inv.setItem(i, itemStack);
 		        }
 		    }
 		}

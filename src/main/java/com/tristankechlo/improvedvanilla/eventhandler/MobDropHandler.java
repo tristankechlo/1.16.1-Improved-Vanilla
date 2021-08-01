@@ -21,15 +21,15 @@ public class MobDropHandler {
 	@SubscribeEvent
 	public void onMobDeath(final LivingDropsEvent event) {
 		final LivingEntity entity = event.getEntityLiving();
-		final World world = entity.world;
-		if (world.isRemote) {
+		final World world = entity.level;
+		if (world.isClientSide) {
 			return;
 		}
 
 		final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.SERVER.dropOnlyWhenKilledByPlayer.get();
 		final int dropchance = ImprovedVanillaConfig.SERVER.mobSpawnEggDropChance.get();
-		final Entity source = event.getSource().getTrueSource();
-		final BlockPos pos = entity.getPosition();
+		final Entity source = event.getSource().getEntity();
+		final BlockPos pos = entity.blockPosition();
 		final EntityType<?> type = (EntityType<?>) entity.getType();
 		final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg"));
 
@@ -59,9 +59,9 @@ public class MobDropHandler {
 				if (dropchance >= 1 && dropchance <= 100) {
 					if (Math.random() < ((double) dropchance / 100)) {
 						final ItemStack stack = new ItemStack(item, 1);
-						ItemEntity itemEntity = new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), stack);
-						itemEntity.setDefaultPickupDelay();
-						world.addEntity(itemEntity);
+						ItemEntity itemEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack);
+						itemEntity.setDefaultPickUpDelay();
+						world.addFreshEntity(itemEntity);
 					}
 				}
 			}
@@ -88,8 +88,8 @@ public class MobDropHandler {
 		if (count > 0) {
 			final ItemStack stack = new ItemStack(item, count);
 			ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-			itemEntity.setDefaultPickupDelay();
-			world.addEntity(itemEntity);
+			itemEntity.setDefaultPickUpDelay();
+			world.addFreshEntity(itemEntity);
 		}
 	}
 
