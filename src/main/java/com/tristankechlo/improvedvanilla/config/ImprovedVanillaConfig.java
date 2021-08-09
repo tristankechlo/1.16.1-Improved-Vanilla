@@ -1,7 +1,10 @@
 package com.tristankechlo.improvedvanilla.config;
 
+import org.apache.logging.log4j.Level;
+
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -9,6 +12,7 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber
 public class ImprovedVanillaConfig {
@@ -30,6 +34,8 @@ public class ImprovedVanillaConfig {
 		public final BooleanValue dropOnlyWhenKilledByPlayer;
 		public final BooleanValue lootingAffective;
 		public final IntValue mobSpawnEggDropChance;
+
+//		public final ConfigValue<List<? extends String>> forgottenWellBiomes;
 
 		Server(ForgeConfigSpec.Builder builder) {
 			builder.comment("farming related configs").push("Farming");
@@ -66,7 +72,22 @@ public class ImprovedVanillaConfig {
 					"Drop-chance for all mobs to drop their spawn-egg in % (default 2, 100 -> always, 0 -> never)")
 					.defineInRange("mobSpawnEggDropChance", 2, 0, 100);
 			builder.pop();
+
+//			builder.comment("in which biomes the biomes should spawn").push("StructureSpawns");
+//			forgottenWellBiomes = builder.comment("in which biomes the forgotten well should generate").defineList(
+//					"forgottenWellBiomes", ForgottenWellStructure.DEFAULT_BIOMES,
+//					(object) -> checkBiome("forgottenWellBiomes", object));
+//			builder.pop();
 		}
+	}
+
+	public static boolean checkBiome(String name, Object object) {
+		if (ForgeRegistries.BIOMES.containsKey(new ResourceLocation(String.valueOf(object)))) {
+			return true;
+		}
+		ImprovedVanilla.LOGGER.log(Level.INFO,
+				"Removing unknown Biome[" + String.valueOf(object) + "] from " + name + "-SpawnBiomes");
+		return false;
 	}
 
 	@SubscribeEvent
