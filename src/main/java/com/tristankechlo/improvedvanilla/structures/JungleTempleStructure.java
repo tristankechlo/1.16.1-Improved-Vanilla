@@ -3,10 +3,12 @@ package com.tristankechlo.improvedvanilla.structures;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +39,8 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 public class JungleTempleStructure extends Structure<NoFeatureConfig> {
 
 	public static final List<String> DEFAULT_BIOMES = getDefaultSpawnBiomes();
+	private static final List<Spawners> STRUCTURE_MONSTERS = ImmutableList
+			.of(new Spawners(EntityType.ILLUSIONER, 100, 4, 9), new Spawners(EntityType.VINDICATOR, 100, 4, 9));
 
 	public JungleTempleStructure(Codec<NoFeatureConfig> codec) {
 		super(codec);
@@ -44,12 +48,7 @@ public class JungleTempleStructure extends Structure<NoFeatureConfig> {
 
 	@Override
 	public List<Spawners> getDefaultSpawnList() {
-		return super.getDefaultSpawnList();
-	}
-
-	@Override
-	public List<Spawners> getDefaultCreatureSpawnList() {
-		return super.getDefaultCreatureSpawnList();
+		return STRUCTURE_MONSTERS;
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class ModStructures {
 
 	public static void setupStructures() {
 		setupMapSpacingAndLand(FORGOTTEN_WELL.get(), new StructureSeparationSettings(10, 5, 1234567890), true);
-		setupMapSpacingAndLand(JUNGLE_TEMPLE.get(), new StructureSeparationSettings(25, 7, 1933467234), false);
+		setupMapSpacingAndLand(JUNGLE_TEMPLE.get(), new StructureSeparationSettings(20, 6, 1933467234), false);
 	}
 
 	private static <F extends Structure<?>> void setupMapSpacingAndLand(F structure,
