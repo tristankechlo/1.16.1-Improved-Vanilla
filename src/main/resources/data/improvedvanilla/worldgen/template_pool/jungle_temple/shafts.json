@@ -1,0 +1,14 @@
+{
+    "name": "improvedvanilla:jungle_temple/shafts",
+    "fallback": "minecraft:empty",
+    "elements": [{
+            "weight": 1,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/shaft_down",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}

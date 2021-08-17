@@ -49,6 +49,7 @@ public class WorldLoadingHandler {
 		Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(
 				serverWorld.getChunkSource().generator.getSettings().structureConfig());
 		tempMap.putIfAbsent(ModStructures.FORGOTTEN_WELL.get(), getSettings(ModStructures.FORGOTTEN_WELL.get()));
+		tempMap.putIfAbsent(ModStructures.JUNGLE_TEMPLE.get(), getSettings(ModStructures.JUNGLE_TEMPLE.get()));
 		serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
 	}
 

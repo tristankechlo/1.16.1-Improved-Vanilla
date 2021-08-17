@@ -1,0 +1,46 @@
+{
+    "name": "improvedvanilla:jungle_temple/long_walkways",
+    "fallback": "minecraft:empty",
+    "elements": [{
+            "weight": 50,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/long_broken_walkway",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 50,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/long_walkway_iron_bars",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 50,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/long_normal_walkway",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 50,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/long_walkway_lava",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 50,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/long_walkway_spawner",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}

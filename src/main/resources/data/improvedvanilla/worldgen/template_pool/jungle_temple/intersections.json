@@ -1,0 +1,30 @@
+{
+    "name": "improvedvanilla:jungle_temple/intersections",
+    "fallback": "minecraft:empty",
+    "elements": [{
+            "weight": 50,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/intersection_four",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 100,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/intersection_three",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 125,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/intersection_corner",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}
