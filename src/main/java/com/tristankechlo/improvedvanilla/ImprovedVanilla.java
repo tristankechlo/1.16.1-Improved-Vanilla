@@ -31,7 +31,7 @@ public class ImprovedVanilla {
 	public static boolean SpawnerSettingsLoaded = false;
 
 	public ImprovedVanilla() {
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ImprovedVanillaConfig.spec);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ImprovedVanillaConfig.spec);
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::commonSetup);

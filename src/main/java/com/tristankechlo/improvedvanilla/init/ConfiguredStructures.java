@@ -15,6 +15,8 @@ public class ConfiguredStructures {
 			.configured(IFeatureConfig.NONE);
 	public static StructureFeature<?, ?> CONFIGURED_JUNGLE_TEMPLE = ModStructures.JUNGLE_TEMPLE.get()
 			.configured(IFeatureConfig.NONE);
+	public static StructureFeature<?, ?> CONFIGURED_UNDERGROUND_TEMPLE = ModStructures.UNDERGROUND_TEMPLE.get()
+			.configured(IFeatureConfig.NONE);
 
 	public static void registerConfiguredStructures() {
 		Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
@@ -22,8 +24,11 @@ public class ConfiguredStructures {
 				CONFIGURED_FORGOTTEN_WELL);
 		Registry.register(registry, new ResourceLocation(ImprovedVanilla.MOD_ID, "configured_jungle_temple"),
 				CONFIGURED_JUNGLE_TEMPLE);
+		Registry.register(registry, new ResourceLocation(ImprovedVanilla.MOD_ID, "configured_underground_temple"),
+				CONFIGURED_UNDERGROUND_TEMPLE);
 
 		FlatGenerationSettings.STRUCTURE_FEATURES.put(ModStructures.FORGOTTEN_WELL.get(), CONFIGURED_FORGOTTEN_WELL);
 		FlatGenerationSettings.STRUCTURE_FEATURES.put(ModStructures.JUNGLE_TEMPLE.get(), CONFIGURED_JUNGLE_TEMPLE);
+		FlatGenerationSettings.STRUCTURE_FEATURES.put(ModStructures.UNDERGROUND_TEMPLE.get(), CONFIGURED_UNDERGROUND_TEMPLE);
 	}
 }

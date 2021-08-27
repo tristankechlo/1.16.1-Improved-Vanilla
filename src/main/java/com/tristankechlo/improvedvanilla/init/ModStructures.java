@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.structures.ForgottenWellStructure;
 import com.tristankechlo.improvedvanilla.structures.JungleTempleStructure;
+import com.tristankechlo.improvedvanilla.structures.UnderGroundTempleStructure;
 
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -27,10 +28,13 @@ public class ModStructures {
 			.register("forgotten_well", () -> (new ForgottenWellStructure(NoFeatureConfig.CODEC)));
 	public static final RegistryObject<Structure<NoFeatureConfig>> JUNGLE_TEMPLE = STRUCTURES
 			.register("jungle_temple", () -> (new JungleTempleStructure(NoFeatureConfig.CODEC)));
+	public static final RegistryObject<Structure<NoFeatureConfig>> UNDERGROUND_TEMPLE = STRUCTURES
+			.register("underground_temple", () -> (new UnderGroundTempleStructure(NoFeatureConfig.CODEC)));
 
 	public static void setupStructures() {
-		setupMapSpacingAndLand(FORGOTTEN_WELL.get(), new StructureSeparationSettings(10, 5, 1234567890), true);
-		setupMapSpacingAndLand(JUNGLE_TEMPLE.get(), new StructureSeparationSettings(20, 6, 1933467234), false);
+		setupMapSpacingAndLand(FORGOTTEN_WELL.get(), new StructureSeparationSettings(10, 5, 2147413647), false);
+		setupMapSpacingAndLand(JUNGLE_TEMPLE.get(), new StructureSeparationSettings(17, 6, 2147413646), false);
+		setupMapSpacingAndLand(UNDERGROUND_TEMPLE.get(), new StructureSeparationSettings(12, 6, 2147413645), false);
 	}
 
 	private static <F extends Structure<?>> void setupMapSpacingAndLand(F structure,

@@ -1,10 +1,18 @@
 {
-    "name": "improvedvanilla:jungle_temple/walkways",
+    "name": "improvedvanilla:underground_temple/walkways",
     "fallback": "minecraft:empty",
     "elements": [{
-            "weight": 30,
+            "weight": 5,
             "element": {
-                "location": "improvedvanilla:jungle_temple/large_room",
+                "location": "improvedvanilla:underground_temple/large_room",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },{
+            "weight": 5,
+            "element": {
+                "location": "improvedvanilla:underground_temple/large_room_down",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -12,7 +20,7 @@
         },{
             "weight": 20,
             "element": {
-                "location": "improvedvanilla:jungle_temple/large_room_down",
+                "location": "improvedvanilla:underground_temple/library",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -20,15 +28,7 @@
         },{
             "weight": 20,
             "element": {
-                "location": "improvedvanilla:jungle_temple/library",
-                "processors": "minecraft:empty",
-                "projection": "rigid",
-                "element_type": "minecraft:single_pool_element"
-            }
-        },{
-            "weight": 50,
-            "element": {
-                "location": "improvedvanilla:jungle_temple/long_broken_walkway",
+                "location": "improvedvanilla:underground_temple/long_broken_walkway",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -36,7 +36,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/long_walkway_iron_bars",
+                "location": "improvedvanilla:underground_temple/long_walkway_iron_bars",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -44,7 +44,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/long_normal_walkway",
+                "location": "improvedvanilla:underground_temple/long_normal_walkway",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -52,7 +52,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/long_walkway_lava",
+                "location": "improvedvanilla:underground_temple/long_walkway_lava",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -60,7 +60,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/long_walkway_spawner",
+                "location": "improvedvanilla:underground_temple/long_walkway_spawner",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -68,7 +68,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/intersection_four",
+                "location": "improvedvanilla:underground_temple/intersection_four",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -76,7 +76,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/intersection_three",
+                "location": "improvedvanilla:underground_temple/intersection_three",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -84,7 +84,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/intersection_corner",
+                "location": "improvedvanilla:underground_temple/intersection_corner",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -92,7 +92,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/walkway_end",
+                "location": "improvedvanilla:underground_temple/walkway_end",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -100,7 +100,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/walkway_end_chest",
+                "location": "improvedvanilla:underground_temple/walkway_end_chest",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -108,7 +108,7 @@
         }, {
             "weight": 20,
             "element": {
-                "location": "improvedvanilla:jungle_temple/enchant_room",
+                "location": "improvedvanilla:underground_temple/enchant_room",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -116,7 +116,7 @@
         }, {
             "weight": 50,
             "element": {
-                "location": "improvedvanilla:jungle_temple/end_to_shaft_down",
+                "location": "improvedvanilla:underground_temple/end_to_shaft_down",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
@@ -124,7 +124,7 @@
         }, {
             "weight": 25,
             "element": {
-                "location": "improvedvanilla:jungle_temple/quest_tower",
+                "location": "improvedvanilla:underground_temple/quest_tower",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"

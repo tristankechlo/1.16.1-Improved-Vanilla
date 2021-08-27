@@ -1,26 +1,26 @@
 {
-    "name": "improvedvanilla:jungle_temple/intersections",
+    "name": "improvedvanilla:jungle_temple/temple_connectors",
     "fallback": "minecraft:empty",
     "elements": [{
-            "weight": 50,
+            "weight": 40,
             "element": {
-                "location": "improvedvanilla:jungle_temple/intersection_four",
+                "location": "improvedvanilla:jungle_temple/outside_stairs_chest",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
             }
         }, {
-            "weight": 100,
+            "weight": 40,
             "element": {
-                "location": "improvedvanilla:jungle_temple/intersection_three",
+                "location": "improvedvanilla:jungle_temple/outside_stairs_empty",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
             }
         }, {
-            "weight": 125,
+            "weight": 20,
             "element": {
-                "location": "improvedvanilla:jungle_temple/intersection_corner",
+                "location": "improvedvanilla:jungle_temple/outside_stairs_full",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"

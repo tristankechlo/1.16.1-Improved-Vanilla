@@ -1,10 +1,10 @@
 {
-    "name": "improvedvanilla:jungle_temple/shafts",
+    "name": "improvedvanilla:underground_temple/shafts",
     "fallback": "minecraft:empty",
     "elements": [{
             "weight": 1,
             "element": {
-                "location": "improvedvanilla:jungle_temple/shaft_down",
+                "location": "improvedvanilla:underground_temple/shaft_down_small",
                 "processors": "minecraft:empty",
                 "projection": "rigid",
                 "element_type": "minecraft:single_pool_element"
