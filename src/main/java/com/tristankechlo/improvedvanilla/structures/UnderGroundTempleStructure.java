@@ -1,6 +1,5 @@
 package com.tristankechlo.improvedvanilla.structures;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -17,7 +16,6 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.MobSpawnInfo.Spawners;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -34,7 +32,6 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class UnderGroundTempleStructure extends Structure<NoFeatureConfig> {
 
-	public static final List<String> DEFAULT_BIOMES = getDefaultSpawnBiomes();
 	private static final List<Spawners> STRUCTURE_MONSTERS = ImmutableList.of(
 			new Spawners(EntityType.ILLUSIONER, 100, 4, 9), new Spawners(EntityType.VINDICATOR, 100, 4, 9),
 			new Spawners(EntityType.PILLAGER, 100, 4, 9));
@@ -63,19 +60,6 @@ public class UnderGroundTempleStructure extends Structure<NoFeatureConfig> {
 			SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos,
 			NoFeatureConfig featureConfig) {
 		return chunkRandom.nextDouble() < 0.6;
-	}
-
-	private static List<String> getDefaultSpawnBiomes() {
-		// TODO
-		List<String> biomes = new ArrayList<>();
-		biomes.add(Biomes.JUNGLE.location().toString());
-		biomes.add(Biomes.JUNGLE_EDGE.location().toString());
-		biomes.add(Biomes.JUNGLE_HILLS.location().toString());
-		biomes.add(Biomes.MODIFIED_JUNGLE.location().toString());
-		biomes.add(Biomes.MODIFIED_JUNGLE_EDGE.location().toString());
-		biomes.add(Biomes.BAMBOO_JUNGLE.location().toString());
-		biomes.add(Biomes.BAMBOO_JUNGLE_HILLS.location().toString());
-		return biomes;
 	}
 
 	public static class Start extends StructureStart<NoFeatureConfig> {

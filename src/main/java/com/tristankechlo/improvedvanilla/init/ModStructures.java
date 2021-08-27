@@ -32,9 +32,9 @@ public class ModStructures {
 			.register("underground_temple", () -> (new UnderGroundTempleStructure(NoFeatureConfig.CODEC)));
 
 	public static void setupStructures() {
-		setupMapSpacingAndLand(FORGOTTEN_WELL.get(), new StructureSeparationSettings(10, 5, 2147413647), false);
+		setupMapSpacingAndLand(FORGOTTEN_WELL.get(), new StructureSeparationSettings(10, 5, 2147413647), true);
 		setupMapSpacingAndLand(JUNGLE_TEMPLE.get(), new StructureSeparationSettings(17, 6, 2147413646), false);
-		setupMapSpacingAndLand(UNDERGROUND_TEMPLE.get(), new StructureSeparationSettings(12, 6, 2147413645), false);
+		setupMapSpacingAndLand(UNDERGROUND_TEMPLE.get(), new StructureSeparationSettings(15, 6, 2147413645), false);
 	}
 
 	private static <F extends Structure<?>> void setupMapSpacingAndLand(F structure,

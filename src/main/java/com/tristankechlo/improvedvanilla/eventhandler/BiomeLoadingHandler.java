@@ -3,8 +3,8 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 import com.tristankechlo.improvedvanilla.init.ConfiguredStructures;
 import com.tristankechlo.improvedvanilla.structures.ForgottenWellStructure;
 import com.tristankechlo.improvedvanilla.structures.JungleTempleStructure;
-import com.tristankechlo.improvedvanilla.structures.UnderGroundTempleStructure;
 
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,8 +24,8 @@ public class BiomeLoadingHandler {
 			event.getGeneration().getStructures().add(() -> ConfiguredStructures.CONFIGURED_JUNGLE_TEMPLE);
 		}
 
-		// add underground temple biomes
-		if (UnderGroundTempleStructure.DEFAULT_BIOMES.contains(event.getName().toString())) {
+		// add undergrounde temple to all overworld biomes
+		if (event.getCategory() != Category.NETHER && event.getCategory() != Category.THEEND) {
 			event.getGeneration().getStructures().add(() -> ConfiguredStructures.CONFIGURED_UNDERGROUND_TEMPLE);
 		}
 
