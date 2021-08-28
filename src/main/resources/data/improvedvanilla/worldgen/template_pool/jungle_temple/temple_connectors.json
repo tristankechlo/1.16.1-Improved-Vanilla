@@ -1,0 +1,30 @@
+{
+    "name": "improvedvanilla:jungle_temple/temple_connectors",
+    "fallback": "minecraft:empty",
+    "elements": [{
+            "weight": 40,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/outside_stairs_chest",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 40,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/outside_stairs_empty",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }, {
+            "weight": 20,
+            "element": {
+                "location": "improvedvanilla:jungle_temple/outside_stairs_full",
+                "processors": "minecraft:empty",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}
