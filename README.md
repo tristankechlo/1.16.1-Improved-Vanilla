@@ -12,7 +12,6 @@
  
  ![EasyPlaynting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
 
-config file can be found with /config showfile improvedvanilla server
 
 
 [Download the mod here](https://www.curseforge.com/minecraft/mc-mods/improved-vanilla)
