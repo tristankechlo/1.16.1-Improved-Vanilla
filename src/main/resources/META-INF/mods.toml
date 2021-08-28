@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+loaderVersion="[36,)"
 license="CC BY-NC-ND 4.0"
 showAsResourcePack=false
 
@@ -16,13 +16,13 @@ description='''Small changes to Minecraft Vanilla'''
 [[dependencies.improvedvanilla]]
     modId="forge"
     mandatory=true
-    versionRange="[32,)"
+    versionRange="[36,)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.improvedvanilla]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.1,1.16.5]"
+    versionRange="[1.16.5,1.17)"
     ordering="NONE"
     side="BOTH"
