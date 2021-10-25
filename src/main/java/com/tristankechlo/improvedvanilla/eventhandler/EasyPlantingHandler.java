@@ -243,4 +243,5 @@ public class EasyPlantingHandler {
 		Block block = ForgeRegistries.BLOCKS.getValue(((ItemNameBlockItem) item).getBlock().getRegistryName());
 		return ((block instanceof CropBlock) || (block instanceof StemBlock));
 	}
+
 }

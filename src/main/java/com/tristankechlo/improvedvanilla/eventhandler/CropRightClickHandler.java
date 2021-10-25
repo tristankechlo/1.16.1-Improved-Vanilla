@@ -76,4 +76,5 @@ public class CropRightClickHandler {
 		drops.forEach(stack -> Block.popResource(world, pos, stack));
 		return true;
 	}
+
 }

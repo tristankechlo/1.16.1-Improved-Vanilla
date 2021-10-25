@@ -192,7 +192,7 @@ public class SpawnerHandler {
 				}
 			}
 		}
-
 		return inv;
 	}
+
 }
