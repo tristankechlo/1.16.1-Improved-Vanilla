@@ -12,8 +12,6 @@
  
  ![EasyPlaynting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
 
-config file can be found with /config showfile improvedvanilla server
-
 
 ### added structures in version 1.17.1-1.5.0  
  - [Forgotten Well](https://github.com/tristankechlo/ImprovedVanilla/wiki/Structures#forgotten-well)
