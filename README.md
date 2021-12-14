@@ -13,10 +13,4 @@
  ![EasyPlaynting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
 
 
-### added structures in version 1.17.1-1.5.0  
- - [Forgotten Well](https://github.com/tristankechlo/ImprovedVanilla/wiki/Structures#forgotten-well)
- - [Jungle Temple](https://github.com/tristankechlo/ImprovedVanilla/wiki/Structures#jungle-temple)
- - [Underground Temple](https://github.com/tristankechlo/ImprovedVanilla/wiki/Structures#underground-temple)
-
-
 [Download the mod here](https://www.curseforge.com/minecraft/mc-mods/improved-vanilla)
