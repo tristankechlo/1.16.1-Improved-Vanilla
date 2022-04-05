@@ -1,5 +1,16 @@
 # Changelog
 
+### Version 1.18.2 - 1.6.0
+ - add 11 recipes for following items (using mostly forge and minecraft tags to be compatible with other mods)
+     - bell
+     - crying obsidian
+     - dead bushes
+     - leather/iron/gold and diamond horse armor
+     - glow ink sac
+     - glow lichen
+     - saddle
+     - string
+
 ### Version 1.18.1 - 1.5.1
  - port to 1.18.1
  - improve spawner drops

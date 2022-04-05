@@ -11,6 +11,3 @@
  - right clicking with seeds will fill the farmland in a small radius (gif below)
  
  ![EasyPlaynting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
-
-
-[Download the mod here](https://www.curseforge.com/minecraft/mc-mods/improved-vanilla)
