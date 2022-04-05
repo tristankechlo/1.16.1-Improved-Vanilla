@@ -5,7 +5,7 @@
      - bell
      - crying obsidian
      - dead bushes
-     - leather/iron/gold and diamond horse armor
+     - iron/gold and diamond horse armor
      - glow ink sac
      - glow lichen
      - saddle
