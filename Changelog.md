@@ -1,7 +1,7 @@
 # Changelog
 
 ### Version 1.18.2 - 1.6.0
- - add 11 recipes for following items (using mostly forge and minecraft tags to be compatible with other mods)
+ - add recipes for following items (using mostly forge and minecraft tags to be compatible with other mods)
      - bell
      - crying obsidian
      - dead bushes
