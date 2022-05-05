@@ -10,6 +10,7 @@
      - glow lichen
      - saddle
      - string
+     - gilded blackstone
 
 ### Version 1.18.1 - 1.5.1
  - port to 1.18.1
