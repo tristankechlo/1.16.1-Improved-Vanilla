@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[39,)"
+loaderVersion="[41,)"
 license="CC BY-NC-ND 4.0"
 showAsResourcePack=false
 
 [[mods]]
 modId="improvedvanilla"
-version="1.18.2 - 1.6.0"
+version="1.19 - 1.6.0"
 displayName="Improved Vanilla"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
 #logoFile="examplemod.png"
@@ -16,13 +16,13 @@ description='''Small changes to Minecraft Vanilla'''
 [[dependencies.improvedvanilla]]
     modId="forge"
     mandatory=true
-    versionRange="[39,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.improvedvanilla]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.1,1.19)"
+    versionRange="[1.19,1.20)"
     ordering="NONE"
     side="BOTH"
