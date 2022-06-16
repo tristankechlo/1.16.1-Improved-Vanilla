@@ -70,9 +70,9 @@ public class SpawnerHandler {
 			return;
 		}
 
-		final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE,
+		final int fortuneLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.BLOCK_FORTUNE,
 				player.getMainHandItem());
-		final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH,
+		final int silkTouchLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.SILK_TOUCH,
 				player.getMainHandItem());
 
 		if (silkTouchLevel >= 1) {
@@ -107,7 +107,7 @@ public class SpawnerHandler {
 			SpawnerBlockEntity tile = (SpawnerBlockEntity) world.getBlockEntity(pos);
 
 			final SpawnData nextSpawnData = new SpawnData(Util.make(new CompoundTag(), (ntb) -> {
-				ntb.putString("id", EntityType.AREA_EFFECT_CLOUD.getRegistryName().toString());
+				ntb.putString("id", ForgeRegistries.ENTITIES.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
 			}), Optional.empty());
 			tile.getSpawner().setNextSpawnData(world, pos, nextSpawnData);
 
@@ -170,7 +170,7 @@ public class SpawnerHandler {
 				entity = entity.substring(entity.indexOf("\"") + 1);
 				entity = entity.substring(0, entity.indexOf("\""));
 				int weight = entry.getShort("weight");
-				if (entity.equalsIgnoreCase(EntityType.AREA_EFFECT_CLOUD.getRegistryName().toString())) {
+				if (entity.equalsIgnoreCase(ForgeRegistries.ENTITIES.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
 					continue;
 				}
 				final ItemStack itemStack = new ItemStack(
@@ -185,7 +185,7 @@ public class SpawnerHandler {
 			String entity = data.getCompound("entity").toString();
 			entity = entity.substring(entity.indexOf("\"") + 1);
 			entity = entity.substring(0, entity.indexOf("\""));
-			if (!entity.equalsIgnoreCase(EntityType.AREA_EFFECT_CLOUD.getRegistryName().toString())) {
+			if (!entity.equalsIgnoreCase(ForgeRegistries.ENTITIES.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
 				final ItemStack itemStack = new ItemStack(
 						ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), 1);
 				return new SimpleContainer(itemStack);

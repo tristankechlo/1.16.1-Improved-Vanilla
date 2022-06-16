@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.19 - 1.6.0
+ - port to 1.19
+
 ### Version 1.18.2 - 1.6.0
  - add recipes for following items (using mostly forge and minecraft tags to be compatible with other mods)
      - bell

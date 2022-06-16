@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.StemBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class EasyPlantingHandler {
 
@@ -103,9 +102,7 @@ public class EasyPlantingHandler {
 			// if player has seeds -> plant the seeds
 			if (playerHasOneSeed(player, seedItem)) {
 
-				Block blockFromSeed = ForgeRegistries.BLOCKS
-						.getValue(((ItemNameBlockItem) seedItem).getBlock().getRegistryName()); // get the block to
-																								// place
+				Block blockFromSeed = ((ItemNameBlockItem) seedItem).getBlock(); // get the block to place
 				world.setBlockAndUpdate(pos.above(), blockFromSeed.defaultBlockState()); // set the block
 				removeOneSeedFromPlayer(player, seedItem); // shrink player inv
 				((ServerPlayer) player).awardStat(Stats.ITEM_USED.get(seedItem)); // increase vanilla item-use-counter
@@ -240,7 +237,7 @@ public class EasyPlantingHandler {
 		if (!(item instanceof ItemNameBlockItem)) {
 			return false;
 		}
-		Block block = ForgeRegistries.BLOCKS.getValue(((ItemNameBlockItem) item).getBlock().getRegistryName());
+		Block block = ((ItemNameBlockItem) item).getBlock();
 		return ((block instanceof CropBlock) || (block instanceof StemBlock));
 	}
 

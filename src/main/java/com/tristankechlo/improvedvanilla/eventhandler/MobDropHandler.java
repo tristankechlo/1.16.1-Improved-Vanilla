@@ -31,7 +31,8 @@ public class MobDropHandler {
 		final Entity source = event.getSource().getEntity();
 		final BlockPos pos = entity.blockPosition();
 		final EntityType<?> type = (EntityType<?>) entity.getType();
-		final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg"));
+		final String typeName = ForgeRegistries.ENTITIES.getKey(type).toString();
+		final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(typeName + "_spawn_egg"));
 
 		// killed by player and onlyWhenKilledByPlayer is true
 		if ((source instanceof ServerPlayer) && onlyWhenKilledByPlayer) {
