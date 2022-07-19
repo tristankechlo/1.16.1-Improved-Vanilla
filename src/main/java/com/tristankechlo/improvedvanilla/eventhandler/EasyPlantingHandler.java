@@ -36,13 +36,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public class EasyPlantingHandler {
 
 	// for easier access, all vanilla crops
-	private final List<Item> vanillaSeeds = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT,
-			Items.POTATO);
+	private final List<Item> vanillaSeeds = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
 
 	@SubscribeEvent
 	public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
-		final Level world = event.getWorld();
-		final Player player = event.getPlayer();
+		final Level world = event.getLevel();
+		final Player player = event.getEntity();
 		final BlockPos pos = event.getPos();
 		if (player == null || world == null) {
 			return;
@@ -95,8 +94,7 @@ public class EasyPlantingHandler {
 		for (BlockPos pos : targetBlocks) {
 			// if config is set to circle and block is not inside the circle, skip this
 			// block
-			if (ImprovedVanillaConfig.SERVER.easyPlantingCircle.get()
-					&& !isWithInCircleDistance(startPos, pos, radius)) {
+			if (ImprovedVanillaConfig.SERVER.easyPlantingCircle.get() && !isWithInCircleDistance(startPos, pos, radius)) {
 				continue;
 			}
 			// if player has seeds -> plant the seeds

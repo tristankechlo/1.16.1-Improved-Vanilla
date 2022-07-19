@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -34,7 +34,7 @@ public class SpawnerHandler {
 
 	@SubscribeEvent
 	public void onSpawnerPlaced(final BlockEvent.EntityPlaceEvent event) {
-		final Level world = (Level) event.getWorld();
+		final Level world = (Level) event.getLevel();
 		final BlockPos pos = event.getPos();
 		if (world.isClientSide) {
 			return;
@@ -53,7 +53,7 @@ public class SpawnerHandler {
 	public void onBlockBreackEvent(final BlockEvent.BreakEvent event) {
 		final Player player = event.getPlayer();
 		final Block targetBlock = event.getState().getBlock();
-		final Level world = (Level) event.getWorld();
+		final Level world = (Level) event.getLevel();
 		final BlockPos pos = event.getPos();
 
 		if (world.isClientSide) {
@@ -70,10 +70,8 @@ public class SpawnerHandler {
 			return;
 		}
 
-		final int fortuneLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.BLOCK_FORTUNE,
-				player.getMainHandItem());
-		final int silkTouchLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.SILK_TOUCH,
-				player.getMainHandItem());
+		final int fortuneLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
+		final int silkTouchLevel = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
 
 		if (silkTouchLevel >= 1) {
 			event.setExpToDrop(0);
@@ -107,7 +105,7 @@ public class SpawnerHandler {
 			SpawnerBlockEntity tile = (SpawnerBlockEntity) world.getBlockEntity(pos);
 
 			final SpawnData nextSpawnData = new SpawnData(Util.make(new CompoundTag(), (ntb) -> {
-				ntb.putString("id", ForgeRegistries.ENTITIES.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
+				ntb.putString("id", ForgeRegistries.ENTITY_TYPES.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
 			}), Optional.empty());
 			tile.getSpawner().setNextSpawnData(world, pos, nextSpawnData);
 
@@ -135,8 +133,7 @@ public class SpawnerHandler {
 					continue;
 				}
 				if (Math.random() < ((double) eggDropChance / 100)) {
-					final ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(),
-							inv.getItem(i));
+					final ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(), inv.getItem(i));
 					world.addFreshEntity(entityItem);
 				}
 			}
@@ -170,11 +167,10 @@ public class SpawnerHandler {
 				entity = entity.substring(entity.indexOf("\"") + 1);
 				entity = entity.substring(0, entity.indexOf("\""));
 				int weight = entry.getShort("weight");
-				if (entity.equalsIgnoreCase(ForgeRegistries.ENTITIES.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
+				if (entity.equalsIgnoreCase(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
 					continue;
 				}
-				final ItemStack itemStack = new ItemStack(
-						ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), weight);
+				final ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), weight);
 				inv.setItem(i, itemStack);
 			}
 			return inv;
@@ -185,9 +181,8 @@ public class SpawnerHandler {
 			String entity = data.getCompound("entity").toString();
 			entity = entity.substring(entity.indexOf("\"") + 1);
 			entity = entity.substring(0, entity.indexOf("\""));
-			if (!entity.equalsIgnoreCase(ForgeRegistries.ENTITIES.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
-				final ItemStack itemStack = new ItemStack(
-						ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), 1);
+			if (!entity.equalsIgnoreCase(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
+				final ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entity + "_spawn_egg")), 1);
 				return new SimpleContainer(itemStack);
 			}
 		}

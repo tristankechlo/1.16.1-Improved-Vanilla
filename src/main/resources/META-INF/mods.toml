@@ -5,7 +5,7 @@ showAsResourcePack=false
 
 [[mods]]
 modId="improvedvanilla"
-version="1.19 - 1.6.0"
+version="1.19 - 1.6.1"
 displayName="Improved Vanilla"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
 #logoFile="examplemod.png"
@@ -16,7 +16,7 @@ description='''Small changes to Minecraft Vanilla'''
 [[dependencies.improvedvanilla]]
     modId="forge"
     mandatory=true
-    versionRange="[41,)"
+    versionRange="[41.0.95,)"
     ordering="NONE"
     side="BOTH"
 	

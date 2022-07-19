@@ -26,8 +26,8 @@ public class CropRightClickHandler {
 
 	@SubscribeEvent
 	public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
-		final Level world = event.getWorld();
-		final Player player = event.getPlayer();
+		final Level world = event.getLevel();
+		final Player player = event.getEntity();
 		final BlockPos pos = event.getPos();
 		if (player == null || world == null) {
 			return;

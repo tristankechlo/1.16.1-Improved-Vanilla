@@ -20,7 +20,7 @@ public class MobDropHandler {
 
 	@SubscribeEvent
 	public void onMobDeath(final LivingDropsEvent event) {
-		final LivingEntity entity = event.getEntityLiving();
+		final LivingEntity entity = event.getEntity();
 		final Level world = entity.level;
 		if (world.isClientSide) {
 			return;
@@ -31,7 +31,7 @@ public class MobDropHandler {
 		final Entity source = event.getSource().getEntity();
 		final BlockPos pos = entity.blockPosition();
 		final EntityType<?> type = (EntityType<?>) entity.getType();
-		final String typeName = ForgeRegistries.ENTITIES.getKey(type).toString();
+		final String typeName = ForgeRegistries.ENTITY_TYPES.getKey(type).toString();
 		final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(typeName + "_spawn_egg"));
 
 		// killed by player and onlyWhenKilledByPlayer is true
@@ -60,8 +60,7 @@ public class MobDropHandler {
 				if (dropchance >= 1 && dropchance <= 100) {
 					if (Math.random() < ((double) dropchance / 100)) {
 						final ItemStack stack = new ItemStack(item, 1);
-						ItemEntity itemEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(),
-								stack);
+						ItemEntity itemEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack);
 						itemEntity.setDefaultPickUpDelay();
 						world.addFreshEntity(itemEntity);
 					}
@@ -70,8 +69,7 @@ public class MobDropHandler {
 		}
 	}
 
-	private static void handleKilledByPlayer(LivingDropsEvent event, Level world, BlockPos pos, Item item,
-			int dropchance) {
+	private static void handleKilledByPlayer(LivingDropsEvent event, Level world, BlockPos pos, Item item, int dropchance) {
 		final int lootingLevel = event.getLootingLevel();
 		final boolean lootingAffective = ImprovedVanillaConfig.SERVER.lootingAffective.get();
 
