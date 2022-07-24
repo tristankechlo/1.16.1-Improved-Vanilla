@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "improvedvanilla",
+	"version": "${version}",
+	"name": "ImprovedVanilla",
+	"description": "Small changes to Minecraft Vanilla",
+	"authors": [
+		"Buecher_wurm"
+	],
+	"contact": {
+		"sources": "https://github.com/tristankechlo/ImprovedVanilla",
+		"issues": "https://github.com/tristankechlo/ImprovedVanilla/issues"
+	},
+	"license": "CC BY-NC-ND 4.0",
+	"icon": "assets/improvedvanilla/logo.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.tristankechlo.improvedvanilla.ImprovedVanilla"
+		]
+	},
+	"mixins": [
+		"improvedvanilla.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14",
+		"fabric": "*",
+		"minecraft": "1.19.x",
+		"java": ">=17"
+	}
+}
