@@ -3,8 +3,8 @@ subprojects {
     apply plugin: 'java'
     
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-    java.withSourcesJar()
-    java.withJavadocJar()
+    //java.withSourcesJar()
+    //java.withJavadocJar()
         
     jar {
         from(rootProject.file("LICENSE")) {
@@ -26,11 +26,11 @@ subprojects {
         }
     }
 
-    sourcesJar {
+    /*sourcesJar {
         from(rootProject.file("LICENSE")) {
             rename { "${it}_${mod_name}" }
         }
-    }
+    }*/
 
     repositories {
 
