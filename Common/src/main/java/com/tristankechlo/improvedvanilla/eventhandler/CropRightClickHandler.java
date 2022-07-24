@@ -17,7 +17,7 @@ import java.util.List;
 
 public final class CropRightClickHandler {
 
-    public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+    public static InteractionResult harvestOnRightClick(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player == null || level == null) {
             return InteractionResult.PASS;
         }

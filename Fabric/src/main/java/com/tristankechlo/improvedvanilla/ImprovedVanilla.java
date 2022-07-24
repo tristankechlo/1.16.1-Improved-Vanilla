@@ -12,9 +12,9 @@ public class ImprovedVanilla implements ModInitializer {
     @Override
     public void onInitialize() {
         // right click crops to harvest
-        UseBlockCallback.EVENT.register(CropRightClickHandler::onPlayerRightClickBlock);
+        UseBlockCallback.EVENT.register(CropRightClickHandler::harvestOnRightClick);
         // easy planting
-        UseBlockCallback.EVENT.register(EasyPlantingHandler::onPlayerRightClickBlock);
+        UseBlockCallback.EVENT.register(EasyPlantingHandler::placeCropsInCircle);
         // drop spawn egg on entity death
         // TODO
         // modify spawner on placement

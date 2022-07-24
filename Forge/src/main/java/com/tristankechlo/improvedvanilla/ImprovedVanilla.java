@@ -24,7 +24,7 @@ public class ImprovedVanilla {
 
     // right click crops to harvest
     private void cropRightClicking(final PlayerInteractEvent.RightClickBlock event) {
-        InteractionResult result = CropRightClickHandler.onPlayerRightClickBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+        InteractionResult result = CropRightClickHandler.harvestOnRightClick(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
         if (result == InteractionResult.SUCCESS) {
             event.getEntity().swing(event.getHand(), true);
             event.setCanceled(true);
@@ -33,7 +33,7 @@ public class ImprovedVanilla {
 
     // easy planting
     private void easyPlanting(final PlayerInteractEvent.RightClickBlock event) {
-        InteractionResult result = EasyPlantingHandler.onPlayerRightClickBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+        InteractionResult result = EasyPlantingHandler.placeCropsInCircle(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
         if (result == InteractionResult.SUCCESS) {
             event.getEntity().swing(event.getHand(), true);
             event.setCanceled(true);

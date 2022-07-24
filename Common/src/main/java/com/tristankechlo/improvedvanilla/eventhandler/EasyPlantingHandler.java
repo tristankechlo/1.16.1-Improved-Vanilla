@@ -30,7 +30,7 @@ public final class EasyPlantingHandler {
     // for easier access, all vanilla crops
     private static final List<Item> VANILLA_SEEDS = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
 
-    public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+    public static InteractionResult placeCropsInCircle(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player == null || level == null) {
             return InteractionResult.PASS;
         }
