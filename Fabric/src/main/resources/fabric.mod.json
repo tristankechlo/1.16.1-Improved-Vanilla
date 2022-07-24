@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "improvedvanilla",
-	"version": "${version}",
+	"version": "1.19 - 1.6.1",
 	"name": "ImprovedVanilla",
 	"description": "Small changes to Minecraft Vanilla",
 	"authors": [
