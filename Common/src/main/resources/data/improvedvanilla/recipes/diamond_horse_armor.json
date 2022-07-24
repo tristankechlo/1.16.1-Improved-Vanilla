@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"  D",
+		"DSD",
+		"DDD"
+	],
+	"key": {
+		"D": {
+			"tag": "forge:gems/diamond"
+		},
+		"S": {
+			"item": "minecraft:saddle"
+		}
+	},
+	"result": {
+		"item": "minecraft:diamond_horse_armor"
+	}
+}

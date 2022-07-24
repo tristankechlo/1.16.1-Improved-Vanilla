@@ -1,0 +1,32 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"improvedvanilla:dead_bush"
+		]
+	},
+	"criteria": {
+		"has_sapling": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"tag": "minecraft:saplings"
+					}
+				]
+			}
+		},
+		"has_the_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "improvedvanilla:dead_bush"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_sapling",
+			"has_the_recipe"
+		]
+	]
+}
