@@ -1,6 +1,5 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
-import com.tristankechlo.improvedvanilla.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
