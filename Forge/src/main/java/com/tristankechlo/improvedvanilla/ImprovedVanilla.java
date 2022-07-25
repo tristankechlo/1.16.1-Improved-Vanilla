@@ -3,6 +3,7 @@ package com.tristankechlo.improvedvanilla;
 import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
 import com.tristankechlo.improvedvanilla.eventhandler.CropRightClickHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
+import com.tristankechlo.improvedvanilla.eventhandler.MobDropHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.SpawnerHandler;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
@@ -46,7 +47,7 @@ public class ImprovedVanilla {
 
     // drop spawn egg on entity death
     private void mobDropHandler(final LivingDropsEvent event) {
-        // TODO
+        MobDropHandler.onLivingDrops(event.getEntity().getLevel(), event.getEntity(), event.getSource(), event.getLootingLevel());
     }
 
     // modify spawner on placement
@@ -59,8 +60,7 @@ public class ImprovedVanilla {
 
     // drop spawner and spawn-eggs on block break
     private void onSpawnerBroken(final BlockEvent.BreakEvent event) {
-        boolean result = SpawnerHandler.onSpawnerBreak((Level) event.getLevel(), event.getPlayer(), event.getPos(), event.getState(),
-                event.getExpToDrop(), event::setExpToDrop);
+        boolean result = SpawnerHandler.onSpawnerBreak((Level) event.getLevel(), event.getPlayer(), event.getPos(), event.getState(), event.getExpToDrop(), event::setExpToDrop);
         if (!result) {
             event.setCanceled(true);
         }

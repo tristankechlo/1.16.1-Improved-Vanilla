@@ -4,6 +4,7 @@
 	"package": "com.tristankechlo.improvedvanilla.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"LivingEntityMixin"
 	],
 	"client": [
 	],

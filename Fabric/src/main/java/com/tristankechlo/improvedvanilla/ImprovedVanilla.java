@@ -16,8 +16,6 @@ public class ImprovedVanilla implements ModInitializer {
         UseBlockCallback.EVENT.register(CropRightClickHandler::harvestOnRightClick);
         // easy planting
         UseBlockCallback.EVENT.register(EasyPlantingHandler::placeCropsInCircle);
-        // drop spawn egg on entity death
-        // TODO
         // modify spawner on placement
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> SpawnerHandler.onSpawnerPlaced(world, hitResult.getBlockPos()));
         // drop spawner and spawn-eggs on block break
