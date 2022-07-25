@@ -26,3 +26,7 @@
 ![GlowLichen](https://i.ibb.co/BVhrdS4/gold-lichen.png)
 ![Saddle](https://i.ibb.co/gV3VwQd/saddle.png)
 ![String](https://i.ibb.co/ynyqQJT/wool.gif)
+
+
+### Project setup
+This project is developed using the [MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template) from jaredlll08
