@@ -9,19 +9,24 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class ImprovedVanilla implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // right click crops to harvest
+        // register event listeners
         UseBlockCallback.EVENT.register(CropRightClickHandler::harvestOnRightClick);
-        // easy planting
         UseBlockCallback.EVENT.register(EasyPlantingHandler::placeCropsInCircle);
-        // modify spawner on placement
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> SpawnerHandler.onSpawnerPlaced(world, hitResult.getBlockPos()));
-        // drop spawner and spawn-eggs on block break
-        PlayerBlockBreakEvents.BEFORE.register((player, world, pos, state, blockEntity) -> SpawnerHandler.onSpawnerBreak(player, world, pos, state, 0, (xp) -> {}));
+        UseBlockCallback.EVENT.register(this::onSpawnerPlaced);
+        PlayerBlockBreakEvents.BEFORE.register(this::onSpawnerBroken);
 
         //register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -30,6 +35,16 @@ public class ImprovedVanilla implements ModInitializer {
 
         // setup configs
         ConfigManager.loadAndVerifyConfig();
+    }
+
+    // modify spawner on placement
+    private InteractionResult onSpawnerPlaced(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+        return SpawnerHandler.onSpawnerPlaced(level, hitResult.getBlockPos());
+    }
+
+    // drop spawner and spawn-eggs on block break
+    private boolean onSpawnerBroken(Level world, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        return SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {});
     }
 
 }
