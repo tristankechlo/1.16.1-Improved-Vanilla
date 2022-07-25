@@ -14,7 +14,7 @@ public final class ConfigManager {
 
     private static final File CONFIG_DIR = Services.PLATFORM.getConfigDirectory().toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-    private static final String FILE_NAME = Constants.MOD_ID + ".json";
+    public static final String FILE_NAME = Constants.MOD_ID + ".json";
 
     public static void loadAndVerifyConfig() {
         ConfigManager.createConfigFolder();
@@ -58,6 +58,30 @@ public final class ConfigManager {
         } else {
             Constants.LOGGER.error("Error loading config '{}', config hasn't been loaded.", FILE_NAME);
         }
+    }
+
+    public static void resetConfig() {
+        ImprovedVanillaConfig.setToDefault();
+        File configFile = new File(CONFIG_DIR, FILE_NAME);
+        ConfigManager.writeConfigToFile(configFile);
+        Constants.LOGGER.info("Config '{}' was set to default.", FILE_NAME);
+    }
+
+    public static void reloadConfig() {
+        File configFile = new File(CONFIG_DIR, FILE_NAME);
+        if (configFile.exists()) {
+            ConfigManager.loadConfigFromFile(configFile);
+            ConfigManager.writeConfigToFile(configFile);
+            Constants.LOGGER.info("Saved the checked/corrected config: " + FILE_NAME);
+        } else {
+            ConfigManager.writeConfigToFile(configFile);
+            Constants.LOGGER.warn("No config '{}' was found, created a new one.", FILE_NAME);
+        }
+    }
+
+    public static String getConfigPath() {
+        File configFile = new File(CONFIG_DIR, FILE_NAME);
+        return configFile.getAbsolutePath();
     }
 
     private static void createConfigFolder() {

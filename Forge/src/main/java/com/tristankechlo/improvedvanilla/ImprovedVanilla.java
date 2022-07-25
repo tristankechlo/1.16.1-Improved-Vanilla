@@ -1,5 +1,6 @@
 package com.tristankechlo.improvedvanilla;
 
+import com.tristankechlo.improvedvanilla.commands.ImprovedVanillaCommand;
 import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
 import com.tristankechlo.improvedvanilla.eventhandler.CropRightClickHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
@@ -8,6 +9,7 @@ import com.tristankechlo.improvedvanilla.eventhandler.SpawnerHandler;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -17,14 +19,23 @@ import net.minecraftforge.fml.common.Mod;
 public class ImprovedVanilla {
 
     public ImprovedVanilla() {
+        // register event listeners
         MinecraftForge.EVENT_BUS.addListener(this::cropRightClicking);
         MinecraftForge.EVENT_BUS.addListener(this::easyPlanting);
         MinecraftForge.EVENT_BUS.addListener(this::mobDropHandler);
         MinecraftForge.EVENT_BUS.addListener(this::onSpawnerPlaced);
         MinecraftForge.EVENT_BUS.addListener(this::onSpawnerBroken);
 
+        // register commands
+        MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
+
         // setup configs
         ConfigManager.loadAndVerifyConfig();
+    }
+
+    // register commands
+    private void registerCommands(final RegisterCommandsEvent event) {
+        ImprovedVanillaCommand.register(event.getDispatcher());
     }
 
     // right click crops to harvest

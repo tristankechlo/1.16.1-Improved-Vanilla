@@ -1,10 +1,12 @@
 package com.tristankechlo.improvedvanilla;
 
+import com.tristankechlo.improvedvanilla.commands.ImprovedVanillaCommand;
 import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
 import com.tristankechlo.improvedvanilla.eventhandler.CropRightClickHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.SpawnerHandler;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 
@@ -20,6 +22,11 @@ public class ImprovedVanilla implements ModInitializer {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> SpawnerHandler.onSpawnerPlaced(world, hitResult.getBlockPos()));
         // drop spawner and spawn-eggs on block break
         PlayerBlockBreakEvents.BEFORE.register((player, world, pos, state, blockEntity) -> SpawnerHandler.onSpawnerBreak(player, world, pos, state, 0, (xp) -> {}));
+
+        //register commands
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            ImprovedVanillaCommand.register(dispatcher);
+        });
 
         // setup configs
         ConfigManager.loadAndVerifyConfig();
