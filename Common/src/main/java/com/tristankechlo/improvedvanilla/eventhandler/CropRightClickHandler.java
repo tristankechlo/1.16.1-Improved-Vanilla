@@ -43,9 +43,6 @@ public final class CropRightClickHandler {
         } else {
             return InteractionResult.PASS;
         }
-        //if () {
-        //    return InteractionResult.SUCCESS;
-        //}
         spawnDropsAndResetBlock(level, target, age);
         return InteractionResult.PASS;
     }

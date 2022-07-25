@@ -12,7 +12,6 @@ public class ImprovedVanilla implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        //FabricImprovedVanillaConfig.setup();
         // right click crops to harvest
         UseBlockCallback.EVENT.register(CropRightClickHandler::harvestOnRightClick);
         // easy planting
