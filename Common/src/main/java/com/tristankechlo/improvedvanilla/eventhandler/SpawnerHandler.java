@@ -1,5 +1,6 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -43,7 +44,7 @@ public final class SpawnerHandler {
             tileEntity.setChanged();
             level.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), 3);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
     //false to cancel, true to continue
@@ -68,7 +69,7 @@ public final class SpawnerHandler {
 
         if (silkTouchLevel >= 1) {
             setExpToDrop.accept(0);
-            final int spawnerDropChance = 100 /*TODO ImprovedVanillaConfig.SERVER.spawnerDropChance.get()*/;
+            final int spawnerDropChance = ImprovedVanillaConfig.spawnerDropChance.get();
             if (spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                 if (Math.random() < ((double) spawnerDropChance / 100)) {
                     final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
@@ -80,7 +81,7 @@ public final class SpawnerHandler {
                 exp += (exp + 1) * level.getRandom().nextInt(4) * level.getRandom().nextInt(4);
                 setExpToDrop.accept(exp);
             }
-            int eggDropChance = 100 /*TODO ImprovedVanillaConfig.SERVER.spawnEggDropChanceOnSpawnerDestroyed.get()*/;
+            int eggDropChance = ImprovedVanillaConfig.spawnEggDropChanceOnSpawnerDestroyed.get();
             dropMonsterEggs(level, pos, eggDropChance);
             // if other mods prevent the block break, at least the spawner is disabled
             resetSpawner(level, pos);

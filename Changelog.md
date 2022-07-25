@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.19 - 1.6.2
+ - move config to json format
+
 ### Version 1.19 - 1.6.1
  - fix `Mod Loading has failed` error
 

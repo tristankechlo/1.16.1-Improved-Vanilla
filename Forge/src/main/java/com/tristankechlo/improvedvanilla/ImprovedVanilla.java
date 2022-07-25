@@ -1,5 +1,6 @@
 package com.tristankechlo.improvedvanilla;
 
+import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
 import com.tristankechlo.improvedvanilla.eventhandler.CropRightClickHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.SpawnerHandler;
@@ -20,6 +21,9 @@ public class ImprovedVanilla {
         MinecraftForge.EVENT_BUS.addListener(this::mobDropHandler);
         MinecraftForge.EVENT_BUS.addListener(this::onSpawnerPlaced);
         MinecraftForge.EVENT_BUS.addListener(this::onSpawnerBroken);
+
+        // setup configs
+        ConfigManager.loadAndVerifyConfig();
     }
 
     // right click crops to harvest

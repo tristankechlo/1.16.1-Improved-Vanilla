@@ -1,5 +1,7 @@
 package com.tristankechlo.improvedvanilla.platform;
 
+import java.nio.file.Path;
+
 public interface IPlatformHelper {
 
     /**
@@ -23,4 +25,12 @@ public interface IPlatformHelper {
      * @return True if in a development environment, false otherwise.
      */
     boolean isDevelopmentEnvironment();
+
+    /**
+     * Gets the path to the directory where the configs will be placed.
+     *
+     * @return The path to the directory where the configs will be placed.
+     */
+    Path getConfigDirectory();
+
 }

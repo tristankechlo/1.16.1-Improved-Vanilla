@@ -2,6 +2,7 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,14 +38,14 @@ public final class EasyPlantingHandler {
         if (player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        //TODO if (ImprovedVanillaConfig.SERVER.enableEasyPlanting.get() == false) {
-        //    return;
-        //}
+        if (ImprovedVanillaConfig.enableEasyPlanting.get() == false) {
+            return InteractionResult.PASS;
+        }
 
         final BlockPos pos = hitResult.getBlockPos();
         final Block targetBlock = level.getBlockState(pos).getBlock();
         final Item item = player.getMainHandItem().getItem();
-        final int radius = 4/*TODO ImprovedVanillaConfig.SERVER.easyPlantingRadius.get()*/;
+        final int radius = ImprovedVanillaConfig.easyPlantingRadius.get();
 
         if (radius <= 0 || !(item instanceof ItemNameBlockItem)) {
             return InteractionResult.PASS;
@@ -75,7 +76,7 @@ public final class EasyPlantingHandler {
 
         List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
         final Item seedItem = player.getMainHandItem().getItem();
-        final boolean makeCircle = true /*TODO ImprovedVanillaConfig.SERVER.easyPlantingCircle.get()*/;
+        final boolean makeCircle = ImprovedVanillaConfig.easyPlantingCircle.get();
         boolean playPlantingSound = false;
 
         for (BlockPos pos : targetBlocks) {

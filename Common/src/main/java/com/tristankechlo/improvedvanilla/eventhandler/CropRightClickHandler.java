@@ -1,5 +1,6 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -24,9 +25,9 @@ public final class CropRightClickHandler {
         if (level.isClientSide || player.isShiftKeyDown() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        //TODO if (ImprovedVanillaConfig.SERVER.enableRightClickCrops.get() == false) {
-        //    return;
-        //}
+        if (ImprovedVanillaConfig.enableRightClickCrops.get() == false) {
+            return InteractionResult.PASS;
+        }
         if (!player.getMainHandItem().isEmpty()) {
             return InteractionResult.PASS;
         }
@@ -42,9 +43,10 @@ public final class CropRightClickHandler {
         } else {
             return InteractionResult.PASS;
         }
-        if (spawnDropsAndResetBlock(level, target, age)) {
-            return InteractionResult.SUCCESS;
-        }
+        //if () {
+        //    return InteractionResult.SUCCESS;
+        //}
+        spawnDropsAndResetBlock(level, target, age);
         return InteractionResult.PASS;
     }
 
