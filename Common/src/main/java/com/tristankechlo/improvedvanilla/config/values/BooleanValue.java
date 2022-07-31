@@ -3,7 +3,6 @@ package com.tristankechlo.improvedvanilla.config.values;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tristankechlo.improvedvanilla.Constants;
-import com.tristankechlo.improvedvanilla.config.values.IConfigValue;
 
 public final class BooleanValue implements IConfigValue<Boolean> {
 
