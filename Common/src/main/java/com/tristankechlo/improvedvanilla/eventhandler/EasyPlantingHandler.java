@@ -52,12 +52,12 @@ public final class EasyPlantingHandler {
         }
 
         if ((VANILLA_SEEDS.contains(item) || isSeedItemForCrop(item)) && (targetBlock instanceof FarmBlock)) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 setCropsInRadius(radius, pos, Blocks.FARMLAND, (ServerLevel) level, (ServerPlayer) player);
             }
             return InteractionResult.SUCCESS;
         } else if ((item == Items.NETHER_WART) && (targetBlock instanceof SoulSandBlock)) {
-            if (level.isClientSide) {
+            if (!level.isClientSide()) {
                 setCropsInRadius(radius, pos, Blocks.SOUL_SAND, (ServerLevel) level, (ServerPlayer) player);
             }
             return InteractionResult.SUCCESS;
