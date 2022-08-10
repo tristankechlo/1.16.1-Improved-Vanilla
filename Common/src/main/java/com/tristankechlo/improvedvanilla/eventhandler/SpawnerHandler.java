@@ -33,7 +33,7 @@ import java.util.function.Consumer;
 public final class SpawnerHandler {
 
     public static InteractionResult onSpawnerPlaced(Level level, BlockPos pos) {
-        if (level.isClientSide()) {
+        if (level == null || level.isClientSide()) {
             return InteractionResult.PASS;
         }
         final Block targetBlock = level.getBlockState(pos).getBlock();
