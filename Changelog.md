@@ -1,6 +1,6 @@
 # Changelog
 
-### Version 1.19.1 - 1.6.2
+### Version 1.19.2 - 1.6.2
  - move config to json format
  - add command `/improvedvanilla`
    - `/improvedvanilla config show` - provides a clickable link, to find the config file easily (works only in singleplayer)

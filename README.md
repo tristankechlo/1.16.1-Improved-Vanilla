@@ -12,7 +12,7 @@
  - added recipes for items that are not craftable by default
  
 #### Easy Planting
- ![EasyPlaynting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
+ ![EasyPlanting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
 
 #### New Recipes
 ![BellRecipe](https://i.ibb.co/fHPTNLN/bell.png) 
