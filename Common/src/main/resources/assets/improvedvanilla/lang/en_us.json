@@ -1,5 +1,0 @@
-{
-	"commands.improvedvanilla.config.show": "Config-file can be found here: %s",
-	"commands.improvedvanilla.config.reload": "Config was successfully reloaded.",
-	"commands.improvedvanilla.config.reset": "Config was successfully set to default."
-}

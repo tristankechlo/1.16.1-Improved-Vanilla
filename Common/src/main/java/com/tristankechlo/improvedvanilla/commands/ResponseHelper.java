@@ -12,17 +12,17 @@ public final class ResponseHelper {
 
     public static void sendMessageConfigShow(CommandSourceStack source) {
         MutableComponent clickableFile = clickableConfig();
-        MutableComponent message = Component.translatable("commands.improvedvanilla.config.show", clickableFile);
+        MutableComponent message = Component.literal("Config-file can be found here: ").append(clickableFile);
         sendMessage(source, message.withStyle(ChatFormatting.WHITE), false);
     }
 
     public static void sendMessageConfigReload(CommandSourceStack source) {
-        MutableComponent message = Component.translatable("commands.improvedvanilla.config.reload");
+        MutableComponent message = Component.literal("Config was successfully reloaded.");
         sendMessage(source, message.withStyle(ChatFormatting.WHITE), true);
     }
 
     public static void sendMessageConfigReset(CommandSourceStack source) {
-        MutableComponent message = Component.translatable("commands.improvedvanilla.config.reset");
+        MutableComponent message = Component.literal("Config was successfully set to default.");
         sendMessage(source, message.withStyle(ChatFormatting.WHITE), true);
     }
 

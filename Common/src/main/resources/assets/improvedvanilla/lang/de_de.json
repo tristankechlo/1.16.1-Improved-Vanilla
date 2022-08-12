@@ -1,5 +1,0 @@
-{
-	"commands.improvedvanilla.config.show": "Konfigurationsdatei kann hier eingesehen werden: %s",
-	"commands.improvedvanilla.config.reload": "Konfigurationsdatei wurde erfolgreich neu geladen.",
-	"commands.improvedvanilla.config.reset": "Konfigurationsdatei wurde erfolgreich zur\u00FCckgesetzt."
-}

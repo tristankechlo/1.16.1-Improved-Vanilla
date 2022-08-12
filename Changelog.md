@@ -2,6 +2,7 @@
 
 ### Version 1.19.2 - 1.6.2
  - move config to json format
+   - this way the config on forge and fabric has the same format
  - add command `/improvedvanilla`
    - `/improvedvanilla config show` - provides a clickable link, to find the config file easily (works only in singleplayer)
    - `/improvedvanilla config reload` - reloads the config file from the file system
