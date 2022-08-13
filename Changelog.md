@@ -1,6 +1,7 @@
 # Changelog
 
 ### Version 1.19.2 - 1.6.2
+ - right-clicking grown crops with a hoe increases the amount of drops depending on the tier-level
  - move config to json format
    - this way the config on forge and fabric has the same format
  - add command `/improvedvanilla`

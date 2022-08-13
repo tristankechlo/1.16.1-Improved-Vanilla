@@ -7,22 +7,28 @@ import com.tristankechlo.improvedvanilla.config.values.IntegerValue;
 public final class ImprovedVanillaConfig {
 
     public static final BooleanValue enableRightClickCrops = new BooleanValue("enableRightClickCrops", true);
+    public static final BooleanValue enableLootMultiplierForHoes = new BooleanValue("enableLootMultiplierForHoes", true);
     public static final BooleanValue enableEasyPlanting = new BooleanValue("enableEasyPlanting", true);
     public static final IntegerValue easyPlantingRadius = new IntegerValue("easyPlantingRadius", 3, 1, 10);
     public static final BooleanValue easyPlantingCircle = new BooleanValue("easyPlantingCircle", true);
+
     public static final IntegerValue spawnerDropChance = new IntegerValue("spawnerDropChance", 100, 0, 100);
     public static final IntegerValue spawnEggDropChanceOnSpawnerDestroyed = new IntegerValue("spawnEggDropChanceOnSpawnerDestroyed", 100, 0, 100);
+
     public static final BooleanValue dropOnlyWhenKilledByPlayer = new BooleanValue("dropOnlyWhenKilledByPlayer", true);
     public static final BooleanValue lootingAffective = new BooleanValue("lootingAffective", true);
     public static final IntegerValue mobSpawnEggDropChance = new IntegerValue("mobSpawnEggDropChance", 2, 0, 100);
 
     public static void setToDefault() {
         enableRightClickCrops.setToDefault();
+        enableLootMultiplierForHoes.setToDefault();
         enableEasyPlanting.setToDefault();
         easyPlantingRadius.setToDefault();
         easyPlantingCircle.setToDefault();
+
         spawnerDropChance.setToDefault();
         spawnEggDropChanceOnSpawnerDestroyed.setToDefault();
+
         dropOnlyWhenKilledByPlayer.setToDefault();
         lootingAffective.setToDefault();
         mobSpawnEggDropChance.setToDefault();
@@ -31,6 +37,7 @@ public final class ImprovedVanillaConfig {
     public static JsonObject serialize(JsonObject json) {
         JsonObject farming = new JsonObject();
         enableRightClickCrops.serialize(farming);
+        enableLootMultiplierForHoes.serialize(farming);
         enableEasyPlanting.serialize(farming);
         easyPlantingRadius.serialize(farming);
         easyPlantingCircle.serialize(farming);
@@ -54,6 +61,7 @@ public final class ImprovedVanillaConfig {
         if (json.has("farming")) {
             JsonObject farming = json.get("farming").getAsJsonObject();
             enableRightClickCrops.deserialize(farming);
+            enableLootMultiplierForHoes.deserialize(farming);
             enableEasyPlanting.deserialize(farming);
             easyPlantingRadius.deserialize(farming);
             easyPlantingCircle.deserialize(farming);
