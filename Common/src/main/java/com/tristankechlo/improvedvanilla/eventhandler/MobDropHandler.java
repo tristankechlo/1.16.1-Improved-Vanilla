@@ -20,8 +20,8 @@ public final class MobDropHandler {
         if (level.isClientSide) {
             return;
         }
-        final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.dropOnlyWhenKilledByPlayer.get();
-        final int dropchance = ImprovedVanillaConfig.mobSpawnEggDropChance.get();
+        final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.MOB_DROP.dropOnlyWhenKilledByPlayer.get();
+        final int dropchance = ImprovedVanillaConfig.MOB_DROP.mobSpawnEggDropChance.get();
         final Entity source = damageSource.getEntity();
         final BlockPos pos = entityKilled.blockPosition();
         final EntityType<?> type = entityKilled.getType();
@@ -64,7 +64,7 @@ public final class MobDropHandler {
     }
 
     private static void handleKilledByPlayer(Level level, BlockPos pos, Item item, int dropchance, int lootingLevel) {
-        final boolean lootingAffective = ImprovedVanillaConfig.lootingAffective.get();
+        final boolean lootingAffective = ImprovedVanillaConfig.MOB_DROP.lootingAffective.get();
 
         int count = 0;
         if (lootingAffective && lootingLevel >= 1) {

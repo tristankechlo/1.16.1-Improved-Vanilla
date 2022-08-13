@@ -7,6 +7,7 @@ import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.SpawnerHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
@@ -30,7 +31,9 @@ public class ImprovedVanilla implements ModInitializer {
         });
 
         // setup configs
-        ConfigManager.loadAndVerifyConfig();
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
+            ConfigManager.loadAndVerifyConfig();
+        });
     }
 
     // drop spawner and spawn-eggs on block break

@@ -36,6 +36,10 @@ public final class SpawnerHandler {
         if (level == null || level.isClientSide()) {
             return InteractionResult.PASS;
         }
+        if (!ImprovedVanillaConfig.SPAWNER.clearSpawner.get()) {
+            return InteractionResult.PASS;
+        }
+
         final Block targetBlock = level.getBlockState(pos).getBlock();
         if (targetBlock == Blocks.SPAWNER) {
             level.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
@@ -69,7 +73,7 @@ public final class SpawnerHandler {
 
         if (silkTouchLevel >= 1) {
             setExpToDrop.accept(0);
-            final int spawnerDropChance = ImprovedVanillaConfig.spawnerDropChance.get();
+            final int spawnerDropChance = ImprovedVanillaConfig.SPAWNER.spawnerDropChance.get();
             if (spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                 if (Math.random() < ((double) spawnerDropChance / 100)) {
                     final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
@@ -81,7 +85,7 @@ public final class SpawnerHandler {
                 exp += (exp + 1) * level.getRandom().nextInt(4) * level.getRandom().nextInt(4);
                 setExpToDrop.accept(exp);
             }
-            int eggDropChance = ImprovedVanillaConfig.spawnEggDropChanceOnSpawnerDestroyed.get();
+            int eggDropChance = ImprovedVanillaConfig.SPAWNER.spawnEggDropChance.get();
             dropMonsterEggs(level, pos, eggDropChance);
             // if other mods prevent the block break, at least the spawner is disabled
             resetSpawner(level, pos);

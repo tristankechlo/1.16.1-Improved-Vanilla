@@ -13,6 +13,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(Constants.MOD_ID)
@@ -30,6 +31,11 @@ public class ImprovedVanilla {
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
         // setup configs
+        MinecraftForge.EVENT_BUS.addListener(this::commonSetup);
+    }
+
+    // setup configs
+    private void commonSetup(final ServerAboutToStartEvent event) {
         ConfigManager.loadAndVerifyConfig();
     }
 

@@ -28,7 +28,7 @@ public final class CropRightClickHandler {
         if (level.isClientSide || player.isShiftKeyDown() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        if (!ImprovedVanillaConfig.enableRightClickCrops.get()) {
+        if (!ImprovedVanillaConfig.FARMING.activated.get()) {
             return InteractionResult.PASS;
         }
 
@@ -39,7 +39,7 @@ public final class CropRightClickHandler {
             spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER);
             return InteractionResult.SUCCESS;
         } else if (heldItem instanceof HoeItem) {
-            if (!ImprovedVanillaConfig.enableLootMultiplierForHoes.get()) {
+            if (!ImprovedVanillaConfig.FARMING.allowHoeUsageAsLootModifier.get()) {
                 return InteractionResult.PASS;
             }
             float multiplier = getLootMultiplier((HoeItem) heldItem);
@@ -99,6 +99,12 @@ public final class CropRightClickHandler {
             int amount = lootMap.getOrDefault(item, 0);
             lootMap.put(item, amount + stack.getCount());
         });
+
+        // if the blacklist is enabled, remove items from the loot
+        if (ImprovedVanillaConfig.FARMING.blacklistEnabled.get()) {
+            Set<Item> itemsToRemove = ImprovedVanillaConfig.FARMING.blacklistedDrops.get();
+            lootMap.keySet().removeIf(itemsToRemove::contains);
+        }
 
         List<ItemStack> newLoot = new ArrayList<>();
         lootMap.forEach((item, amount) -> {

@@ -38,14 +38,14 @@ public final class EasyPlantingHandler {
         if (player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        if (ImprovedVanillaConfig.enableEasyPlanting.get() == false) {
+        if (!ImprovedVanillaConfig.EASY_PLANTING.activated.get()) {
             return InteractionResult.PASS;
         }
 
         final BlockPos pos = hitResult.getBlockPos();
         final Block targetBlock = level.getBlockState(pos).getBlock();
         final Item item = player.getMainHandItem().getItem();
-        final int radius = ImprovedVanillaConfig.easyPlantingRadius.get();
+        final int radius = ImprovedVanillaConfig.EASY_PLANTING.radius.get();
 
         if (radius <= 0 || !(item instanceof ItemNameBlockItem)) {
             return InteractionResult.PASS;
@@ -76,7 +76,7 @@ public final class EasyPlantingHandler {
 
         List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
         final Item seedItem = player.getMainHandItem().getItem();
-        final boolean makeCircle = ImprovedVanillaConfig.easyPlantingCircle.get();
+        final boolean makeCircle = ImprovedVanillaConfig.EASY_PLANTING.makeCircle.get();
         boolean playPlantingSound = false;
 
         for (BlockPos pos : targetBlocks) {

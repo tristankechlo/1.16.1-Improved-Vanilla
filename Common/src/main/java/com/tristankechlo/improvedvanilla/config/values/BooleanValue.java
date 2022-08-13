@@ -16,7 +16,6 @@ public final class BooleanValue implements IConfigValue<Boolean> {
         this.value = defaultValue;
     }
 
-
     @Override
     public String getIdentifier() {
         return identifier;
@@ -40,13 +39,14 @@ public final class BooleanValue implements IConfigValue<Boolean> {
     @Override
     public void deserialize(JsonObject jsonObject) {
         try {
-            JsonElement element = jsonObject.get(getIdentifier());
-            if (element != null) {
-                value = element.getAsBoolean();
+            if(jsonObject.has(getIdentifier()) && jsonObject.get(getIdentifier()).isJsonPrimitive()) {
+                value = jsonObject.get(getIdentifier()).getAsBoolean();
                 return;
+            } else {
+                Constants.LOGGER.warn("Config value '{}' was not found or is not a valid boolean, using default value '{}' instead", getIdentifier(), defaultValue);
             }
         } catch (Exception e) {
-            Constants.LOGGER.warn("Error while loading the config value " + getIdentifier() + ", using defaultvalue instead");
+            Constants.LOGGER.warn("Error while loading the config value '{}', using default value '{}' instead", getIdentifier(), defaultValue);
         }
         this.setToDefault();
     }
