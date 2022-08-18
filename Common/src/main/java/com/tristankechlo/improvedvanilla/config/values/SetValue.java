@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.tristankechlo.improvedvanilla.Constants;
+import net.minecraft.util.GsonHelper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,8 +54,8 @@ public class SetValue<T> implements IConfigValue<Set<T>> {
     @Override
     public void deserialize(JsonObject json) {
         try {
-            if (json.has(getIdentifier()) && json.get(getIdentifier()).isJsonArray()) {
-                JsonArray jsonArray = json.get(getIdentifier()).getAsJsonArray();
+            if (GsonHelper.isArrayNode(json, getIdentifier())) {
+                JsonArray jsonArray = GsonHelper.getAsJsonArray(json, getIdentifier());
                 this.value.clear();
                 for (int i = 0; i < jsonArray.size(); i++) {
                     String stringElement = jsonArray.get(i).getAsString();

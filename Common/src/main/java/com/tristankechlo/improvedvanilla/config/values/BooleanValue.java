@@ -3,6 +3,7 @@ package com.tristankechlo.improvedvanilla.config.values;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tristankechlo.improvedvanilla.Constants;
+import net.minecraft.util.GsonHelper;
 
 public final class BooleanValue implements IConfigValue<Boolean> {
 
@@ -39,8 +40,8 @@ public final class BooleanValue implements IConfigValue<Boolean> {
     @Override
     public void deserialize(JsonObject jsonObject) {
         try {
-            if(jsonObject.has(getIdentifier()) && jsonObject.get(getIdentifier()).isJsonPrimitive()) {
-                value = jsonObject.get(getIdentifier()).getAsBoolean();
+            if(GsonHelper.isBooleanValue(jsonObject, getIdentifier())) {
+                value = GsonHelper.getAsBoolean(jsonObject, getIdentifier(), defaultValue);
                 return;
             } else {
                 Constants.LOGGER.warn("Config value '{}' was not found or is not a valid boolean, using default value '{}' instead", getIdentifier(), defaultValue);
