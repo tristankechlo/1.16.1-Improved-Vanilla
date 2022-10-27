@@ -7,7 +7,7 @@
 - added a config option to filter out items that should not be dropped when the crop is harvested by right-clicking
   - disabled by default
   - applies to harvesting with empty hand and with a hoe
-  - example: can be used to remove wheat_seeds from the drops of wheat-crops
+  - example: can be used to remove `minecraft:wheat_seeds` from the drops of wheat-crops
 - added config option to disable spawner clearing when placed
  - move config to json format
    - this way the config on forge and fabric has the same format
