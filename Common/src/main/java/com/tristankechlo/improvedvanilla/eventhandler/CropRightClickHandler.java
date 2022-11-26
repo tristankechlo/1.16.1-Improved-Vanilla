@@ -36,15 +36,15 @@ public final class CropRightClickHandler {
         Item heldItem = player.getMainHandItem().getItem();
 
         if (player.getMainHandItem().isEmpty()) {
-            spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER);
-            return InteractionResult.SUCCESS;
+            boolean success = spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER);
+            return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
         } else if (heldItem instanceof HoeItem) {
             if (!ImprovedVanillaConfig.FARMING.allowHoeUsageAsLootModifier.get()) {
                 return InteractionResult.PASS;
             }
             float multiplier = getLootMultiplier((HoeItem) heldItem);
-            spawnDropsAndResetBlock(level, targetPos, multiplier);
-            return InteractionResult.SUCCESS;
+            boolean success = spawnDropsAndResetBlock(level, targetPos, multiplier);
+            return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
         return InteractionResult.PASS;
     }
@@ -66,12 +66,12 @@ public final class CropRightClickHandler {
         return BASE_MULTIPLIER + (tierLevel * 0.55F);
     }
 
-    private static void spawnDropsAndResetBlock(Level level, BlockPos pos, float multiplier) {
+    private static boolean spawnDropsAndResetBlock(Level level, BlockPos pos, float multiplier) {
         //get age property
         Block targetBlock = level.getBlockState(pos).getBlock();
         IntegerProperty ageProperty = getAgeProperty(targetBlock);
         if (ageProperty == null) {
-            return;
+            return false;
         }
 
         //check if crop is fully grown
@@ -79,7 +79,7 @@ public final class CropRightClickHandler {
         final int maximumAge = Collections.max(ageProperty.getPossibleValues());
         final int currentAge = blockState.getValue(ageProperty);
         if (currentAge < maximumAge) {
-            return;
+            return false;
         }
 
         //reset the crop age
@@ -90,6 +90,7 @@ public final class CropRightClickHandler {
         List<ItemStack> oldLoot = Block.getDrops(blockState, (ServerLevel) level, pos, null);
         List<ItemStack> newLoot = getLootModified(oldLoot, multiplier);
         newLoot.forEach(stack -> Block.popResource(level, pos, stack));
+        return true;
     }
 
     private static List<ItemStack> getLootModified(List<ItemStack> loot, float multiplier) {

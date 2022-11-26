@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 1.19.2 - 1.6.3
+ - fix error where there was no interaction when right clicking on a block
+   - affected for example that chests could not be opened with an empty hand 
+
 ### Version 1.19.2 - 1.6.2
  - right-clicking grown crops with a hoe increases the amount of drops depending on the tier of the hoe
    - can be disabled in the config
