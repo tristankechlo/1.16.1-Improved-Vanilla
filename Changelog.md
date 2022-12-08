@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.19.3 - 1.6.3
+ - port to 1.19.3
+
 ### Version 1.19.2 - 1.6.3
  - fix error where there was no interaction when right clicking on a block
    - affected for example that chests could not be opened with an empty hand 

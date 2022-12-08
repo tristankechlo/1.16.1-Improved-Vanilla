@@ -2,7 +2,7 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,8 +25,8 @@ public final class MobDropHandler {
         final Entity source = damageSource.getEntity();
         final BlockPos pos = entityKilled.blockPosition();
         final EntityType<?> type = entityKilled.getType();
-        final String typeName = Registry.ENTITY_TYPE.getKey(type).toString();
-        final Item item = Registry.ITEM.get(new ResourceLocation(typeName + "_spawn_egg"));
+        final String typeName = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
+        final Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(typeName + "_spawn_egg"));
 
         // killed by player and onlyWhenKilledByPlayer is true
         if ((source instanceof ServerPlayer) && onlyWhenKilledByPlayer) {

@@ -1,12 +1,14 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+import com.tristankechlo.improvedvanilla.platform.Services;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
@@ -44,7 +46,8 @@ public final class SpawnerHandler {
         if (targetBlock == Blocks.SPAWNER) {
             level.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
             BlockEntity tileEntity = level.getBlockEntity(pos);
-            ((SpawnerBlockEntity) tileEntity).getSpawner().setEntityId(EntityType.AREA_EFFECT_CLOUD);
+            RandomSource random = level.getRandom();
+            ((SpawnerBlockEntity) tileEntity).getSpawner().setEntityId(EntityType.AREA_EFFECT_CLOUD, level, random, pos);
             tileEntity.setChanged();
             level.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), 3);
         }
@@ -104,10 +107,9 @@ public final class SpawnerHandler {
             SpawnerBlockEntity tile = (SpawnerBlockEntity) world.getBlockEntity(pos);
 
             final SpawnData nextSpawnData = new SpawnData(Util.make(new CompoundTag(), (ntb) -> {
-                ntb.putString("id", Registry.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
+                ntb.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
             }), Optional.empty());
-            tile.getSpawner().setNextSpawnData(world, pos, nextSpawnData);
-
+            Services.PLATFORM.setNextSpawnData(tile.getSpawner(), world, pos, nextSpawnData);
             tile.setChanged();
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
         }
@@ -166,10 +168,10 @@ public final class SpawnerHandler {
                 entity = entity.substring(entity.indexOf("\"") + 1);
                 entity = entity.substring(0, entity.indexOf("\""));
                 int weight = entry.getShort("weight");
-                if (entity.equalsIgnoreCase(Registry.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
+                if (entity.equalsIgnoreCase(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
                     continue;
                 }
-                final ItemStack itemStack = new ItemStack(Registry.ITEM.get(new ResourceLocation(entity + "_spawn_egg")), weight);
+                final ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(entity + "_spawn_egg")), weight);
                 inv.setItem(i, itemStack);
             }
             return inv;
@@ -180,8 +182,8 @@ public final class SpawnerHandler {
             String entity = data.getCompound("entity").toString();
             entity = entity.substring(entity.indexOf("\"") + 1);
             entity = entity.substring(0, entity.indexOf("\""));
-            if (!entity.equalsIgnoreCase(Registry.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
-                final ItemStack itemStack = new ItemStack(Registry.ITEM.get(new ResourceLocation(entity + "_spawn_egg")), 1);
+            if (!entity.equalsIgnoreCase(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
+                final ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(entity + "_spawn_egg")), 1);
                 return new SimpleContainer(itemStack);
             }
         }

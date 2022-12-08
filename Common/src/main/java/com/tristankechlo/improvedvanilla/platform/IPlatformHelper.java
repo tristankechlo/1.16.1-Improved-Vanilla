@@ -1,5 +1,11 @@
 package com.tristankechlo.improvedvanilla.platform;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BaseSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.SpawnData;
+
+import javax.annotation.Nullable;
 import java.nio.file.Path;
 
 public interface IPlatformHelper {
@@ -32,5 +38,7 @@ public interface IPlatformHelper {
      * @return The path to the directory where the configs will be placed.
      */
     Path getConfigDirectory();
+
+    void setNextSpawnData(BaseSpawner spawner, @Nullable Level level, BlockPos pos, SpawnData spawnData);
 
 }

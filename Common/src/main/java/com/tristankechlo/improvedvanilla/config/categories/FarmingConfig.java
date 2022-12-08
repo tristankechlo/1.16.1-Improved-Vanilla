@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonObject;
 import com.tristankechlo.improvedvanilla.config.values.BooleanValue;
 import com.tristankechlo.improvedvanilla.config.values.SetValue;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -14,10 +14,10 @@ import java.util.function.Function;
 public final class FarmingConfig {
 
     private static final String IDENTIFIER = "right_click_to_harvest";
-    private static final Function<Item, String> ITEM_TO_STRING = (item) -> Registry.ITEM.getKey(item).toString();
+    private static final Function<Item, String> ITEM_TO_STRING = (item) -> BuiltInRegistries.ITEM.getKey(item).toString();
     private static final Function<String, Item> STRING_TO_ITEM = (string) -> {
         ResourceLocation resourceLocation = ResourceLocation.tryParse(string);
-        return Registry.ITEM.get(resourceLocation);
+        return BuiltInRegistries.ITEM.get(resourceLocation);
     };
 
     public final BooleanValue activated = new BooleanValue("activated", true);
