@@ -44,4 +44,15 @@ public final class ResponseHelper {
         return mutableComponent;
     }
 
+    public static MutableComponent clickableLink(String url, String displayText) {
+        MutableComponent mutableComponent = Component.literal(displayText);
+        mutableComponent.withStyle(ChatFormatting.GREEN, ChatFormatting.UNDERLINE);
+        mutableComponent.withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)));
+        return mutableComponent;
+    }
+
+    public static MutableComponent clickableLink(String url) {
+        return clickableLink(url, url);
+    }
+
 }

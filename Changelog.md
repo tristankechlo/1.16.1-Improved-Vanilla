@@ -1,7 +1,14 @@
 # Changelog
 
-### Version 1.19.3 - 1.6.3
+### Version 1.19.3 - 1.6.4
  - port to 1.19.3
+ - extended the `/improvedvanilla` command
+   - `/improvedvanilla github` shows the url to the github page
+   - `/improvedvanilla discord` shows the url to the discord server
+   - `/improvedvanilla wiki` shows the url to the wiki
+   - `/improvedvanilla issues` shows the url to the issues page
+   - `/improvedvanilla curseforge` shows the url to the curseforge page
+   - `/improvedvanilla modrinth` shows the url to the modrinth page
 
 ### Version 1.19.2 - 1.6.3
  - fix error where there was no interaction when right clicking on a block
