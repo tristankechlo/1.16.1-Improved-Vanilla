@@ -1,12 +1,12 @@
 modLoader="javafml"
-loaderVersion="[4,)"
+loaderVersion="[44,)"
 license="CC BY-NC-ND 4.0"
 issueTrackerURL="https://github.com/tristankechlo/ImprovedVanilla/issues"
 showAsResourcePack=false
 
 [[mods]] #mandatory
 modId="improvedvanilla" #mandatory
-version="1.19.3-1.6.4" #mandatory
+version="1.19.4-1.6.4" #mandatory
 displayName="Improved Vanilla" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla" #optional

@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 1.19.4 - 1.6.4
+ - port to 1.19.4
+
 ### Version 1.19.3 - 1.6.4
  - port to 1.19.3
  - extended the `/improvedvanilla` command
