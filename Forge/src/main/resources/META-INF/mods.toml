@@ -1,12 +1,12 @@
 modLoader="javafml"
-loaderVersion="[44,)"
+loaderVersion="[46,)"
 license="CC BY-NC-ND 4.0"
 issueTrackerURL="https://github.com/tristankechlo/ImprovedVanilla/issues"
 showAsResourcePack=false
 
 [[mods]] #mandatory
 modId="improvedvanilla" #mandatory
-version="1.19.4-1.6.4" #mandatory
+version="${version}" #mandatory
 displayName="Improved Vanilla" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla" #optional
@@ -19,13 +19,13 @@ displayTest="IGNORE_SERVER_VERSION" #optional
 [[dependencies.improvedvanilla]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[44,)" #mandatory
+    versionRange="[46,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.improvedvanilla]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.3,1.20)"
+    versionRange="[1.20,1.21)"
     ordering="NONE"
     side="BOTH"

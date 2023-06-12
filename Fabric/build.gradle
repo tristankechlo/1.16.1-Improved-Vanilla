@@ -1,22 +1,31 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
-//    id 'maven-publish'
+    id 'java'
     id 'idea'
+    id 'fabric-loom'
 }
 
-archivesBaseName = "${mod_id}-fabric-${minecraft_version}"
+base {
+    version = "${minecraft_version}-${mod_version}"
+    archivesBaseName = "${mod_id}-fabric"
+}
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(":Common")
 }
 
 loom {
-    mixin.defaultRefmapName = "improvedvanilla.refmap.json"
+    if (project(":Common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
+        accessWidenerPath.set(project(":Common").file("src/main/resources/${mod_id}.accesswidener"))
+    }
+
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+
     runs {
         client {
             client()
@@ -33,6 +42,12 @@ loom {
     }
 }
 
+tasks.withType(JavaCompile).configureEach {
+    source(project(":Common").sourceSets.main.allSource)
+}
+tasks.withType(Javadoc).configureEach {
+    source(project(":Common").sourceSets.main.allJava)
+}
 
 processResources {
     from project(":Common").sourceSets.main.resources
@@ -46,22 +61,3 @@ processResources {
 tasks.withType(JavaCompile) {
     source(project(":Common").sourceSets.main.allSource)
 }
-
-/*
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
-    }
-}
-*/

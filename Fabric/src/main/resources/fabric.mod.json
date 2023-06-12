@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "improvedvanilla",
-	"version": "1.19.4-1.6.4",
+	"version": "${version}",
 	"name": "ImprovedVanilla",
 	"description": "Small changes to Minecraft Vanilla",
 	"authors": [
@@ -25,7 +25,7 @@
 	"depends": {
 		"fabricloader": ">=0.14",
 		"fabric": "*",
-		"minecraft": ">=1.19.3",
+		"minecraft": ">=1.20",
 		"java": ">=17"
 	}
 }
