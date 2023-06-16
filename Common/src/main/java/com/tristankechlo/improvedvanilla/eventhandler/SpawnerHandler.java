@@ -1,7 +1,7 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-import com.tristankechlo.improvedvanilla.mixin.BaseSpawnerAccessor;
+import com.tristankechlo.improvedvanilla.mixin.BaseSpawnerInvoker;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -109,7 +109,7 @@ public final class SpawnerHandler {
             final SpawnData nextSpawnData = new SpawnData(Util.make(new CompoundTag(), (ntb) -> {
                 ntb.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
             }), Optional.empty());
-            ((BaseSpawnerAccessor) tile.getSpawner()).callSetNextSpawnData(world, pos, nextSpawnData);
+            ((BaseSpawnerInvoker) tile.getSpawner()).callSetNextSpawnData(world, pos, nextSpawnData);
             tile.setChanged();
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
         }

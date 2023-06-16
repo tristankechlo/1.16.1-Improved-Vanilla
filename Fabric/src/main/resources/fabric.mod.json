@@ -8,6 +8,7 @@
 		"Buecher_wurm"
 	],
 	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/improved-vanilla",
 		"sources": "https://github.com/tristankechlo/ImprovedVanilla",
 		"issues": "https://github.com/tristankechlo/ImprovedVanilla/issues"
 	},
@@ -28,5 +29,15 @@
 		"fabric": "*",
 		"minecraft": ">=1.20",
 		"java": ">=17"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/bhUaWhq",
+				"modmenu.curseforge": "https://www.curseforge.com/minecraft/mc-mods/improved-vanilla",
+				"modmenu.modrinth": "https://modrinth.com/mod/improved-vanilla",
+				"modmenu.wiki": "https://github.com/tristankechlo/ImprovedVanilla/wiki"
+			}
+		}
 	}
 }

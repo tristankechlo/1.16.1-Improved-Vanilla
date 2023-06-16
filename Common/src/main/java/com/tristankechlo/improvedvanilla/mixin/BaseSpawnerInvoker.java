@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BaseSpawner.class)
-public interface BaseSpawnerAccessor {
+public interface BaseSpawnerInvoker {
 
     @Invoker("setNextSpawnData")
     void callSetNextSpawnData(Level level, BlockPos pos, SpawnData spawnData);
