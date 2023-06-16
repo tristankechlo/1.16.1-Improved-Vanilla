@@ -64,7 +64,7 @@ public class ImprovedVanilla {
 
     // drop spawn egg on entity death
     private void mobDropHandler(final LivingDropsEvent event) {
-        MobDropHandler.onLivingDrops(event.getEntity().getLevel(), event.getEntity(), event.getSource(), event.getLootingLevel());
+        MobDropHandler.onLivingDrops(event.getEntity().level(), event.getEntity(), event.getSource(), event.getLootingLevel());
     }
 
     // modify spawner on placement

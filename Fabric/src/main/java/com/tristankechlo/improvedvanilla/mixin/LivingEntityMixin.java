@@ -26,7 +26,7 @@ public class LivingEntityMixin {
             lootingLevel = EnchantmentHelper.getMobLooting((LivingEntity) source);
         }
         // drop spawn egg on entity death
-        MobDropHandler.onLivingDrops(source.getLevel(), ((LivingEntity) (Object) this), damageSource, lootingLevel);
+        MobDropHandler.onLivingDrops(source.level(), ((LivingEntity) (Object) this), damageSource, lootingLevel);
     }
 
 }

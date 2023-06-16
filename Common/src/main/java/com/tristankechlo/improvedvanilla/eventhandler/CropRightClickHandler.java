@@ -1,6 +1,7 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+import com.tristankechlo.improvedvanilla.mixin.CropBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -51,7 +52,7 @@ public final class CropRightClickHandler {
 
     private static IntegerProperty getAgeProperty(Block targetBlock) {
         if (targetBlock instanceof CropBlock) {
-            return ((CropBlock) targetBlock).getAgeProperty();
+            return ((CropBlockAccessor) targetBlock).getAgeProperty();
         } else if (targetBlock.equals(Blocks.COCOA)) {
             return CocoaBlock.AGE;
         } else if (targetBlock.equals(Blocks.NETHER_WART)) {

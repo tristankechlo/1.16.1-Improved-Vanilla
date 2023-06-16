@@ -2,11 +2,11 @@
     "required": true,
     "minVersion": "0.8",
     "package": "com.tristankechlo.improvedvanilla.mixin",
+    "refmap": "improvedvanilla.refmap.json",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
         "BaseSpawnerAccessor",
-        "BlockItemMixin",
-        "LivingEntityMixin"
+        "CropBlockAccessor"
     ],
     "client": [
     ],

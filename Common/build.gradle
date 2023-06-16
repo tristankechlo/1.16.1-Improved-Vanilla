@@ -8,9 +8,6 @@ base {
 }
 minecraft {
     version(minecraft_version)
-    if(file("src/main/resources/${mod_id}.accesswidener").exists()){
-        accessWideners(file("src/main/resources/${mod_id}.accesswidener"))
-    }
 }
 
 dependencies {
@@ -20,7 +17,7 @@ dependencies {
 
 processResources {
     def buildProps = project.properties.clone()
-    filesMatching(['pack.mcmeta']) {
+    filesMatching("pack.mcmeta") {
         expand buildProps
     }
 }

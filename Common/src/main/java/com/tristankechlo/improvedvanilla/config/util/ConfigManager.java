@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 import com.tristankechlo.improvedvanilla.Constants;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-import com.tristankechlo.improvedvanilla.platform.Services;
+import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,7 +12,7 @@ import java.io.FileWriter;
 
 public final class ConfigManager {
 
-    private static final File CONFIG_DIR = Services.PLATFORM.getConfigDirectory().toFile();
+    private static final File CONFIG_DIR = IPlatformHelper.INSTANCE.getConfigDirectory().toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     public static final String FILE_NAME = Constants.MOD_ID + ".json";
 
