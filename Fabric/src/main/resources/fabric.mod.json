@@ -12,7 +12,7 @@
 		"issues": "https://github.com/tristankechlo/ImprovedVanilla/issues"
 	},
 	"license": "CC BY-NC-ND 4.0",
-	"icon": "assets/improvedvanilla/logo.png",
+	"icon": "logo.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
