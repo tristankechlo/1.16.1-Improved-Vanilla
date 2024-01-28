@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[2,)"
+license="CC BY-NC-ND 4.0"
+issueTrackerURL="https://github.com/tristankechlo/ImprovedVanilla/issues"
+showAsResourcePack=false
+
+[[mods]]
+modId="improvedvanilla"
+version="${version}"
+displayName="Improved Vanilla"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
+logoFile="logo.png"
+#credits="Thanks to TelepathicGrunt for his StructureTutorialMod"
+authors="Buecher_wurm"
+description='''Small changes to Minecraft Vanilla'''
+displayTest="IGNORE_SERVER_VERSION" #optional
+
+[[mixins]]
+config = "improvedvanilla.mixins.json"
+
+[[dependencies.improvedvanilla]]
+    modId="neoforge"
+    type="required"
+    versionRange = "[20.4,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.improvedvanilla]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.20.4,1.21)"
+    ordering="NONE"
+    side="BOTH"

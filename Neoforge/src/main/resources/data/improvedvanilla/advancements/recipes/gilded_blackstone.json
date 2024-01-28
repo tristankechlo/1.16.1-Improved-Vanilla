@@ -1,0 +1,45 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"improvedvanilla:gilded_blackstone"
+		]
+	},
+	"criteria": {
+		"has_gold_nugget": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"tag": "forge:nuggets/gold"
+					}
+				]
+			}
+		},
+		"has_blackstone": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:blackstone"
+						]
+					}
+				]
+			}
+		},
+		"has_the_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "improvedvanilla:gilded_blackstone"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_gold_nugget",
+			"has_blackstone",
+			"has_the_recipe"
+		]
+	]
+}
