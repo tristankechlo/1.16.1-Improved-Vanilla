@@ -1,4 +1,7 @@
-# Improved Vanilla [![Curseforge](http://cf.way2muchnoise.eu/full_392827_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/improved-vanilla) [![Discord](https://img.shields.io/discord/639540436524072970?color=0a48c4&label=%20&logo=discord&logoColor=FFF)](https://discord.gg/bhUaWhq)
+# Improved Vanilla
+[![Curseforge](https://img.shields.io/curseforge/dt/392827?style=for-the-badge&logo=curseforge&color=e05d44)](https://www.curseforge.com/minecraft/mc-mods/improved-vanilla)&nbsp;
+[![Modrinth](https://img.shields.io/modrinth/dt/VQVS8mIw?style=for-the-badge&logo=modrinth&color=e05d44)](https://modrinth.com/mod/improved-vanilla)&nbsp;
+[![Discord](https://img.shields.io/discord/639540436524072970?style=for-the-badge&logo=discord&logoColor=fff&label=%20&color=0a48c4)](https://discord.gg/bhUaWhq)
 
 ### added some small features to Vanilla Minecraft to make the gameplay a little bit more pleasant/enjoyable
 
