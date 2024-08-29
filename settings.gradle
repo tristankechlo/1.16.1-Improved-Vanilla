@@ -25,4 +25,4 @@ plugins {
 }
 
 rootProject.name = 'ImprovedVanilla'
-include("Common", "Fabric", "Forge", "Neoforge")
+include("common", "fabric", "forge", "neoforge")
