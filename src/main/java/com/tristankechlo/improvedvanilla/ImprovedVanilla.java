@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ImprovedVanilla.MOD_ID, acceptableRemoteVersions = "*")
+@Mod(modid = ImprovedVanilla.MOD_ID, acceptableRemoteVersions = "*", acceptedMinecraftVersions="[1.12.2,1.13)")
 public class ImprovedVanilla {
 
 	public static Logger LOGGER = LogManager.getLogger();
