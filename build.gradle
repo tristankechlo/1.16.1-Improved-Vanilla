@@ -5,13 +5,7 @@ plugins {
 
 subprojects {
     apply plugin: 'java'
-    java.toolchain.languageVersion = JavaLanguageVersion.of(java_version
-
-sourceSets.each {
-    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
-    it.output.resourcesDir = dir
-    it.java.destinationDirectory = dir
-})
+    java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
         
     jar {
         from rootProject.file('LICENSE')
