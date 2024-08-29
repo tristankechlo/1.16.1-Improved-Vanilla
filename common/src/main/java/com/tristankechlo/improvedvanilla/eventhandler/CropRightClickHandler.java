@@ -52,7 +52,7 @@ public final class CropRightClickHandler {
 
     private static IntegerProperty getAgeProperty(Block targetBlock) {
         if (targetBlock instanceof CropBlock) {
-            return ((CropBlockHelper) targetBlock).getAgeProp();
+            return ((CropBlockHelper) targetBlock).getAgeProp$improvedvanilla();
         } else if (targetBlock.equals(Blocks.COCOA)) {
             return CocoaBlock.AGE;
         } else if (targetBlock.equals(Blocks.NETHER_WART)) {

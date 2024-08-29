@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface BaseSpawnerInvoker {
 
     @Invoker("setNextSpawnData")
-    void callSetNextSpawnData(Level level, BlockPos pos, SpawnData spawnData);
+    void callSetNextSpawnData$improvedvanilla(Level level, BlockPos pos, SpawnData spawnData);
 
 }

@@ -109,7 +109,7 @@ public final class SpawnerHandler {
             final SpawnData nextSpawnData = new SpawnData(Util.make(new CompoundTag(), (ntb) -> {
                 ntb.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
             }), Optional.empty());
-            ((BaseSpawnerInvoker) tile.getSpawner()).callSetNextSpawnData(world, pos, nextSpawnData);
+            ((BaseSpawnerInvoker) tile.getSpawner()).callSetNextSpawnData$improvedvanilla(world, pos, nextSpawnData);
             tile.setChanged();
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
         }

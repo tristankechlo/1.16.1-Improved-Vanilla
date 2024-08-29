@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class CropBlockMixin implements CropBlockHelper {
 
     @Override
-    public IntegerProperty getAgeProp() {
+    public IntegerProperty getAgeProp$improvedvanilla() {
         return this.getAgeProperty();
     }
 
