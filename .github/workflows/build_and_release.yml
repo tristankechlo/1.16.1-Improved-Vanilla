@@ -12,7 +12,7 @@ env:
   MODRINTH_LINK: "https://modrinth.com/mod/improved-vanilla"
   MODRINTH_FEATURED: false # if this version should be featured on modrinth
   DISCORD_COLOR: 15721648
-  DISCORD_MENTION: "<@&>" # TODO get correct discord mention
+  DISCORD_MENTION: "<@&890143460164784169>"
   DISCORD_TITLE: "New version for Improved Vanilla just released :exclamation:"
   DISCORD_THUMBNAIL: "https://cdn.modrinth.com/data/VQVS8mIw/icon.png"
 
