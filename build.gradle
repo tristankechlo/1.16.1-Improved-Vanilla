@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -10,13 +9,9 @@ buildscript {
 }
         
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
-version = '1.12.2-1.4.1'
-group = 'com.tristankechlo.improvedvanilla'
-archivesBaseName = 'improvedvanilla'
+version = "${minecraft_version}-${mod_version}"
+archivesBaseName = "${mod_id}-forge"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -38,31 +33,40 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 }
 
 jar {
+    from rootProject.file('LICENSE')
     manifest {
         attributes([
-            "Specification-Title": "Improved Vanilla",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            'Specification-Title'     : mod_name,
+            'Specification-Vendor'    : mod_author,
+            'Specification-Version'   : project.jar.archiveVersion,
+            'Implementation-Title'    : project.name,
+            'Implementation-Version'  : project.jar.archiveVersion,
+            'Implementation-Vendor'   : mod_author,
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            'Timestamp'               : System.currentTimeMillis(),
+            'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+            'Build-On-Minecraft'      : minecraft_version
         ])
     }
 }
 
-jar.finalizedBy('reobfJar') 
+jar.finalizedBy('reobfJar')
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
+processResources {
+    def expandProps = [
+        "version"                   : "${minecraft_version}-${mod_version}",
+        "version_range"             : version_range,
+        "minecraft_version"         : minecraft_version,
+        "java_version"              : java_version,
+        "forge_loader_range"        : forge_loader_range
+    ]
+
+    filesMatching(['mcmod.info']) {
+        expand expandProps
     }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+    inputs.properties(expandProps)
 }
