@@ -37,7 +37,6 @@ public final class MobDropHandler {
             }
             handleKilledByPlayer(level, pos, item, dropchance, lootingLevel);
 
-            // if allowed to drop always (onlyWhenKilledByPlayer == true)
         } else if (!onlyWhenKilledByPlayer) {
 
             // if the mob was killed by player anyway
@@ -49,8 +48,8 @@ public final class MobDropHandler {
                 }
                 handleKilledByPlayer(level, pos, item, dropchance, lootingLevel);
 
-                // not killed by player
             } else {
+                // not killed by player
                 if (dropchance >= 1 && dropchance <= 100) {
                     if (Math.random() < ((double) dropchance / 100)) {
                         final ItemStack stack = new ItemStack(item, 1);

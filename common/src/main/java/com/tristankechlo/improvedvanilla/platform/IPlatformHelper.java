@@ -1,7 +1,5 @@
 package com.tristankechlo.improvedvanilla.platform;
 
-import com.tristankechlo.improvedvanilla.Constants;
-
 import java.nio.file.Path;
 import java.util.ServiceLoader;
 
@@ -13,7 +11,6 @@ public interface IPlatformHelper {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        Constants.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
 
