@@ -8,7 +8,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,8 +28,8 @@ public class ImprovedVanillaCommand extends CommandBase {
         if (args.length < 1) {
             throw new WrongUsageException("Must provide at least one argument!");
         }
-        if (Arrays.asList(ProjectLinks.ARGS).contains(args[0].toLowerCase())) {
-            ProjectLinks projectLinks = ProjectLinks.valueOf(args[0]);
+        if (ProjectLinks.ARGS.contains(args[0].toLowerCase())) {
+            ProjectLinks projectLinks = ProjectLinks.valueOf(args[0].toUpperCase());
             projectLinks.execute(server, sender);
             return;
         }
@@ -53,6 +52,7 @@ public class ImprovedVanillaCommand extends CommandBase {
                 default:
                     throw new WrongUsageException("/improvedvanilla config <reset|reload|show>");
             }
+            return;
         }
         throw new WrongUsageException(this.getUsage(sender));
     }

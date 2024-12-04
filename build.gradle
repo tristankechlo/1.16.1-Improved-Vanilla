@@ -31,6 +31,7 @@ minecraft {
 
 dependencies {
     minecraft group: 'net.minecraftforge', name: 'forge', version: '1.12.2-14.23.5.2860'
+    implementation("net.minecraftforge:mergetool:0.2.3.3") { force = true }
 }
 
 jar {
@@ -72,4 +73,9 @@ fancyGradle {
         asm
         mergetool
     }
+}
+
+// include resources during runtime
+sourceSets.all {
+    it.output.resourcesDir = it.output.classesDirs.getFiles().iterator().next()
 }

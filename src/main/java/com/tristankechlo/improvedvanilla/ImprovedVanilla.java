@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ImprovedVanilla.MOD_ID, useMetadata = true, serverSideOnly = true, acceptableRemoteVersions = "*")
+@Mod(modid = ImprovedVanilla.MOD_ID, useMetadata = true, acceptableRemoteVersions = "*")
 public class ImprovedVanilla {
 
     public static final String MOD_ID = "improvedvanilla";

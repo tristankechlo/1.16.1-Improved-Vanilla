@@ -6,6 +6,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ProjectLinks {
@@ -18,7 +20,7 @@ public enum ProjectLinks {
     MODRINTH("Check out the Modrinth page here: ", "https://modrinth.com/mod/improved-vanilla");
 
     private final ITextComponent message;
-    public static final String[] ARGS = (String[]) Stream.of(ProjectLinks.values()).map(e -> e.name().toLowerCase()).toArray();
+    public static final List<String> ARGS = Stream.of(ProjectLinks.values()).map(e -> e.name().toLowerCase()).collect(Collectors.toList());
 
     ProjectLinks(String message, String link) {
         this.message = new TextComponentString(message);

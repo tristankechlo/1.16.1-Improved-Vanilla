@@ -15,19 +15,19 @@ public final class ResponseHelper {
         ITextComponent message = new TextComponentString("Config-file can be found here: ");
         message.getStyle().setColor(TextFormatting.WHITE);
         message.appendSibling(clickableFile);
-        source.sendMessage(message);
+        source.sendMessage(start().appendSibling(message));
     }
 
     public static void sendMessageConfigReload(ICommandSender source) {
         ITextComponent message = new TextComponentString("Config was successfully reloaded.");
         message.getStyle().setColor(TextFormatting.WHITE);
-        source.sendMessage(message);
+        source.sendMessage(start().appendSibling(message));
     }
 
     public static void sendMessageConfigReset(ICommandSender source) {
         ITextComponent message = new TextComponentString("Config was successfully set to default.");
         message.getStyle().setColor(TextFormatting.WHITE);
-        source.sendMessage(message);
+        source.sendMessage(start().appendSibling(message));
     }
 
     public static ITextComponent start() {
