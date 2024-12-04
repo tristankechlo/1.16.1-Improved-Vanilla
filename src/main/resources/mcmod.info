@@ -2,19 +2,13 @@
   {
     "modid": "improvedvanilla",
     "name": "Improved Vanilla",
-    "description": "small changes/additions to Minecraft Vanilla",
+    "description": "small changes/additions to make the gameplay a little bit more pleasant/enjoyable",
     "version": "${version}",
     "mcversion": "${minecraft_version}",
     "url": "https://www.curseforge.com/minecraft/mc-mods/improved-vanilla",
-    "updateUrl": "",
     "authorList": [
       "Buecher_wurm"
     ],
-    "credits": "",
-    "logoFile": "logo.png",
-    "screenshots": [],
-    "dependencies": [
-      "forge"
-    ]
+    "logoFile": "pack.png"
   }
 ]
