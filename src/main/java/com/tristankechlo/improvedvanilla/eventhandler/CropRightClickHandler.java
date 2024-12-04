@@ -68,12 +68,12 @@ public class CropRightClickHandler {
             Class<? extends Block> clazz = targetBlock.getClass();
             PropertyInteger age = null;
             try {
-                Method retrieveItems = clazz.getDeclaredMethod("getAgeProperty");
+                Method retrieveItems = clazz.getDeclaredMethod("func_185524_e");
                 retrieveItems.setAccessible(true);
                 age = (PropertyInteger) retrieveItems.invoke(targetBlock);
             } catch (NoSuchMethodException e) {
                 try {
-                    Method retrieveItems = clazz.getSuperclass().getDeclaredMethod("getAgeProperty");
+                    Method retrieveItems = clazz.getSuperclass().getDeclaredMethod("func_185524_e");
                     retrieveItems.setAccessible(true);
                     age = (PropertyInteger) retrieveItems.invoke(targetBlock);
                 } catch (Exception e1) {
@@ -95,7 +95,7 @@ public class CropRightClickHandler {
     }
 
     private static float getLootMultiplier(ItemHoe item) {
-        int tierLevel = item.toolMaterial.getHarvestLevel();
+        int tierLevel = Item.ToolMaterial.valueOf(item.getMaterialName()).getHarvestLevel();
         return BASE_MULTIPLIER + (tierLevel * 0.55F);
     }
 
