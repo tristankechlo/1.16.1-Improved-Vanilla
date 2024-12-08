@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,8 +19,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,97 +29,73 @@ import java.util.Queue;
 public class EasyPlantingHandler {
 
     //for easier access, all vanilla crops
-    private final List<Item> vanillaSeeds = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
+    private static final List<Item> VANILLA_SEEDS = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
 
     @SubscribeEvent
     public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
-        final World world = event.getWorld();
+        final World level = event.getWorld();
         final PlayerEntity player = event.getPlayer();
         final BlockPos pos = event.getPos();
-        if (player == null || world == null) {
+        if (player == null || level == null) {
             return;
         }
-        if (player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
+        if (level.isClientSide() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
             return;
         }
-        if (ImprovedVanillaConfig.SERVER.enableEasyPlanting.get() == false) {
+        if (!ImprovedVanillaConfig.EASY_PLANTING.activated.get()) {
             return;
         }
 
-        final Block targetBlock = world.getBlockState(pos).getBlock();
+        final Block targetBlock = level.getBlockState(pos).getBlock();
         final Item item = player.getMainHandItem().getItem();
-        final int radius = ImprovedVanillaConfig.SERVER.easyPlantingRadius.get();
+        final int radius = ImprovedVanillaConfig.EASY_PLANTING.radius.get();
 
         if (radius <= 0 || !(item instanceof BlockNamedItem)) {
             return;
         }
 
-        if ((vanillaSeeds.contains(item) || isSeedItemForCrop(item)) && (targetBlock instanceof FarmlandBlock)) {
+        if ((VANILLA_SEEDS.contains(item) || isSeedItemForCrop(item)) && (targetBlock instanceof FarmlandBlock)) {
+            setCropsInRadius(radius, pos, Blocks.FARMLAND, (ServerWorld) level, (ServerPlayerEntity) player);
             event.setCanceled(true);
-            if (world.isClientSide()) {
-                return;
-            }
-            this.setCropsInRadius(radius, pos, Blocks.FARMLAND, (ServerWorld) world, player);
-            return;
         } else if ((item == Items.NETHER_WART) && (targetBlock instanceof SoulSandBlock)) {
+            setCropsInRadius(radius, pos, Blocks.SOUL_SAND, (ServerWorld) level, (ServerPlayerEntity) player);
             event.setCanceled(true);
-            if (world.isClientSide()) {
-                return;
-            }
-            this.setCropsInRadius(radius, pos, Blocks.SOUL_SAND, (ServerWorld) world, player);
-            return;
         }
     }
 
-    /**
-     * @param radius
-     * @param startPos
-     * @param target
-     * @param world
-     * @param player
-     */
-    private void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerWorld world, PlayerEntity player) {
-
-        List<BlockPos> targetBlocks = getTargetBlocks(radius, world, startPos, target);
-        final Item seedItem = player.getMainHandItem().getItem();
+    private static void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerWorld level, ServerPlayerEntity player) {
+        List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
+        Item seedItem = player.getMainHandItem().getItem();
+        final boolean makeCircle = ImprovedVanillaConfig.EASY_PLANTING.makeCircle.get();
         boolean playPlantingSound = false;
 
         for (BlockPos pos : targetBlocks) {
-            //if config is set to circle and block is not inside the circle, skip this block
-            if (ImprovedVanillaConfig.SERVER.easyPlantingCircle.get() && !isWithInCircleDistance(startPos, pos, radius)) {
+            // if config is set to circle and block is not inside the circle, skip this block
+            if (makeCircle && !isWithInCircleDistance(startPos, pos, radius)) {
                 continue;
             }
-            //if player has seeds -> plant the seeds
+            // if player has seeds -> plant the seeds
             if (playerHasOneSeed(player, seedItem)) {
 
-                Block blockFromSeed = ForgeRegistries.BLOCKS.getValue(((BlockNamedItem) seedItem).getBlock().getRegistryName());        //get the block to place
-                world.setBlockAndUpdate(pos.above(), blockFromSeed.defaultBlockState());                                                        //set the block
-                removeOneSeedFromPlayer(player, seedItem);                                                                            //shrink player inv
-                player.awardStat(Stats.ITEM_USED.get(seedItem));                                                //increase vanilla item-use-counter
+                Block blockFromSeed = ((BlockNamedItem) seedItem).getBlock(); // get the block to place
+                level.setBlockAndUpdate(pos.above(), blockFromSeed.defaultBlockState()); // set the block
+                removeOneSeedFromPlayer(player, seedItem); // shrink player inv
+                player.awardStat(Stats.ITEM_USED.get(seedItem)); // increase vanilla item-use-counter
 
-                //play sound when atleast one seed was planted
+                // play sound when at least one seed was planted
                 playPlantingSound = true;
             }
         }
 
         //play the planting sounds
         if (player.getMainHandItem().getItem().equals(Items.NETHER_WART) && playPlantingSound) {
-            world.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.NETHER_WART_PLANTED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.NETHER_WART_PLANTED, SoundCategory.BLOCKS, 1.0F, 1.0F);
         } else if (playPlantingSound) {
-            world.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.CROP_PLANTED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.CROP_PLANTED, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 
-    /**
-     * get all blocks in a radius using floodfill
-     *
-     * @param world
-     * @param startPos
-     * @param target
-     * @param radius
-     * @return
-     */
-    private List<BlockPos> getTargetBlocks(int radius, ServerWorld world, BlockPos startPos, Block target) {
+    private static List<BlockPos> getTargetBlocks(int radius, ServerWorld level, BlockPos startPos, Block target) {
         List<BlockPos> targetBlocks = new ArrayList<>();
         Queue<Point> queue = new LinkedList<>();
         queue.add(new Point(startPos.getX(), startPos.getZ()));
@@ -133,12 +108,12 @@ public class EasyPlantingHandler {
 
             Point p = queue.remove();
 
-            //if inside of square
+            // if inside of square
             if ((p.x >= minX) && (p.x <= maxX) && (p.y >= minY) && (p.y <= maxY)) {
 
                 BlockPos current = new BlockPos(p.x, startPos.getY(), p.y);
-                //if current block is can be used to plant the crop
-                if (isTargetBlock(world, current, target) && isAir(world, current.above()) && !targetBlocks.contains(current)) {
+                // if current block is can be used to plant the crop
+                if (isTargetBlock(level, current, target) && isAir(level, current.above()) && !targetBlocks.contains(current)) {
                     targetBlocks.add(current);
 
                     queue.add(new Point(p.x + 1, p.y));
@@ -152,80 +127,41 @@ public class EasyPlantingHandler {
         return targetBlocks;
     }
 
-    /**
-     * wether or not the endpos is the radius for the startpos
-     *
-     * @param start
-     * @param end
-     * @param radius
-     * @return
-     */
-    private boolean isWithInCircleDistance(BlockPos start, BlockPos end, int radius) {
+    private static boolean isWithInCircleDistance(BlockPos start, BlockPos end, int radius) {
         double x = Math.sqrt(Math.pow((start.getX() - end.getX()), 2) + Math.pow((start.getZ() - end.getZ()), 2));
         return x <= (radius + 0.5);
     }
 
-    /**
-     * wether or not the player has atleast one specified seed item
-     *
-     * @param player
-     * @param seed
-     * @return
-     */
-    private boolean playerHasOneSeed(PlayerEntity player, Item seed) {
+    private static boolean playerHasOneSeed(ServerPlayerEntity player, Item seed) {
         return player.inventory.hasAnyOf(ImmutableSet.of(seed));
     }
 
-    /**
-     * @param player
-     * @param seed
-     */
-    private void removeOneSeedFromPlayer(PlayerEntity player, Item seed) {
-        //don't shrink player inv when in creative
+    private static void removeOneSeedFromPlayer(ServerPlayerEntity player, Item seed) {
+        // don't shrink player inv when in creative
         if (player.isCreative()) {
             return;
         }
         int slot = player.inventory.findSlotMatchingUnusedItem(new ItemStack(seed));
-        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                .ifPresent(handler -> {
-                    handler.extractItem(slot, 1, false);
-                });
+        // remove one seed from player inv
+        if (slot != -1) {
+            player.inventory.removeItem(slot, 1);
+        }
     }
 
-    /**
-     * if block at pos is considered air
-     *
-     * @param world
-     * @param pos
-     * @return
-     */
-    private boolean isAir(ServerWorld world, BlockPos pos) {
-        return world.getBlockState(pos).isAir(world, pos);
+    private static boolean isAir(ServerWorld level, BlockPos pos) {
+        return level.getBlockState(pos).isAir(level, pos);
     }
 
-    /**
-     * compare the block at pos is equal to the provided targetblock
-     *
-     * @param world
-     * @param pos
-     * @param target
-     * @return
-     */
-    private boolean isTargetBlock(ServerWorld world, BlockPos pos, Block target) {
-        return world.getBlockState(pos).getBlock().equals(target);
+    private static boolean isTargetBlock(ServerWorld level, BlockPos pos, Block target) {
+        return level.getBlockState(pos).getBlock().equals(target);
     }
 
-    /**
-     * if the item can be used to place crops or stems
-     *
-     * @param item
-     * @return
-     */
-    private boolean isSeedItemForCrop(Item item) {
+    private static boolean isSeedItemForCrop(Item item) {
         if (!(item instanceof BlockNamedItem)) {
             return false;
         }
-        Block block = ForgeRegistries.BLOCKS.getValue(((BlockNamedItem) item).getBlock().getRegistryName());
+        Block block = ((BlockNamedItem) item).getBlock();
         return ((block instanceof CropsBlock) || (block instanceof StemBlock));
     }
+
 }
