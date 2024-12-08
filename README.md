@@ -8,8 +8,7 @@
 
 > [!NOTE]
 > While this mod works when it's only installed on the server, it is recommended to install it on the client as well.  
-> This way the correct animations are played when placing/breaking blocks.  
-> *only applies for this version (1.14.4)*
+> This way the correct animations are played when placing/breaking blocks.
 
 ### things I changed
 
