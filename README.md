@@ -8,8 +8,7 @@
 
 > [!NOTE]
 > While this mod works when it's only installed on the server, it is recommended to install it on the client as well.  
-> This way the correct animation are played when placing/breaking blocks, and the recipes are properly listed in the recipe book.  
-> *only applies for this version (1.12.2)*
+> This way the correct animation are played when placing/breaking blocks, and the recipes are properly listed in the recipe book.
 
 ### things I changed
 
