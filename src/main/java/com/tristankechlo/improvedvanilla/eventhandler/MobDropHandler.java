@@ -1,122 +1,106 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
+import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-
-import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class MobDropHandler {
 
-	@SubscribeEvent
-	public void onMobDeath(final LivingDeathEvent event) {
-		final LivingEntity entity = event.getEntityLiving();
-		final World world = entity.world;
-		if (!world.isRemote) {
+    @SubscribeEvent
+    public void onMobDeath(final LivingDropsEvent event) {
+        final LivingEntity entityKilled = event.getEntityLiving();
+        final DamageSource damageSource = event.getSource();
+        final World level = entityKilled.level;
+        if (level.isClientSide()) {
+            return;
+        }
 
-			final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.SERVER.dropOnlyWhenKilledByPlayer.get();
-			final int dropchance = ImprovedVanillaConfig.SERVER.mobSpawnEggDropChance.get();
-			final Entity source = event.getSource().getTrueSource();
-			final EntityType<?> type = (EntityType<?>) entity.getType();
-			final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg"));
-			
-			//killed by player and onlyWhenKilledByPlayer is true
-			if ((source instanceof ServerPlayerEntity) && onlyWhenKilledByPlayer) {
-				//drop only when entity was killed by a player
-				final ServerPlayerEntity player = (ServerPlayerEntity) source;
-				if (player.isSpectator()) {
-					return;
-				}
+        final EntityType<?> type = entityKilled.getType();
+        final String typeName = Objects.requireNonNull(ForgeRegistries.ENTITIES.getKey(type)).toString();
+        final ResourceLocation search = new ResourceLocation(typeName + "_spawn_egg");
+        final Item item = ForgeRegistries.ITEMS.getValue(search);
 
-				final int lootingLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, player.getHeldItemMainhand());
-				final boolean lootingAffective = ImprovedVanillaConfig.SERVER.lootingAffective.get();
+        if (item == null) {
+            ImprovedVanilla.LOGGER.info("Did not find a spawn-egg for '{}', searched for '{}'", typeName, search);
+            return;
+        }
 
-				if (dropchance >= 1 && dropchance <= 100) {
-					int count = 0;
-					if(lootingAffective) {
-						// foreach lootinglevel there's an additional chance to drop the egg
-						for (int i = 0; i < (1 + lootingLevel); i++) {
-							if (Math.random() < ((double) dropchance / 100)) {
-								count++;
-							}
-						}
-					} else {						
-						if (Math.random() < ((double) dropchance / 100)) {
-							count++;
-						}
-					}
-					if(count > 0) {
-						final ItemStack stack = new ItemStack(item, count);
-						ItemEntity itemEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, stack);
-						itemEntity.setDefaultPickupDelay();
-						world.addEntity(itemEntity);
-					}
-				}
-				
-			//if onlyWhenKilledByPlayer is false
-			} else if (!onlyWhenKilledByPlayer) {
-				
-				//if the mob was killed by player anyway
-				if (source instanceof ServerPlayerEntity) {
-					
-					final ServerPlayerEntity player = (ServerPlayerEntity) source;
-					if (player.isSpectator()) {
-						return;
-					}
+        final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.MOB_DROP.dropOnlyWhenKilledByPlayer.get();
+        final int dropChance = ImprovedVanillaConfig.MOB_DROP.mobSpawnEggDropChance.get();
+        final Entity source = damageSource.getEntity();
+        final Vec3d pos = entityKilled.position();
 
-					final int lootingLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.LOOTING, player.getHeldItemMainhand());
-					final boolean lootingAffective = ImprovedVanillaConfig.SERVER.lootingAffective.get();
-					
-					if (dropchance >= 1 && dropchance <= 100) {
-						int count = 0;
-						if(lootingAffective) {
-							// foreach lootinglevel there's an additional chance to drop the egg
-							for (int i = 0; i < (1 + lootingLevel); i++) {
-								if (Math.random() < ((double) dropchance / 100)) {
-									count++;
-								}
-							}
-						} else {						
-							if (Math.random() < ((double) dropchance / 100)) {
-								count++;
-							}
-						}
-						if(count > 0) {
-							final ItemStack stack = new ItemStack(item, count);
-							ItemEntity itemEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, stack);
-							itemEntity.setDefaultPickupDelay();
-							world.addEntity(itemEntity);
-						}
-					}
+        // killed by player and onlyWhenKilledByPlayer is true
+        if ((source instanceof ServerPlayerEntity) && onlyWhenKilledByPlayer) {
+            // drop only when entity was killed by a player
+            ServerPlayerEntity player = (ServerPlayerEntity) source;
+            if (player.isSpectator()) {
+                return;
+            }
+            handleKilledByPlayer(level, pos, item, dropChance, event.getLootingLevel());
 
-				//not killed by player
-				} else {
-					if (dropchance >= 1 && dropchance <= 100) {
-						if (Math.random() < ((double) dropchance / 100)) {
-							final ItemStack stack = new ItemStack(item, 1);
-							ItemEntity itemEntity = new ItemEntity(world, entity.posX, entity.posY, entity.posZ, stack);
-							itemEntity.setDefaultPickupDelay();
-							world.addEntity(itemEntity);
-						}
-					}
-				}
-			} else {
-				return;
-			}
-		}
-	}
+        } else if (!onlyWhenKilledByPlayer) {
+
+            // if the mob was killed by player anyway
+            if (source instanceof ServerPlayerEntity) {
+                ServerPlayerEntity player = (ServerPlayerEntity) source;
+                if (player.isSpectator()) {
+                    return;
+                }
+                handleKilledByPlayer(level, pos, item, dropChance, event.getLootingLevel());
+            } else {
+                // not killed by player
+                if (dropChance <= 0 || dropChance > 100) {
+                    return;
+                }
+                if (Math.random() < ((double) dropChance / 100)) {
+                    ItemStack stack = new ItemStack(item, 1);
+                    ItemEntity itemEntity = new ItemEntity(level, pos.x(), pos.y(), pos.z(), stack);
+                    itemEntity.setDefaultPickUpDelay();
+                    level.addFreshEntity(itemEntity);
+                }
+            }
+        }
+    }
+
+    private static void handleKilledByPlayer(World level, Vec3d pos, Item item, int dropChance, int lootingLevel) {
+        final boolean lootingAffective = ImprovedVanillaConfig.MOB_DROP.lootingAffective.get();
+        int count = 0;
+        if (lootingAffective && lootingLevel >= 1) {
+            // foreach lootingLevel there's an additional chance to drop the egg
+            for (int i = 0; i < (1 + lootingLevel); i++) {
+                if (Math.random() < ((double) dropChance / 100)) {
+                    count++;
+                }
+            }
+        } else {
+            if (Math.random() < ((double) dropChance / 100)) {
+                count++;
+            }
+        }
+        if (count > 0) {
+            ItemStack stack = new ItemStack(item, count);
+            ItemEntity itemEntity = new ItemEntity(level, pos.x(), pos.y(), pos.z(), stack);
+            itemEntity.setDefaultPickUpDelay();
+            level.addFreshEntity(itemEntity);
+        }
+    }
+
 }

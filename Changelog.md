@@ -1,0 +1,8 @@
+# Changelog
+
+## 1.14.4 - 1.7.1
+
+- backport latest functionality to 1.14.4
+- move config to json format
+    - same config design across all mod versions
+- fix multiple bugs
