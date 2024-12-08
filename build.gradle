@@ -25,16 +25,14 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            args '--nogui'
 
             mods { improvedvanilla { source sourceSets.main } }
         }
     }
 }
 
-repositories {
-}
-
-dependencies {    
+dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 }
 
@@ -54,6 +52,12 @@ jar {
             'Build-On-Minecraft'      : minecraft_version
         ])
     }
+}
+
+jar.finalizedBy('reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
 processResources {
