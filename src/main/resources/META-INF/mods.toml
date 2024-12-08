@@ -1,28 +1,28 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="${forge_loader_range}"
 license="CC BY-NC-ND 4.0"
 showAsResourcePack=false
 
 [[mods]]
-modId="improvedvanilla"
-version="1.15.2 - 1.4.1"
-displayName="Improved Vanilla"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
-#logoFile="examplemod.png"
-#credits="Thanks for this example mod goes to Java"
-authors="Buecher_wurm"
-description='''Small changes to Minecraft Vanilla'''
+    modId="improvedvanilla"
+    version="${version}"
+    displayName="Improved Vanilla"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
+    logoFile="logo.png"
+    #credits="Thanks for this example mod goes to Java"
+    authors="Buecher_wurm"
+    description='''Small changes to Minecraft Vanilla'''
 
 [[dependencies.improvedvanilla]]
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="${forge_loader_range}"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.improvedvanilla]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="${version_range}"
     ordering="NONE"
     side="BOTH"
