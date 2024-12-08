@@ -50,6 +50,9 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
+legacy {
+    fixClasspath = true
+}
 
 processResources {
     def expandProps = [

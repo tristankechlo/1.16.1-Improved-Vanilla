@@ -6,18 +6,25 @@
 
 ### added some small features to Vanilla Minecraft to make the gameplay a little bit more pleasant/enjoyable
 
+> [!NOTE]
+> While this mod works when it's only installed on the server, it is recommended to install it on the client as well.  
+> This way the correct animation are played when placing/breaking blocks, and the recipes are properly listed in the recipe book.  
+> *only applies for this version (1.12.2)*
+
 ### things I changed
 
 - spawners are mineable with silk-touch pickaxes
-- spawners drop spawn-eggs depending on their spawn-potentials
+- spawners drop the spawn-egg of the displayed entity
 - mobs can drop their spawn-egg at a 2% chance
 - right-click crops to harvest them
-- right-clicking with seeds will fill the farmland in a small radius (gif below)
 - added recipes for items that are not craftable by default
+- right-clicking with seeds will fill the farmland in a small radius (gif below)
+
+<small>everything can be adjusted/deactivated with the config</small>
 
 #### Easy Planting
 
- ![EasyPlanting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
+![EasyPlanting](https://i.ibb.co/LCLZJZK/Easy-Planting.gif)
 
 #### New Recipes
 

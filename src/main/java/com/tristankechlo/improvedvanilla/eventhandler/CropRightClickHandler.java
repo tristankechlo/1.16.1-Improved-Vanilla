@@ -28,61 +28,96 @@ public class CropRightClickHandler {
     private static final float BASE_MULTIPLIER = 1.0F;
 
     @SubscribeEvent
-    public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
-        final World level = event.getWorld();
+    public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        final World world = event.getWorld();
         final EntityPlayer player = event.getEntityPlayer();
         final BlockPos targetPos = event.getPos();
-        if (player == null || level == null) {
+        if (player == null || world == null) {
             return;
         }
-        if (level.isRemote || player.isSneaking() || player.isSpectator() || event.getHand() != EnumHand.MAIN_HAND) {
+        if (player.isSneaking() || player.isSpectator() || event.getHand() != EnumHand.MAIN_HAND) {
             return;
         }
-        if (!ImprovedVanillaConfig.FARMING.activated.get()) {
+        if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.activated.get()) {
             return;
         }
-        final Block targetBlock = level.getBlockState(targetPos).getBlock();
-        Item heldItem = player.getHeldItemMainhand().getItem();
+        final Item heldItem = player.getHeldItemMainhand().getItem();
 
         if (player.getHeldItemMainhand().isEmpty()) {
-            boolean success = spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER);
-            if (success) {
-                event.setCanceled(true);
-                player.swingArm(event.getHand());
+            if (!world.isRemote) {
+                spawnDropsAndResetBlock(world, targetPos, BASE_MULTIPLIER, () -> event.setCanceled(true));
             }
+            player.swingArm(EnumHand.MAIN_HAND);
         } else if (heldItem instanceof ItemHoe) {
-            if (!ImprovedVanillaConfig.FARMING.allowHoeUsageAsLootModifier.get()) {
+            if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.allowHoeUsageAsLootModifier.get()) {
                 return;
             }
             float multiplier = getLootMultiplier((ItemHoe) heldItem);
-            boolean success = spawnDropsAndResetBlock(level, targetPos, multiplier);
-            if (success) {
-                event.setCanceled(true);
-                player.swingArm(event.getHand());
+            if (!world.isRemote) {
+                spawnDropsAndResetBlock(world, targetPos, multiplier, () -> event.setCanceled(true));
             }
+            player.swingArm(EnumHand.MAIN_HAND);
         }
+    }
+
+    private static float getLootMultiplier(ItemHoe item) {
+        int tierLevel = Item.ToolMaterial.valueOf(item.getMaterialName()).getHarvestLevel();
+        return BASE_MULTIPLIER + (tierLevel * 0.55F);
+    }
+
+    private static void spawnDropsAndResetBlock(World world, BlockPos pos, float multiplier, Runnable success) {
+        //get age property
+        Block targetBlock = world.getBlockState(pos).getBlock();
+        PropertyInteger ageProperty = getAgeProperty(targetBlock);
+        if (ageProperty == null) {
+            return;
+        }
+
+        //check if crop is fully grown
+        IBlockState blockState = world.getBlockState(pos);
+        int maximumAge = Collections.max(ageProperty.getAllowedValues());
+        int currentAge = blockState.getValue(ageProperty);
+        if (currentAge < maximumAge) {
+            return;
+        }
+
+        //reset the crop age
+        IBlockState newState = blockState.withProperty(ageProperty, 0);
+        world.setBlockState(pos, newState, 3);
+
+        //get and modify loot
+        NonNullList<ItemStack> oldLoot = NonNullList.create();
+        world.getBlockState(pos).getBlock().getDrops(oldLoot, world, pos, blockState, 0);
+        List<ItemStack> newLoot = getLootModified(oldLoot, multiplier);
+        newLoot.forEach(stack -> Block.spawnAsEntity(world, pos, stack));
+        success.run();
     }
 
     private static PropertyInteger getAgeProperty(Block targetBlock) {
         if (targetBlock instanceof BlockCrops) {
             Class<? extends Block> clazz = targetBlock.getClass();
             PropertyInteger age = null;
-            try {
-                Method retrieveItems = clazz.getDeclaredMethod("func_185524_e");
-                retrieveItems.setAccessible(true);
-                age = (PropertyInteger) retrieveItems.invoke(targetBlock);
-            } catch (NoSuchMethodException e) {
+            // check for possible names of the function (obfuscated and de-obfuscated)
+            String[] methods = {"func_185524_e", "getAgeProperty"};
+            for (String method : methods) {
                 try {
-                    Method retrieveItems = clazz.getSuperclass().getDeclaredMethod("func_185524_e");
+                    Method retrieveItems = clazz.getDeclaredMethod(method);
                     retrieveItems.setAccessible(true);
                     age = (PropertyInteger) retrieveItems.invoke(targetBlock);
-                } catch (Exception e1) {
-                    ImprovedVanilla.LOGGER.error("Could not find method 'getAgeProperty' from super");
-                    ImprovedVanilla.LOGGER.error(e.getMessage());
+                } catch (Exception e) {
+                    try {
+                        Method retrieveItems = clazz.getSuperclass().getDeclaredMethod(method);
+                        retrieveItems.setAccessible(true);
+                        age = (PropertyInteger) retrieveItems.invoke(targetBlock);
+                    } catch (Exception ignored) {
+                    }
                 }
-            } catch (Exception e) {
-                ImprovedVanilla.LOGGER.error("Could not find method 'getAgeProperty'");
-                ImprovedVanilla.LOGGER.error(e.getMessage());
+                if (age != null) {
+                    break;
+                }
+            }
+            if (age == null) {
+                ImprovedVanilla.LOGGER.error("Did not find correct age property on block '{}'", targetBlock);
             }
             return age;
         } else if (targetBlock.equals(Blocks.COCOA)) {
@@ -92,39 +127,6 @@ public class CropRightClickHandler {
         } else {
             return null;
         }
-    }
-
-    private static float getLootMultiplier(ItemHoe item) {
-        int tierLevel = Item.ToolMaterial.valueOf(item.getMaterialName()).getHarvestLevel();
-        return BASE_MULTIPLIER + (tierLevel * 0.55F);
-    }
-
-    private boolean spawnDropsAndResetBlock(World world, BlockPos pos, float multiplier) {
-        //get age property
-        final Block targetBlock = world.getBlockState(pos).getBlock();
-        PropertyInteger ageProperty = getAgeProperty(targetBlock);
-        if (ageProperty == null) {
-            return false;
-        }
-
-        //check if crop is fully grown
-        final IBlockState blockState = world.getBlockState(pos);
-        final int maximumAge = Collections.max(ageProperty.getAllowedValues());
-        final int currentAge = blockState.getValue(ageProperty);
-        if (currentAge < maximumAge) {
-            return false;
-        }
-
-        //reset the crop age
-        final IBlockState newState = blockState.withProperty(ageProperty, 0);
-        world.setBlockState(pos, newState, 3);
-
-        //get and modify loot
-        final NonNullList<ItemStack> oldLoot = NonNullList.create();
-        world.getBlockState(pos).getBlock().getDrops(oldLoot, world, pos, blockState, 0);
-        List<ItemStack> newLoot = getLootModified(oldLoot, multiplier);
-        newLoot.forEach(stack -> Block.spawnAsEntity(world, pos, stack));
-        return true;
     }
 
     @SuppressWarnings("deprecation")
@@ -137,8 +139,8 @@ public class CropRightClickHandler {
         });
 
         // if the blacklist is enabled, remove items from the loot
-        if (ImprovedVanillaConfig.FARMING.blacklistEnabled.get()) {
-            Set<Item> itemsToRemove = ImprovedVanillaConfig.FARMING.blacklistedDrops.get();
+        if (ImprovedVanillaConfig.CROP_RIGHT_CLICKING.blacklistEnabled.get()) {
+            Set<Item> itemsToRemove = ImprovedVanillaConfig.CROP_RIGHT_CLICKING.blacklistedDrops.get();
             lootMap.keySet().removeIf(itemsToRemove::contains);
         }
 

@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockSoulSand;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -37,14 +36,14 @@ public class EasyPlantingHandler {
     private static final List<Item> VANILLA_SEEDS = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
 
     @SubscribeEvent
-    public void onPlayerRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
+    public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         final World world = event.getWorld();
         final EntityPlayer player = event.getEntityPlayer();
         final BlockPos pos = event.getPos();
         if (player == null || world == null) {
             return;
         }
-        if (player.isSpectator() || event.getHand() != EnumHand.MAIN_HAND || player instanceof EntityPlayerSP) {
+        if (world.isRemote || player.isSpectator() || event.getHand() != EnumHand.MAIN_HAND) {
             return;
         }
         if (!ImprovedVanillaConfig.EASY_PLANTING.activated.get()) {
@@ -60,17 +59,11 @@ public class EasyPlantingHandler {
         }
 
         if (VANILLA_SEEDS.contains(item) && (targetBlock instanceof BlockFarmland) && (getPlantType(world, pos, item) == EnumPlantType.Crop)) {
-            if (!world.isRemote) {
-                this.setCropsInRadius(radius, pos, Blocks.FARMLAND, (WorldServer) world, player);
-            }
+            setCropsInRadius(radius, pos, Blocks.FARMLAND, (WorldServer) world, player);
             event.setCanceled(true);
-            player.swingArm(event.getHand());
         } else if ((targetBlock instanceof BlockSoulSand) && (getPlantType(world, pos, item) == EnumPlantType.Nether)) {
-            if (!world.isRemote) {
-                this.setCropsInRadius(radius, pos, Blocks.SOUL_SAND, (WorldServer) world, player);
-            }
+            setCropsInRadius(radius, pos, Blocks.SOUL_SAND, (WorldServer) world, player);
             event.setCanceled(true);
-            player.swingArm(event.getHand());
         }
     }
 
@@ -94,10 +87,10 @@ public class EasyPlantingHandler {
         return null;
     }
 
-    private void setCropsInRadius(int radius, BlockPos startPos, Block target, WorldServer world, EntityPlayer player) {
+    private static void setCropsInRadius(int radius, BlockPos startPos, Block target, WorldServer world, EntityPlayer player) {
 
         List<BlockPos> targetBlocks = getTargetBlocks(radius, world, startPos, target);
-        final Item seedItem = player.getHeldItemMainhand().getItem();
+        Item seedItem = player.getHeldItemMainhand().getItem();
         final boolean makeCircle = ImprovedVanillaConfig.EASY_PLANTING.makeCircle.get();
         boolean playPlantingSound = false;
 
@@ -111,6 +104,7 @@ public class EasyPlantingHandler {
 
                 world.setBlockState(pos.up(), getPlant(world, startPos, seedItem));
                 removeOneSeedFromPlayer(player, seedItem);
+                // CHECK: award statistic
                 // play sound when atleast one seed was planted
                 playPlantingSound = true;
             }
@@ -123,7 +117,7 @@ public class EasyPlantingHandler {
     }
 
     /* get all blocks in a radius using flood-fill */
-    private List<BlockPos> getTargetBlocks(int radius, WorldServer world, BlockPos startPos, Block target) {
+    private static List<BlockPos> getTargetBlocks(int radius, WorldServer world, BlockPos startPos, Block target) {
         List<BlockPos> targetBlocks = new ArrayList<>();
         Queue<Point> queue = new LinkedList<>();
         queue.add(new Point(startPos.getX(), startPos.getZ()));
@@ -151,17 +145,17 @@ public class EasyPlantingHandler {
     }
 
     /* wether or not the endpos is the radius for the startpos */
-    private boolean isWithInCircleDistance(BlockPos start, BlockPos end, int radius) {
+    private static boolean isWithInCircleDistance(BlockPos start, BlockPos end, int radius) {
         double x = Math.sqrt(Math.pow((start.getX() - end.getX()), 2) + Math.pow((start.getZ() - end.getZ()), 2));
         return x <= (radius + 0.5);
     }
 
     /* wether or not the player has atleast one specified seed item */
-    private boolean playerHasOneSeed(EntityPlayer player, Item seed) {
+    private static boolean playerHasOneSeed(EntityPlayer player, Item seed) {
         return player.inventory.hasItemStack(new ItemStack(seed));
     }
 
-    private void removeOneSeedFromPlayer(EntityPlayer player, Item seed) {
+    private static void removeOneSeedFromPlayer(EntityPlayer player, Item seed) {
         // don't shrink player inv when in creative
         if (player.isCreative()) {
             return;
@@ -171,12 +165,12 @@ public class EasyPlantingHandler {
     }
 
     /* if block at pos is considered air */
-    private boolean isAir(WorldServer world, BlockPos pos) {
+    private static boolean isAir(WorldServer world, BlockPos pos) {
         return world.getBlockState(pos).getBlock().equals(Blocks.AIR);
     }
 
     /* compare the block at pos is equal to the provided targetblock */
-    private boolean isTargetBlock(WorldServer world, BlockPos pos, Block target) {
+    private static boolean isTargetBlock(WorldServer world, BlockPos pos, Block target) {
         return world.getBlockState(pos).getBlock().equals(target);
     }
 

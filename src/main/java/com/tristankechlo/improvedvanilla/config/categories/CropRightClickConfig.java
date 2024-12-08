@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.function.Function;
 
-public final class FarmingConfig {
+public final class CropRightClickConfig {
 
     private static final String IDENTIFIER = "right_click_to_harvest";
     private static final Function<Item, String> ITEM_TO_STRING = (item) -> ForgeRegistries.ITEMS.getKey(item).toString();
