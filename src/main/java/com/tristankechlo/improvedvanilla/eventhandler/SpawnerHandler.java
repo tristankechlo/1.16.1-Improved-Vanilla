@@ -7,16 +7,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -25,7 +22,6 @@ import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber
 public class SpawnerHandler {
@@ -61,13 +57,10 @@ public class SpawnerHandler {
         final IWorld iWorld = event.getWorld();
         final BlockPos pos = event.getPos();
 
-        if (iWorld.isClientSide() || !(iWorld instanceof World)) {
+        if (iWorld.isClientSide() || !(iWorld instanceof World) || targetBlock != Blocks.SPAWNER) {
             return;
         }
         final World world = (World) iWorld;
-        if (targetBlock != Blocks.SPAWNER) {
-            return;
-        }
         if (!(player.getMainHandItem().getItem() instanceof PickaxeItem)) {
             event.setExpToDrop(0);
             return;
@@ -86,9 +79,7 @@ public class SpawnerHandler {
             if (spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                 if (Math.random() < ((double) spawnerDropChance / 100)) {
                     ItemStack stack = new ItemStack(Items.SPAWNER, 1);
-                    ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-                    entity.setDefaultPickUpDelay();
-                    world.addFreshEntity(entity);
+                    ImprovedVanilla.dropItemStackInWorld(world, pos, stack);
                 }
             } else {
                 int exp = event.getExpToDrop();
@@ -136,20 +127,14 @@ public class SpawnerHandler {
     }
 
     private static void dropMonsterEggs(final World world, final BlockPos pos) {
-        Item item = getEggFromSpawner(world, pos);
-        if (item == Items.AIR) {
-            return;
-        }
-        ItemStack stack = new ItemStack(item);
-        ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(), stack);
-        entityItem.setDefaultPickUpDelay();
-        world.addFreshEntity(entityItem);
+        ItemStack stack = getEggFromSpawner(world, pos);
+        ImprovedVanilla.dropItemStackInWorld(world, pos, stack);
     }
 
-    private static Item getEggFromSpawner(final World world, final BlockPos pos) {
+    private static ItemStack getEggFromSpawner(final World world, final BlockPos pos) {
         TileEntity tile = world.getBlockEntity(pos);
         if (!(tile instanceof MobSpawnerTileEntity)) {
-            return Items.AIR;
+            return ItemStack.EMPTY;
         }
 
         // load the state of the spawner into this nbt
@@ -161,14 +146,8 @@ public class SpawnerHandler {
         if (nbt.contains("SpawnData")) {
             WeightedSpawnerEntity spawnData = new WeightedSpawnerEntity(1, nbt.getCompound("SpawnData"));
             String id = spawnData.getTag().getString("id"); // should be the id of the entity
-            ResourceLocation search = new ResourceLocation(id + "_spawn_egg");
-            Item item = ForgeRegistries.ITEMS.getValue(search);
-            if (item == null) {
-                ImprovedVanilla.LOGGER.info("Did not find a spawn-egg for '{}', searched for '{}'", id, search);
-                return Items.AIR;
-            }
-            return item;
+            return ImprovedVanilla.getMonsterEgg(id, 1);
         }
-        return Items.AIR;
+        return ItemStack.EMPTY;
     }
 }

@@ -39,7 +39,7 @@ public class EasyPlantingHandler {
         if (player == null || level == null) {
             return;
         }
-        if (level.isClientSide() && player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
+        if (level.isClientSide() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
             return;
         }
         if (!ImprovedVanillaConfig.EASY_PLANTING.activated.get()) {
@@ -57,16 +57,13 @@ public class EasyPlantingHandler {
         if ((VANILLA_SEEDS.contains(item) || isSeedItemForCrop(item)) && (targetBlock instanceof FarmlandBlock)) {
             setCropsInRadius(radius, pos, Blocks.FARMLAND, (ServerWorld) level, (ServerPlayerEntity) player);
             event.setCanceled(true);
-            player.swing(event.getHand());
         } else if ((item == Items.NETHER_WART) && (targetBlock instanceof SoulSandBlock)) {
             setCropsInRadius(radius, pos, Blocks.SOUL_SAND, (ServerWorld) level, (ServerPlayerEntity) player);
             event.setCanceled(true);
-            player.swing(event.getHand());
         }
     }
 
-    private void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerWorld level, ServerPlayerEntity player) {
-
+    private static void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerWorld level, ServerPlayerEntity player) {
         List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
         Item seedItem = player.getMainHandItem().getItem();
         final boolean makeCircle = ImprovedVanillaConfig.EASY_PLANTING.makeCircle.get();

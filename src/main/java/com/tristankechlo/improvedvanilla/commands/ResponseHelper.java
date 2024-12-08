@@ -52,8 +52,4 @@ public final class ResponseHelper {
         return mutableComponent;
     }
 
-    public static ITextComponent clickableLink(String url) {
-        return clickableLink(url, url);
-    }
-
 }

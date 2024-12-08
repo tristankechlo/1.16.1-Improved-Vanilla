@@ -32,7 +32,7 @@ public class CropRightClickHandler {
         if (player == null || level == null) {
             return;
         }
-        if (level.isClientSide() || player.isSneaking() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
+        if (player.isSneaking() || player.isSpectator() || event.getHand() != Hand.MAIN_HAND) {
             return;
         }
         if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.activated.get()) {
@@ -42,19 +42,19 @@ public class CropRightClickHandler {
         final Item heldItem = player.getMainHandItem().getItem();
 
         if (player.getMainHandItem().isEmpty()) {
-            spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER, () -> {
-                event.setCanceled(true);
-                player.swing(event.getHand());
-            });
+            if (!level.isClientSide()) {
+                spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER, () -> event.setCanceled(true));
+            }
+            player.swing(event.getHand());
         } else if (heldItem instanceof HoeItem) {
             if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.allowHoeUsageAsLootModifier.get()) {
                 return;
             }
             float multiplier = getLootMultiplier((HoeItem) heldItem);
-            spawnDropsAndResetBlock(level, targetPos, multiplier, () -> {
-                event.setCanceled(true);
-                player.swing(event.getHand());
-            });
+            if (!level.isClientSide()) {
+                spawnDropsAndResetBlock(level, targetPos, multiplier, () -> event.setCanceled(true));
+            }
+            player.swing(event.getHand());
         }
     }
 
@@ -75,7 +75,7 @@ public class CropRightClickHandler {
         return BASE_MULTIPLIER + (tierLevel * 0.55F);
     }
 
-    private void spawnDropsAndResetBlock(World level, BlockPos pos, float multiplier, Runnable success) {
+    private static void spawnDropsAndResetBlock(World level, BlockPos pos, float multiplier, Runnable success) {
         //get age property
         Block targetBlock = level.getBlockState(pos).getBlock();
         IntegerProperty ageProperty = getAgeProperty(targetBlock);

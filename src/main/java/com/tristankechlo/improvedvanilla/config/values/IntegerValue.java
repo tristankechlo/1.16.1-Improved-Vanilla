@@ -2,7 +2,6 @@ package com.tristankechlo.improvedvanilla.config.values;
 
 import com.google.gson.JsonObject;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
-import net.minecraft.util.JSONUtils;
 import net.minecraft.util.math.MathHelper;
 
 public final class IntegerValue implements IConfigValue<Integer> {
@@ -45,8 +44,8 @@ public final class IntegerValue implements IConfigValue<Integer> {
     @Override
     public void deserialize(JsonObject json) {
         try {
-            if (JSONUtils.isNumberValue(json.get(getIdentifier()))) {
-                int integer = JSONUtils.getAsInt(json, getIdentifier());
+            if (json.has(getIdentifier()) && json.get(getIdentifier()).isJsonPrimitive()) {
+                int integer = json.get(getIdentifier()).getAsInt();
                 value = MathHelper.clamp(integer, minValue, maxValue);
                 return;
             } else {
