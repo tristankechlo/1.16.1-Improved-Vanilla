@@ -39,7 +39,6 @@ minecraft {
 }
 
 repositories {
-    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {    
