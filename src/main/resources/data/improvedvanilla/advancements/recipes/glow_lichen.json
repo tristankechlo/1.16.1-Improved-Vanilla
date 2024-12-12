@@ -1,0 +1,45 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "improvedvanilla:glow_lichen"
+        ]
+    },
+    "criteria": {
+        "has_glowstone": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "tag": "forge:dusts/glowstone"
+                    }
+                ]
+            }
+        },
+        "has_vine": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:vine"
+                        ]
+                    }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "improvedvanilla:glow_lichen"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_glowstone",
+            "has_vine",
+            "has_the_recipe"
+        ]
+    ]
+}
