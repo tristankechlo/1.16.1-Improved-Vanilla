@@ -15,21 +15,21 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.network.NetworkConstants;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(ImprovedVanilla.MOD_ID)
 public class ImprovedVanilla {
 
     public static final String MOD_ID = "improvedvanilla";
     public static final String MOD_NAME = "Improved Vanilla";
-    public final static Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+    public final static Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
     public ImprovedVanilla() {
         MinecraftForge.EVENT_BUS.register(new CropRightClickHandler());
@@ -48,7 +48,7 @@ public class ImprovedVanilla {
     }
 
     // setup configs
-    private void commonSetup(final FMLDedicatedServerSetupEvent event) {
+    private void commonSetup(final ServerAboutToStartEvent event) {
         ConfigManager.loadAndVerifyConfig();
     }
 

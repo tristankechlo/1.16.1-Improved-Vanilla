@@ -58,10 +58,9 @@ public class SpawnerHandler {
         final LevelAccessor world = event.getWorld();
         final BlockPos pos = event.getPos();
 
-        if (world.isClientSide() || !(world instanceof Level) || targetBlock != Blocks.SPAWNER) {
+        if (world.isClientSide() || !(world instanceof Level level) || targetBlock != Blocks.SPAWNER) {
             return;
         }
-        final Level level = (Level) world;
         if (!(player.getMainHandItem().getItem() instanceof PickaxeItem)) {
             event.setExpToDrop(0);
             return;
@@ -141,7 +140,7 @@ public class SpawnerHandler {
 
         // get the displayed entity
         if (nbt.contains("SpawnData")) {
-            SpawnData spawnData = new SpawnData(nbt.getCompound("SpawnData"), Optional.empty());
+            SpawnData spawnData = new SpawnData(nbt.getCompound("SpawnData").getCompound("entity"), Optional.empty());
             String id = spawnData.entityToSpawn().getString("id"); // should be the id of the entity
             return ImprovedVanilla.getMonsterEgg(id, 1);
         }
