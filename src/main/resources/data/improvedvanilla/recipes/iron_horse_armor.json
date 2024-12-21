@@ -1,19 +1,19 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"  I",
-		"ISI",
-		"III"
-	],
-	"key": {
-		"I": {
-			"tag": "forge:ingots/iron"
-		},
-		"S": {
-			"item": "minecraft:saddle"
-		}
-	},
-	"result": {
-		"item": "minecraft:iron_horse_armor"
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "  I",
+        "ISI",
+        "III"
+    ],
+    "key": {
+        "I": {
+            "tag": "forge:ingots/iron"
+        },
+        "S": {
+            "item": "minecraft:saddle"
+        }
+    },
+    "result": {
+        "item": "minecraft:iron_horse_armor"
+    }
 }

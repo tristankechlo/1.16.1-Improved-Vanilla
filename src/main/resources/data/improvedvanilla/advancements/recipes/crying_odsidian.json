@@ -2,16 +2,18 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "improvedvanilla:dead_bush"
+            "improvedvanilla:crying_obsidian"
         ]
     },
     "criteria": {
-        "has_sapling": {
+        "has_ghast_tear": {
             "trigger": "minecraft:inventory_changed",
             "conditions": {
                 "items": [
                     {
-                        "tag": "minecraft:saplings"
+                        "items": [
+                            "minecraft:ghast_tear"
+                        ]
                     }
                 ]
             }
@@ -19,13 +21,13 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "improvedvanilla:dead_bush"
+                "recipe": "improvedvanilla:crying_obsidian"
             }
         }
     },
     "requirements": [
         [
-            "has_sapling",
+            "has_ghast_tear",
             "has_the_recipe"
         ]
     ]

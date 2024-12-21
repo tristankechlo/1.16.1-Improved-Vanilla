@@ -1,13 +1,6 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 }
-apply plugin: 'net.minecraftforge.gradle'
 
 version = "${minecraft_version}-${mod_version}"
 archivesBaseName = "${mod_id}-forge"
@@ -16,8 +9,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    
+
     runs {
         client {
             workingDirectory project.file('run')
@@ -31,33 +23,30 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            args '--nogui'
 
             mods { improvedvanilla { source sourceSets.main } }
         }
     }
 }
 
-repositories {
-}
-
-dependencies {    
-    minecraft "net.minecraftforge:forge:${minecraft_version}${forge_version}"
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation 'org.codehaus.groovy:groovy-json:3.0.16'
 }
 
 jar {
     from rootProject.file('LICENSE')
     manifest {
         attributes([
-            'Specification-Title'     : mod_name,
-            'Specification-Vendor'    : mod_author,
-            'Specification-Version'   : project.jar.archiveVersion,
-            'Implementation-Title'    : project.name,
-            'Implementation-Version'  : project.jar.archiveVersion,
-            'Implementation-Vendor'   : mod_author,
-            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            'Timestamp'               : System.currentTimeMillis(),
-            'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-            'Build-On-Minecraft'      : minecraft_version
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Implementation-Title'    : project.name,
+                'Implementation-Vendor'   : mod_author,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'Timestamp'               : System.currentTimeMillis(),
+                'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                'Build-On-Minecraft'      : minecraft_version
         ])
     }
 }
@@ -66,11 +55,11 @@ jar.finalizedBy('reobfJar')
 
 processResources {
     def expandProps = [
-        "version"                   : "${minecraft_version}-${mod_version}",
-        "version_range"             : version_range,
-        "minecraft_version"         : minecraft_version,
-        "java_version"              : java_version,
-        "forge_loader_range"        : forge_loader_range
+            "version"           : "${minecraft_version}-${mod_version}",
+            "version_range"     : version_range,
+            "minecraft_version" : minecraft_version,
+            "java_version"      : java_version,
+            "forge_loader_range": forge_loader_range
     ]
 
     filesMatching(['META-INF/mods.toml']) {

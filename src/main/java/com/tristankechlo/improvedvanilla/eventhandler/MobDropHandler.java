@@ -1,98 +1,87 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Objects;
+
+@Mod.EventBusSubscriber
 public class MobDropHandler {
 
-	@SubscribeEvent
-	public void onMobDeath(final LivingDropsEvent event) {
-		final LivingEntity entity = event.getEntityLiving();
-		final Level world = entity.level;
-		if (world.isClientSide) {
-			return;
-		}
+    @SubscribeEvent
+    public void onMobDeath(final LivingDropsEvent event) {
+        final LivingEntity entityKilled = event.getEntityLiving();
+        final DamageSource damageSource = event.getSource();
+        final Level level = entityKilled.level;
+        if (level.isClientSide()) {
+            return;
+        }
 
-		final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.SERVER.dropOnlyWhenKilledByPlayer.get();
-		final int dropchance = ImprovedVanillaConfig.SERVER.mobSpawnEggDropChance.get();
-		final Entity source = event.getSource().getEntity();
-		final BlockPos pos = entity.blockPosition();
-		final EntityType<?> type = (EntityType<?>) entity.getType();
-		final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(type.getRegistryName() + "_spawn_egg"));
+        final String entityID = Objects.requireNonNull(ForgeRegistries.ENTITIES.getKey(entityKilled.getType())).toString();
+        final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.MOB_DROP.dropOnlyWhenKilledByPlayer.get();
+        final int dropChance = ImprovedVanillaConfig.MOB_DROP.mobSpawnEggDropChance.get();
+        final Entity player = damageSource.getEntity();
+        final BlockPos pos = new BlockPos(entityKilled.position());
 
-		// killed by player and onlyWhenKilledByPlayer is true
-		if ((source instanceof ServerPlayer) && onlyWhenKilledByPlayer) {
-			// drop only when entity was killed by a player
-			final ServerPlayer player = (ServerPlayer) source;
-			if (player.isSpectator()) {
-				return;
-			}
-			handleKilledByPlayer(event, world, pos, item, dropchance);
+        // killed by player and onlyWhenKilledByPlayer is true
+        if ((player instanceof ServerPlayer) && onlyWhenKilledByPlayer) {
+            // drop only when entity was killed by a player
+            if (player.isSpectator()) {
+                return;
+            }
+            handleKilledByPlayer(level, pos, dropChance, event.getLootingLevel(), entityID);
 
-			// if allowed to drop always (onlyWhenKilledByPlayer == true)
-		} else if (!onlyWhenKilledByPlayer) {
+        } else if (!onlyWhenKilledByPlayer) {
 
-			// if the mob was killed by player anyway
-			if (source instanceof ServerPlayer) {
+            // if the mob was killed by player anyway
+            if (player instanceof ServerPlayer) {
+                if (player.isSpectator()) {
+                    return;
+                }
+                handleKilledByPlayer(level, pos, dropChance, event.getLootingLevel(), entityID);
+            } else {
+                // not killed by player
+                if (dropChance <= 0 || dropChance > 100) {
+                    return;
+                }
+                if (Math.random() < ((double) dropChance / 100)) {
+                    ItemStack stack = ImprovedVanilla.getMonsterEgg(entityID, 1);
+                    ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
+                }
+            }
+        }
+    }
 
-				final ServerPlayer player = (ServerPlayer) source;
-				if (player.isSpectator()) {
-					return;
-				}
-				handleKilledByPlayer(event, world, pos, item, dropchance);
-
-				// not killed by player
-			} else {
-				if (dropchance >= 1 && dropchance <= 100) {
-					if (Math.random() < ((double) dropchance / 100)) {
-						final ItemStack stack = new ItemStack(item, 1);
-						ItemEntity itemEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(),
-								stack);
-						itemEntity.setDefaultPickUpDelay();
-						world.addFreshEntity(itemEntity);
-					}
-				}
-			}
-		}
-	}
-
-	private static void handleKilledByPlayer(LivingDropsEvent event, Level world, BlockPos pos, Item item,
-			int dropchance) {
-		final int lootingLevel = event.getLootingLevel();
-		final boolean lootingAffective = ImprovedVanillaConfig.SERVER.lootingAffective.get();
-
-		int count = 0;
-		if (lootingAffective && lootingLevel >= 1) {
-			// foreach lootinglevel there's an additional chance to drop the egg
-			for (int i = 0; i < (1 + lootingLevel); i++) {
-				if (Math.random() < ((double) dropchance / 100)) {
-					count++;
-				}
-			}
-		} else {
-			if (Math.random() < ((double) dropchance / 100)) {
-				count++;
-			}
-		}
-		if (count > 0) {
-			final ItemStack stack = new ItemStack(item, count);
-			ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-			itemEntity.setDefaultPickUpDelay();
-			world.addFreshEntity(itemEntity);
-		}
-	}
+    private static void handleKilledByPlayer(Level level, BlockPos pos, int dropChance, int lootingLevel, String id) {
+        final boolean lootingAffective = ImprovedVanillaConfig.MOB_DROP.lootingAffective.get();
+        int count = 0;
+        if (lootingAffective && lootingLevel >= 1) {
+            // foreach lootingLevel there's an additional chance to drop the egg
+            for (int i = 0; i < (1 + lootingLevel); i++) {
+                if (Math.random() < ((double) dropChance / 100)) {
+                    count++;
+                }
+            }
+        } else {
+            if (Math.random() < ((double) dropChance / 100)) {
+                count++;
+            }
+        }
+        if (count > 0) {
+            ItemStack stack = ImprovedVanilla.getMonsterEgg(id, count);
+            ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
+        }
+    }
 
 }

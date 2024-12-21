@@ -1,29 +1,27 @@
-modLoader="javafml"
-loaderVersion="${forge_loader_range}"
-license="CC BY-NC-ND 4.0"
-showAsResourcePack=false
+modLoader = "javafml"
+loaderVersion = "${forge_loader_range}"
+license = "CC BY-NC-ND 4.0"
+showAsResourcePack = false
 
 [[mods]]
-    modId="improvedvanilla"
-    version="${version}"
-    displayName="Improved Vanilla"
-    displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
-    logoFile="logo.png"
-    #credits="Thanks for this example mod goes to Java"
-    authors="Buecher_wurm"
-    description='''Small changes to Minecraft Vanilla'''
-    displayTest="IGNORE_SERVER_VERSION" #optional
+    modId = "improvedvanilla"
+    version = "${version}"
+    displayName = "Improved Vanilla"
+    displayURL = "https://www.curseforge.com/minecraft/mc-mods/improved-vanilla"
+    logoFile = "pack.png"
+    authors = "Buecher_wurm"
+    description = '''small changes/additions to make the gameplay a little bit more pleasant/enjoyable'''
 
 [[dependencies.improvedvanilla]]
-    modId="forge"
-    mandatory=true
-    versionRange="${forge_loader_range}"
-    ordering="NONE"
-    side="BOTH"
-	
+    modId = "forge"
+    mandatory = true
+    versionRange = "${forge_loader_range}"
+    ordering = "NONE"
+    side = "BOTH"
+
 [[dependencies.improvedvanilla]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="${version_range}"
-    ordering="NONE"
-    side="BOTH"
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "${version_range}"
+    ordering = "NONE"
+    side = "BOTH"

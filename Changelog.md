@@ -1,5 +1,12 @@
 # Changelog
 
+### Version 1.18.2 - 1.7.1
+
+- backport latest functionality to 1.17.1
+- move config to json format
+  - same config design across all mod versions
+- fix multiple bugs
+
 ### Version 1.18.2 - 1.6.0
 
 - add recipes for following items (using mostly forge and minecraft tags to be compatible with other mods)
