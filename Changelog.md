@@ -2,7 +2,7 @@
 
 ### Version 1.18.2 - 1.7.1
 
-- backport latest functionality to 1.17.1
+- backport latest functionality to 1.18.2
 - move config to json format
   - same config design across all mod versions
 - fix multiple bugs
