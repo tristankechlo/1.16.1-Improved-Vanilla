@@ -8,7 +8,6 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'java'
 
 version = "${minecraft_version}-${mod_version}"
 archivesBaseName = "${mod_id}-forge"
@@ -16,7 +15,7 @@ archivesBaseName = "${mod_id}-forge"
 java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 
 minecraft {
-    mappings channel: 'official', version: project.mappings
+    mappings channel: 'official', version: minecraft_version
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
     runs {
@@ -62,6 +61,8 @@ jar {
         ])
     }
 }
+
+jar.finalizedBy('reobfJar')
 
 processResources {
     def expandProps = [
