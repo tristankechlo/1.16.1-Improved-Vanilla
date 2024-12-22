@@ -49,18 +49,18 @@ public final class SpawnerHandler {
         return InteractionResult.PASS;
     }
 
-    public static InteractionResult onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state, int xpToDrop, Consumer<Integer> setExpToDrop) {
+    public static void onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state, int xpToDrop, Consumer<Integer> setExpToDrop) {
         final Block targetBlock = state.getBlock();
 
         if (level.isClientSide() || targetBlock != Blocks.SPAWNER) {
-            return InteractionResult.PASS;
+            return;
         }
         if (!(player.getMainHandItem().getItem() instanceof PickaxeItem)) {
             setExpToDrop.accept(0);
-            return InteractionResult.PASS;
+            return;
         }
         if (player.isCreative() || player.isSpectator()) {
-            return InteractionResult.PASS;
+            return;
         }
         final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
         final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
@@ -91,14 +91,11 @@ public final class SpawnerHandler {
 
             // if other mods prevent the block break, at least the spawner is disabled
             resetSpawner(level, pos);
-            return InteractionResult.SUCCESS;
-
         } else if (silkTouchLevel == 0 && fortuneLevel >= 1) {
             int exp = xpToDrop;
             exp += (exp + 1) * level.getRandom().nextInt(fortuneLevel) * level.getRandom().nextInt(fortuneLevel);
             setExpToDrop.accept(exp);
         }
-        return InteractionResult.PASS;
     }
 
     private static void resetSpawner(final Level world, final BlockPos pos) {

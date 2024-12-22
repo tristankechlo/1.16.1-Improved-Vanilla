@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,14 +31,13 @@ public class FabricImprovedVanilla implements ModInitializer {
         });
 
         // setup configs
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
-            ConfigManager.loadAndVerifyConfig();
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> ConfigManager.loadAndVerifyConfig());
     }
 
     // drop spawner and spawn-eggs on block break
     private boolean onSpawnerBroken(Level world, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        return SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {}) == InteractionResult.PASS;
+        SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {});
+        return true; // always allow other event listeners to run
     }
 
 }

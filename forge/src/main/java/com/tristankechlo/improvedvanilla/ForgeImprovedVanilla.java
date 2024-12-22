@@ -75,10 +75,7 @@ public class ForgeImprovedVanilla {
 
     // drop spawner and spawn-eggs on block break
     private void onSpawnerBroken(final BlockEvent.BreakEvent event) {
-        InteractionResult result = SpawnerHandler.onSpawnerBreak((Level) event.getLevel(), event.getPlayer(), event.getPos(), event.getState(), event.getExpToDrop(), event::setExpToDrop);
-        if (result == InteractionResult.SUCCESS) {
-            event.setCanceled(true);
-        }
+        SpawnerHandler.onSpawnerBreak((Level) event.getLevel(), event.getPlayer(), event.getPos(), event.getState(), event.getExpToDrop(), event::setExpToDrop);
     }
 
 }
