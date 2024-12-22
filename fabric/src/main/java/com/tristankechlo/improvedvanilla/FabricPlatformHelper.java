@@ -35,7 +35,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public void setNextSpawnData(BaseSpawner spawner, @Nullable Level level, BlockPos pos, SpawnData spawnData) {
-        ((BaseSpawnerAccessor) spawner).callSetNextSpawnData(level, pos, spawnData);
+        ((BaseSpawnerAccessor) spawner).callSetNextSpawnData$improvedvanilla(level, pos, spawnData);
     }
 
 }

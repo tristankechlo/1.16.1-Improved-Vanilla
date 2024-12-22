@@ -16,7 +16,7 @@ public class LivingEntityMixin {
 
     @SuppressWarnings("ConstantConditions")
     @Inject(at = @At(value = "TAIL"), method = "dropAllDeathLoot")
-    private void dropAllDeathLoot(DamageSource damageSource, CallbackInfo info) {
+    private void dropAllDeathLoot$improvedvanilla(DamageSource damageSource, CallbackInfo info) {
         Entity source = damageSource.getEntity();
         if (source == null) {
             return;
