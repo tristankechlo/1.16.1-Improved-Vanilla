@@ -1,18 +1,6 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 }
-
-apply plugin: 'java'
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 
 version = "${minecraft_version}-${mod_version}"
 archivesBaseName = "${mod_id}-forge"
@@ -21,15 +9,12 @@ minecraft {
     mappings channel: 'official', version: minecraft_version
     
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    project.logger.debug('Forge Access Transformers are enabled for this project.')
 
     runs {
         client {
             workingDirectory project.file('run')
             ideaModule "${rootProject.name}.${project.name}.main"
             taskName 'Client'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 modClientRun {
                     source sourceSets.main
@@ -42,8 +27,6 @@ minecraft {
             workingDirectory project.file('run')
             ideaModule "${rootProject.name}.${project.name}.main"
             taskName 'Server'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 modServerRun {
                     source sourceSets.main
@@ -57,6 +40,9 @@ minecraft {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":common")
+
+    compileOnly group: 'com.google.auto.service', name: 'auto-service', version: auto_service_version
+    annotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: auto_service_version
 }
 
 tasks.withType(JavaCompile) {

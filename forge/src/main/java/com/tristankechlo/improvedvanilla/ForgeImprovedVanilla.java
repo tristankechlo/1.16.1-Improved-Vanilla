@@ -16,10 +16,10 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod(Constants.MOD_ID)
-public class ImprovedVanilla {
+@Mod(ImprovedVanilla.MOD_ID)
+public class ForgeImprovedVanilla {
 
-    public ImprovedVanilla() {
+    public ForgeImprovedVanilla() {
         // register event listeners
         MinecraftForge.EVENT_BUS.addListener(this::cropRightClicking);
         MinecraftForge.EVENT_BUS.addListener(this::easyPlanting);
@@ -46,25 +46,23 @@ public class ImprovedVanilla {
 
     // right click crops to harvest
     private void cropRightClicking(final PlayerInteractEvent.RightClickBlock event) {
-        InteractionResult result = CropRightClickHandler.harvestOnRightClick(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+        InteractionResult result = CropRightClickHandler.onPlayerRightClickBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
         if (result == InteractionResult.SUCCESS) {
-            event.getEntity().swing(event.getHand(), true);
             event.setCanceled(true);
         }
     }
 
     // easy planting
     private void easyPlanting(final PlayerInteractEvent.RightClickBlock event) {
-        InteractionResult result = EasyPlantingHandler.placeCropsInCircle(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+        InteractionResult result = EasyPlantingHandler.onPlayerRightClickBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
         if (result == InteractionResult.SUCCESS) {
-            event.getEntity().swing(event.getHand(), true);
             event.setCanceled(true);
         }
     }
 
     // drop spawn egg on entity death
     private void mobDropHandler(final LivingDropsEvent event) {
-        MobDropHandler.onLivingDrops(event.getEntity().getLevel(), event.getEntity(), event.getSource(), event.getLootingLevel());
+        MobDropHandler.onMobDeath(event.getEntity().getLevel(), event.getEntity(), event.getSource(), event.getLootingLevel());
     }
 
     // modify spawner on placement
@@ -77,8 +75,8 @@ public class ImprovedVanilla {
 
     // drop spawner and spawn-eggs on block break
     private void onSpawnerBroken(final BlockEvent.BreakEvent event) {
-        boolean result = SpawnerHandler.onSpawnerBreak((Level) event.getLevel(), event.getPlayer(), event.getPos(), event.getState(), event.getExpToDrop(), event::setExpToDrop);
-        if (!result) {
+        InteractionResult result = SpawnerHandler.onSpawnerBreak((Level) event.getLevel(), event.getPlayer(), event.getPos(), event.getState(), event.getExpToDrop(), event::setExpToDrop);
+        if (result == InteractionResult.SUCCESS) {
             event.setCanceled(true);
         }
     }

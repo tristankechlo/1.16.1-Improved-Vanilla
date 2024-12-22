@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.tristankechlo.improvedvanilla.ImprovedVanilla"
+			"com.tristankechlo.improvedvanilla.FabricImprovedVanilla"
 		]
 	},
 	"mixins": [

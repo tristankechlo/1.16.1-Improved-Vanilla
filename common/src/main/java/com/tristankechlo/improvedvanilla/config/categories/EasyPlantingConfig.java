@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.tristankechlo.improvedvanilla.config.values.BooleanValue;
 import com.tristankechlo.improvedvanilla.config.values.IntegerValue;
 
-public class EasyPlantingConfig {
+public final class EasyPlantingConfig {
 
     private static final String IDENTIFIER = "easy_planting";
 

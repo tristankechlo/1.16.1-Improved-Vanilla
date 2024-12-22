@@ -11,18 +11,19 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ImprovedVanilla implements ModInitializer {
+public class FabricImprovedVanilla implements ModInitializer {
 
     @Override
     public void onInitialize() {
         // register event listeners
-        UseBlockCallback.EVENT.register(CropRightClickHandler::harvestOnRightClick);
-        UseBlockCallback.EVENT.register(EasyPlantingHandler::placeCropsInCircle);
+        UseBlockCallback.EVENT.register(CropRightClickHandler::onPlayerRightClickBlock);
+        UseBlockCallback.EVENT.register(EasyPlantingHandler::onPlayerRightClickBlock);
         PlayerBlockBreakEvents.BEFORE.register(this::onSpawnerBroken);
 
         //register commands
@@ -38,7 +39,7 @@ public class ImprovedVanilla implements ModInitializer {
 
     // drop spawner and spawn-eggs on block break
     private boolean onSpawnerBroken(Level world, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        return SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {});
+        return SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {}) == InteractionResult.PASS;
     }
 
 }

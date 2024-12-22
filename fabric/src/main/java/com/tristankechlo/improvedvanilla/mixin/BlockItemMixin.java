@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BlockItemMixin {
 
     @Inject(method = "place", at = @At("TAIL"))
-    private void onSpawnerPlaced$improvedvanilla(BlockPlaceContext blockPlaceContext, CallbackInfoReturnable<InteractionResult> cir) {
+    private void onSpawnerPlaced$improvedVanilla(BlockPlaceContext blockPlaceContext, CallbackInfoReturnable<InteractionResult> cir) {
         SpawnerHandler.onSpawnerPlaced(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos());
     }
 

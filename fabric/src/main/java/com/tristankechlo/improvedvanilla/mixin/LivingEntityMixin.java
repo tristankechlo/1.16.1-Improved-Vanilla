@@ -14,9 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-    @SuppressWarnings("ConstantConditions")
     @Inject(at = @At(value = "TAIL"), method = "dropAllDeathLoot")
-    private void dropAllDeathLoot$improvedvanilla(DamageSource damageSource, CallbackInfo info) {
+    private void dropAllDeathLoot$improvedVanilla(DamageSource damageSource, CallbackInfo info) {
         Entity source = damageSource.getEntity();
         if (source == null) {
             return;
@@ -26,7 +25,7 @@ public class LivingEntityMixin {
             lootingLevel = EnchantmentHelper.getMobLooting((LivingEntity) source);
         }
         // drop spawn egg on entity death
-        MobDropHandler.onLivingDrops(source.getLevel(), ((LivingEntity) (Object) this), damageSource, lootingLevel);
+        MobDropHandler.onMobDeath(source.getLevel(), ((LivingEntity) (Object) this), damageSource, lootingLevel);
     }
 
 }

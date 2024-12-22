@@ -1,7 +1,7 @@
 package com.tristankechlo.improvedvanilla.config.values;
 
 import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.Constants;
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 
@@ -38,22 +38,22 @@ public final class IntegerValue implements IConfigValue<Integer> {
     }
 
     @Override
-    public void serialize(JsonObject jsonObject) {
-        jsonObject.addProperty(getIdentifier(), get());
+    public void serialize(JsonObject json) {
+        json.addProperty(getIdentifier(), get());
     }
 
     @Override
-    public void deserialize(JsonObject jsonObject) {
+    public void deserialize(JsonObject json) {
         try {
-            if (GsonHelper.isNumberValue(jsonObject, getIdentifier())) {
-                int integer = GsonHelper.getAsInt(jsonObject, getIdentifier(), defaultValue);
+            if (GsonHelper.isNumberValue(json, getIdentifier())) {
+                int integer = GsonHelper.getAsInt(json, getIdentifier());
                 value = Mth.clamp(integer, minValue, maxValue);
                 return;
             } else {
-                Constants.LOGGER.warn("Config value '{}' was not found or is not a valid integer, using default value '{}' instead", getIdentifier(), defaultValue);
+                ImprovedVanilla.LOGGER.warn("Config value '{}' was not found or is not a valid integer, using default value '{}' instead", getIdentifier(), defaultValue);
             }
         } catch (Exception e) {
-            Constants.LOGGER.warn("Error while loading the config value '{}', using default value '{}' instead", getIdentifier(), defaultValue);
+            ImprovedVanilla.LOGGER.warn("Error while loading the config value '{}', using default value '{}' instead", getIdentifier(), defaultValue);
         }
         this.setToDefault();
     }
