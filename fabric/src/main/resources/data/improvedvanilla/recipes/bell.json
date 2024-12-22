@@ -1,22 +1,22 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"SSS",
-		" G ",
-		"GNG"
-	],
-	"key": {
-		"S": {
-			"tag": "c:wooden_rods"
-		},
-		"G": {
-			"tag": "c:gold_ingots"
-		},
-		"N": {
-			"tag": "c:gold_nuggets"
-		}
-	},
-	"result": {
-		"item": "minecraft:bell"
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "SSS",
+        " G ",
+        "GNG"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:stick"
+        },
+        "G": {
+            "tag": "c:gold_ingots"
+        },
+        "N": {
+            "item": "minecraft:gold_nugget"
+        }
+    },
+    "result": {
+        "item": "minecraft:bell"
+    }
 }

@@ -2,18 +2,16 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "improvedvanilla:saddle"
+            "improvedvanilla:dead_bush"
         ]
     },
     "criteria": {
-        "has_leather": {
+        "has_sapling": {
             "trigger": "minecraft:inventory_changed",
             "conditions": {
                 "items": [
                     {
-                        "items": [
-                            "minecraft:leather"
-                        ]
+                        "tag": "minecraft:saplings"
                     }
                 ]
             }
@@ -21,13 +19,13 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "improvedvanilla:saddle"
+                "recipe": "improvedvanilla:dead_bush"
             }
         }
     },
     "requirements": [
         [
-            "has_leather",
+            "has_sapling",
             "has_the_recipe"
         ]
     ]

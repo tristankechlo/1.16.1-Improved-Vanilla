@@ -1,19 +1,19 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"GGG",
-		"GSG",
-		"GGG"
-	],
-	"key": {
-		"S": {
-			"item": "minecraft:blackstone"
-		},
-		"G": {
-			"tag": "c:gold_nuggets"
-		}
-	},
-	"result": {
-		"item": "minecraft:gilded_blackstone"
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "GGG",
+        "GSG",
+        "GGG"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:blackstone"
+        },
+        "G": {
+            "item": "minecraft:gold_nugget"
+        }
+    },
+    "result": {
+        "item": "minecraft:gilded_blackstone"
+    }
 }

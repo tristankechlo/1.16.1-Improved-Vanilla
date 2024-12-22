@@ -2,29 +2,17 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "improvedvanilla:glow_ink_sac"
+            "improvedvanilla:diamond_horse_armor"
         ]
     },
     "criteria": {
-        "has_glowstone": {
+        "has_saddle": {
             "trigger": "minecraft:inventory_changed",
             "conditions": {
                 "items": [
                     {
                         "items": [
-                            "minecraft:glowstone_dust"
-                        ]
-                    }
-                ]
-            }
-        },
-        "has_ink_sac": {
-            "trigger": "minecraft:inventory_changed",
-            "conditions": {
-                "items": [
-                    {
-                        "items": [
-                            "minecraft:ink_sac"
+                            "minecraft:saddle"
                         ]
                     }
                 ]
@@ -33,14 +21,13 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "improvedvanilla:glow_ink_sac"
+                "recipe": "improvedvanilla:diamond_horse_armor"
             }
         }
     },
     "requirements": [
         [
-            "has_glowstone",
-            "has_ink_sac",
+            "has_saddle",
             "has_the_recipe"
         ]
     ]

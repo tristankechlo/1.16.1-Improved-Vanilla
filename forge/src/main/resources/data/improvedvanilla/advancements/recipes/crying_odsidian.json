@@ -2,29 +2,17 @@
     "parent": "minecraft:recipes/root",
     "rewards": {
         "recipes": [
-            "improvedvanilla:glow_ink_sac"
+            "improvedvanilla:crying_obsidian"
         ]
     },
     "criteria": {
-        "has_glowstone": {
+        "has_ghast_tear": {
             "trigger": "minecraft:inventory_changed",
             "conditions": {
                 "items": [
                     {
                         "items": [
-                            "minecraft:glowstone_dust"
-                        ]
-                    }
-                ]
-            }
-        },
-        "has_ink_sac": {
-            "trigger": "minecraft:inventory_changed",
-            "conditions": {
-                "items": [
-                    {
-                        "items": [
-                            "minecraft:ink_sac"
+                            "minecraft:ghast_tear"
                         ]
                     }
                 ]
@@ -33,14 +21,13 @@
         "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-                "recipe": "improvedvanilla:glow_ink_sac"
+                "recipe": "improvedvanilla:crying_obsidian"
             }
         }
     },
     "requirements": [
         [
-            "has_glowstone",
-            "has_ink_sac",
+            "has_ghast_tear",
             "has_the_recipe"
         ]
     ]

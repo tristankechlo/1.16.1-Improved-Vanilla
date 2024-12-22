@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "improvedvanilla",
 	"version": "${version}",
-	"name": "ImprovedVanilla",
-	"description": "Small changes to Minecraft Vanilla",
+	"name": "Improved Vanilla",
+	"description": "small changes/additions to make the gameplay a little bit more pleasant/enjoyable",
 	"authors": [
 		"Buecher_wurm"
 	],
@@ -12,7 +12,7 @@
 		"issues": "https://github.com/tristankechlo/ImprovedVanilla/issues"
 	},
 	"license": "CC BY-NC-ND 4.0",
-	"icon": "assets/improvedvanilla/logo.png",
+	"icon": "pack.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
