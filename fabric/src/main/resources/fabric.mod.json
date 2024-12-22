@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "improvedvanilla",
-	"version": "1.19.4-1.6.4",
+	"version": "${version}",
 	"name": "ImprovedVanilla",
 	"description": "Small changes to Minecraft Vanilla",
 	"authors": [
@@ -23,9 +23,19 @@
 		"improvedvanilla.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14",
-		"fabric": "*",
-		"minecraft": ">=1.19.3",
-		"java": ">=17"
-	}
+        "fabricloader": ">=${fabric_loader_min}",
+        "fabric-api": "*",
+        "minecraft": ">=${fabric_range_min_inclusive} <${fabric_range_max_exclusive}",
+        "java": ">=${java_version}"
+	},
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.discord": "https://discord.gg/bhUaWhq",
+                "modmenu.curseforge": "https://www.curseforge.com/minecraft/mc-mods/improved-vanilla",
+                "modmenu.modrinth": "https://modrinth.com/mod/improved-vanilla",
+                "modmenu.wiki": "https://github.com/tristankechlo/ImprovedVanilla/wiki"
+            }
+        }
+    }
 }

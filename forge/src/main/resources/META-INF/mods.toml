@@ -1,31 +1,31 @@
 modLoader="javafml"
-loaderVersion="[44,)"
+loaderVersion="${forge_loader_range}"
 license="CC BY-NC-ND 4.0"
 issueTrackerURL="https://github.com/tristankechlo/ImprovedVanilla/issues"
 showAsResourcePack=false
 
 [[mods]] #mandatory
-modId="improvedvanilla" #mandatory
-version="1.19.4-1.6.4" #mandatory
-displayName="Improved Vanilla" #mandatory
-#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
-displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla" #optional
-logoFile="logo.png" #optional
-credits="Thanks for this example mod goes to Java" #optional
-authors="Buecher_wurm" #optional
-description='''Small changes to Minecraft Vanilla'''
-displayTest="IGNORE_SERVER_VERSION" #optional
+    modId="improvedvanilla" #mandatory
+    version="${version}" #mandatory
+    displayName="Improved Vanilla" #mandatory
+    #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/improved-vanilla" #optional
+    logoFile="logo.png" #optional
+    credits="Thanks for this example mod goes to Java" #optional
+    authors="Buecher_wurm" #optional
+    description='''Small changes to Minecraft Vanilla'''
+    displayTest="IGNORE_SERVER_VERSION" #optional
 
 [[dependencies.improvedvanilla]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[44,)" #mandatory
+    versionRange="${forge_loader_range}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.improvedvanilla]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.3,1.20)"
+    versionRange="${version_range}"
     ordering="NONE"
     side="BOTH"
