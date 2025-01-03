@@ -10,8 +10,8 @@ public interface IConfigValue<T> {
 
     T get();
 
-    void serialize(JsonObject jsonObject);
+    void serialize(JsonObject json);
 
-    void deserialize(JsonObject jsonObject);
+    void deserialize(JsonObject json);
 
 }

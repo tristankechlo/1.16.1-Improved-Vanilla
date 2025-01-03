@@ -16,13 +16,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ImprovedVanilla implements ModInitializer {
+public class FabricImprovedVanilla implements ModInitializer {
 
     @Override
     public void onInitialize() {
         // register event listeners
-        UseBlockCallback.EVENT.register(CropRightClickHandler::harvestOnRightClick);
-        UseBlockCallback.EVENT.register(EasyPlantingHandler::placeCropsInCircle);
+        UseBlockCallback.EVENT.register(CropRightClickHandler::onPlayerRightClickBlock);
+        UseBlockCallback.EVENT.register(EasyPlantingHandler::onPlayerRightClickBlock);
         PlayerBlockBreakEvents.BEFORE.register(this::onSpawnerBroken);
 
         //register commands
@@ -31,14 +31,13 @@ public class ImprovedVanilla implements ModInitializer {
         });
 
         // setup configs
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
-            ConfigManager.loadAndVerifyConfig();
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> ConfigManager.loadAndVerifyConfig());
     }
 
     // drop spawner and spawn-eggs on block break
     private boolean onSpawnerBroken(Level world, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        return SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {});
+        SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {});
+        return true; // always allow other event listeners to run
     }
 
 }

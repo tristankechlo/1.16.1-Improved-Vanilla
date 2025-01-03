@@ -1,20 +1,14 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-import com.tristankechlo.improvedvanilla.mixin.BaseSpawnerInvoker;
-import net.minecraft.Util;
+import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
@@ -43,6 +37,7 @@ public final class SpawnerHandler {
         }
 
         final Block targetBlock = level.getBlockState(pos).getBlock();
+
         if (targetBlock == Blocks.SPAWNER) {
             level.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
             BlockEntity tileEntity = level.getBlockEntity(pos);
@@ -54,42 +49,46 @@ public final class SpawnerHandler {
         return InteractionResult.PASS;
     }
 
-    //false to cancel, true to continue
-    public static boolean onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state, int xpToDrop, Consumer<Integer> setExpToDrop) {
-        if (level.isClientSide()) {
-            return true;
-        }
+    public static void onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state, int xpToDrop, Consumer<Integer> setExpToDrop) {
         final Block targetBlock = state.getBlock();
-        if (targetBlock != Blocks.SPAWNER) {
-            return true;
+
+        if (level.isClientSide() || targetBlock != Blocks.SPAWNER) {
+            return;
         }
         if (!(player.getMainHandItem().getItem() instanceof PickaxeItem)) {
             setExpToDrop.accept(0);
-            return true;
+            return;
         }
         if (player.isCreative() || player.isSpectator()) {
-            return true;
+            return;
         }
-
         final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
         final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
 
         if (silkTouchLevel >= 1) {
             setExpToDrop.accept(0);
+
+            // try dropping the spawner itself
             final int spawnerDropChance = ImprovedVanillaConfig.SPAWNER.spawnerDropChance.get();
             if (spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                 if (Math.random() < ((double) spawnerDropChance / 100)) {
-                    final ItemStack stack = new ItemStack(Items.SPAWNER, 1);
-                    final ItemEntity entity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack);
-                    level.addFreshEntity(entity);
+                    ItemStack stack = new ItemStack(Items.SPAWNER, 1);
+                    ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
                 }
             } else {
                 int exp = xpToDrop;
                 exp += (exp + 1) * level.getRandom().nextInt(4) * level.getRandom().nextInt(4);
                 setExpToDrop.accept(exp);
             }
-            int eggDropChance = ImprovedVanillaConfig.SPAWNER.spawnEggDropChance.get();
-            dropMonsterEggs(level, pos, eggDropChance);
+
+            // try dropping the monster egg
+            final int eggDropChance = ImprovedVanillaConfig.SPAWNER.spawnEggDropChance.get();
+            if (eggDropChance >= 1 && eggDropChance <= 100) {
+                if (Math.random() < ((double) eggDropChance / 100)) {
+                    dropMonsterEggs(level, pos);
+                }
+            }
+
             // if other mods prevent the block break, at least the spawner is disabled
             resetSpawner(level, pos);
         } else if (silkTouchLevel == 0 && fortuneLevel >= 1) {
@@ -97,97 +96,47 @@ public final class SpawnerHandler {
             exp += (exp + 1) * level.getRandom().nextInt(fortuneLevel) * level.getRandom().nextInt(fortuneLevel);
             setExpToDrop.accept(exp);
         }
-        return true;
     }
 
     private static void resetSpawner(final Level world, final BlockPos pos) {
-        if (world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
-            world.removeBlockEntity(pos);
-            world.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
-            SpawnerBlockEntity tile = (SpawnerBlockEntity) world.getBlockEntity(pos);
+        // remove old block-entity
+        world.removeBlockEntity(pos);
 
-            final SpawnData nextSpawnData = new SpawnData(Util.make(new CompoundTag(), (ntb) -> {
-                ntb.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString());
-            }), Optional.empty());
-            ((BaseSpawnerInvoker) tile.getSpawner()).callSetNextSpawnData$improvedvanilla(world, pos, nextSpawnData);
-            tile.setChanged();
-            world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        }
+        // create new block with new block-entity
+        world.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
+        SpawnerBlockEntity tile = (SpawnerBlockEntity) world.getBlockEntity(pos);
+
+        CompoundTag entity = new CompoundTag();
+        entity.putString("id", "minecraft:area_effect_cloud");
+
+        SpawnData nextSpawnData = new SpawnData(entity, Optional.empty());
+        IPlatformHelper.INSTANCE.setNextSpawnData(tile.getSpawner(), world, pos, nextSpawnData);
+        tile.setChanged();
+        world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
     }
 
-    private static void dropMonsterEggs(final Level world, final BlockPos pos, int eggDropChance) {
-        if (eggDropChance <= 0) {
-            return;
-        }
-        if (world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
-            final SimpleContainer inv = getInvfromSpawner(world, pos);
-            if (eggDropChance > 100) {
-                eggDropChance = 100;
-            }
-            for (int i = 0; i < inv.getContainerSize(); i++) {
-                if (inv.getItem(i) == ItemStack.EMPTY) {
-                    continue;
-                }
-                Item item = inv.getItem(i).getItem();
-                int weight = inv.getItem(i).getCount();
-                if (item == Items.AIR || weight < 1) {
-                    continue;
-                }
-                if (Math.random() < ((double) eggDropChance / 100)) {
-                    final ItemEntity entityItem = new ItemEntity(world, pos.getX(), (pos.getY() + 1.0f), pos.getZ(), inv.getItem(i));
-                    world.addFreshEntity(entityItem);
-                }
-            }
-        }
+    private static void dropMonsterEggs(final Level world, final BlockPos pos) {
+        ItemStack stack = getEggFromSpawner(world, pos);
+        ImprovedVanilla.dropItemStackInWorld(world, pos, stack);
     }
 
-    private static SimpleContainer getInvfromSpawner(final Level world, final BlockPos pos) {
-        if (!world.getBlockState(pos).getBlock().equals(Blocks.SPAWNER)) {
-            return new SimpleContainer(ItemStack.EMPTY);
-        }
-        final BlockEntity tile = world.getBlockEntity(pos);
+    private static ItemStack getEggFromSpawner(final Level world, final BlockPos pos) {
+        BlockEntity tile = world.getBlockEntity(pos);
         if (!(tile instanceof SpawnerBlockEntity)) {
-            return new SimpleContainer(ItemStack.EMPTY);
+            return ItemStack.EMPTY;
         }
 
-        final BaseSpawner logic = ((SpawnerBlockEntity) tile).getSpawner();
+        // load the state of the spawner into this nbt
+        BaseSpawner logic = ((SpawnerBlockEntity) tile).getSpawner();
         CompoundTag nbt = new CompoundTag();
         nbt = logic.save(nbt);
 
-        if (!nbt.contains("SpawnPotentials", 9) && !nbt.contains("SpawnData")) {
-            return new SimpleContainer(ItemStack.EMPTY);
+        // get the displayed entity
+        if (nbt.contains("SpawnData")) {
+            SpawnData spawnData = new SpawnData(nbt.getCompound("SpawnData").getCompound("entity"), Optional.empty());
+            String id = spawnData.entityToSpawn().getString("id"); // should be the id of the entity
+            return ImprovedVanilla.getMonsterEgg(id, 1);
         }
-
-        ListTag listnbt = nbt.getList("SpawnPotentials", 10);
-        if (listnbt.size() > 0) {
-            SimpleContainer inv = new SimpleContainer(listnbt.size());
-
-            for (int i = 0; i < listnbt.size(); ++i) {
-                CompoundTag entry = listnbt.getCompound(i);
-                String entity = entry.getCompound("data").getCompound("entity").toString();
-                entity = entity.substring(entity.indexOf("\"") + 1);
-                entity = entity.substring(0, entity.indexOf("\""));
-                int weight = entry.getShort("weight");
-                if (entity.equalsIgnoreCase(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
-                    continue;
-                }
-                final ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(entity + "_spawn_egg")), weight);
-                inv.setItem(i, itemStack);
-            }
-            return inv;
-        }
-
-        CompoundTag data = nbt.getCompound("SpawnData");
-        if (data.contains("entity")) {
-            String entity = data.getCompound("entity").toString();
-            entity = entity.substring(entity.indexOf("\"") + 1);
-            entity = entity.substring(0, entity.indexOf("\""));
-            if (!entity.equalsIgnoreCase(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.AREA_EFFECT_CLOUD).toString())) {
-                final ItemStack itemStack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(entity + "_spawn_egg")), 1);
-                return new SimpleContainer(itemStack);
-            }
-        }
-        return new SimpleContainer(ItemStack.EMPTY);
+        return ItemStack.EMPTY;
     }
-
 }

@@ -1,7 +1,7 @@
 package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-import com.tristankechlo.improvedvanilla.platform.CropBlockHelper;
+import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -17,42 +17,48 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public final class CropRightClickHandler {
 
     private static final float BASE_MULTIPLIER = 1.0F;
 
-    public static InteractionResult harvestOnRightClick(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+    public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player == null || level == null) {
             return InteractionResult.PASS;
         }
-        if (level.isClientSide || player.isShiftKeyDown() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
+        if (player.isShiftKeyDown() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        if (!ImprovedVanillaConfig.FARMING.activated.get()) {
+        if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.activated.get()) {
             return InteractionResult.PASS;
         }
 
-        BlockPos targetPos = hitResult.getBlockPos();
-        Item heldItem = player.getMainHandItem().getItem();
+        final Item heldItem = player.getMainHandItem().getItem();
+        AtomicReference<InteractionResult> result = new AtomicReference<>(InteractionResult.PASS);
 
         if (player.getMainHandItem().isEmpty()) {
-            boolean success = spawnDropsAndResetBlock(level, targetPos, BASE_MULTIPLIER);
-            return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
+            if (!level.isClientSide()) {
+                spawnDropsAndResetBlock(level, hitResult.getBlockPos(), BASE_MULTIPLIER, () -> result.set(InteractionResult.SUCCESS));
+            }
+            player.swing(hand, true);
         } else if (heldItem instanceof HoeItem) {
-            if (!ImprovedVanillaConfig.FARMING.allowHoeUsageAsLootModifier.get()) {
+            if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.allowHoeUsageAsLootModifier.get()) {
                 return InteractionResult.PASS;
             }
             float multiplier = getLootMultiplier((HoeItem) heldItem);
-            boolean success = spawnDropsAndResetBlock(level, targetPos, multiplier);
-            return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
+            if (!level.isClientSide()) {
+                spawnDropsAndResetBlock(level, hitResult.getBlockPos(), multiplier, () -> result.set(InteractionResult.SUCCESS));
+            }
+            player.swing(hand, true);
         }
-        return InteractionResult.PASS;
+        return result.get();
     }
 
     private static IntegerProperty getAgeProperty(Block targetBlock) {
         if (targetBlock instanceof CropBlock) {
-            return ((CropBlockHelper) targetBlock).getAgeProp$improvedvanilla();
+            return IPlatformHelper.INSTANCE.getAgeProperty((CropBlock) targetBlock);
         } else if (targetBlock.equals(Blocks.COCOA)) {
             return CocoaBlock.AGE;
         } else if (targetBlock.equals(Blocks.NETHER_WART)) {
@@ -67,31 +73,31 @@ public final class CropRightClickHandler {
         return BASE_MULTIPLIER + (tierLevel * 0.55F);
     }
 
-    private static boolean spawnDropsAndResetBlock(Level level, BlockPos pos, float multiplier) {
+    private static void spawnDropsAndResetBlock(Level level, BlockPos pos, float multiplier, Runnable success) {
         //get age property
         Block targetBlock = level.getBlockState(pos).getBlock();
         IntegerProperty ageProperty = getAgeProperty(targetBlock);
         if (ageProperty == null) {
-            return false;
+            return;
         }
 
         //check if crop is fully grown
-        final BlockState blockState = level.getBlockState(pos);
-        final int maximumAge = Collections.max(ageProperty.getPossibleValues());
-        final int currentAge = blockState.getValue(ageProperty);
+        BlockState blockState = level.getBlockState(pos);
+        int maximumAge = Collections.max(ageProperty.getPossibleValues());
+        int currentAge = blockState.getValue(ageProperty);
         if (currentAge < maximumAge) {
-            return false;
+            return;
         }
 
         //reset the crop age
-        final BlockState newState = blockState.setValue(ageProperty, 0);
+        BlockState newState = blockState.setValue(ageProperty, 0);
         level.setBlock(pos, newState, 3);
 
         //get and modify loot
         List<ItemStack> oldLoot = Block.getDrops(blockState, (ServerLevel) level, pos, null);
         List<ItemStack> newLoot = getLootModified(oldLoot, multiplier);
         newLoot.forEach(stack -> Block.popResource(level, pos, stack));
-        return true;
+        success.run();
     }
 
     private static List<ItemStack> getLootModified(List<ItemStack> loot, float multiplier) {
@@ -103,23 +109,39 @@ public final class CropRightClickHandler {
         });
 
         // if the blacklist is enabled, remove items from the loot
-        if (ImprovedVanillaConfig.FARMING.blacklistEnabled.get()) {
-            Set<Item> itemsToRemove = ImprovedVanillaConfig.FARMING.blacklistedDrops.get();
+        if (ImprovedVanillaConfig.CROP_RIGHT_CLICKING.blacklistEnabled.get()) {
+            Set<Item> itemsToRemove = ImprovedVanillaConfig.CROP_RIGHT_CLICKING.blacklistedDrops.get();
             lootMap.keySet().removeIf(itemsToRemove::contains);
         }
 
         List<ItemStack> newLoot = new ArrayList<>();
         lootMap.forEach((item, amount) -> {
             int newAmount = Math.round(amount * multiplier);
-            if (newAmount <= 0) {return;}
-            while (newAmount > item.getMaxStackSize()) {
-                newLoot.add(new ItemStack(item, item.getMaxStackSize()));
-                newAmount -= item.getMaxStackSize();
+            if (newAmount <= 0) {
+                return;
             }
-            newLoot.add(new ItemStack(item, newAmount));
+            Consumer<ItemStack> splitter = createStackSplitter(newLoot::add);
+            splitter.accept(new ItemStack(item, newAmount));
         });
 
         return newLoot;
+    }
+
+    private static Consumer<ItemStack> createStackSplitter(Consumer<ItemStack> consumer) {
+        return (stack) -> {
+            if (stack.getCount() < stack.getMaxStackSize()) {
+                consumer.accept(stack);
+            } else {
+                int count = stack.getCount();
+
+                while (count > 0) {
+                    ItemStack copied = stack.copy();
+                    copied.setCount(Math.min(stack.getMaxStackSize(), count));
+                    count -= copied.getCount();
+                    consumer.accept(copied);
+                }
+            }
+        };
     }
 
 }

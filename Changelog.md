@@ -1,5 +1,11 @@
 # Changelog
 
+### Version 1.20.4 - 1.7.1
+
+- backport latest functionality to 1.19.4
+- fix broken recipes on fabric
+- fix multiple bugs
+
 ### Version 1.20.4 - 1.6.4
 
 - port to 1.20.4

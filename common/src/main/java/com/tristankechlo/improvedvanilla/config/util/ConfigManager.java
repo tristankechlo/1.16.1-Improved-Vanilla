@@ -2,11 +2,12 @@ package com.tristankechlo.improvedvanilla.config.util;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
-import com.tristankechlo.improvedvanilla.Constants;
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 
@@ -14,74 +15,74 @@ public final class ConfigManager {
 
     private static final File CONFIG_DIR = IPlatformHelper.INSTANCE.getConfigDirectory().toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-    public static final String FILE_NAME = Constants.MOD_ID + ".json";
+    public static final String FILE_NAME = ImprovedVanilla.MOD_ID + ".json";
+    private static final File CONFIG_FILE = new File(CONFIG_DIR, FILE_NAME);
 
     public static void loadAndVerifyConfig() {
         ConfigManager.createConfigFolder();
-        ImprovedVanillaConfig.setToDefault();
-        File configFile = new File(CONFIG_DIR, FILE_NAME);
-        if (configFile.exists()) {
-            ConfigManager.loadConfigFromFile(configFile);
-            ConfigManager.writeConfigToFile(configFile);
-            Constants.LOGGER.info("Saved the checked/corrected config: '{}'", FILE_NAME);
-        } else {
-            ConfigManager.writeConfigToFile(configFile);
-            Constants.LOGGER.warn("No config '{}' was found, created a new one.", FILE_NAME);
+
+        if (!CONFIG_FILE.exists()) {
+            ImprovedVanillaConfig.setToDefault();
+            ConfigManager.writeConfigToFile();
+            ImprovedVanilla.LOGGER.warn("No config '{}' was found, created a new one.", FILE_NAME);
+            return;
+        }
+
+        try {
+            ConfigManager.loadConfigFromFile();
+            ImprovedVanilla.LOGGER.info("Config '{}' was successfully loaded.", FILE_NAME);
+        } catch (Exception e) {
+            ImprovedVanilla.LOGGER.error(e.getMessage());
+            ImprovedVanilla.LOGGER.error("Error loading config '{}', config hasn't been loaded. Using default config.", FILE_NAME);
+            ImprovedVanillaConfig.setToDefault();
         }
     }
 
-    private static void writeConfigToFile(File file) {
-        JsonObject jsonObject = ImprovedVanillaConfig.serialize(new JsonObject());
+    private static void loadConfigFromFile() throws FileNotFoundException {
+        JsonParser parser = new JsonParser();
+        JsonElement jsonElement = parser.parse(new FileReader(CONFIG_FILE));
+        JsonObject json = jsonElement.getAsJsonObject();
+        ImprovedVanillaConfig.deserialize(json);
+    }
+
+    private static void writeConfigToFile() {
         try {
-            JsonWriter writer = new JsonWriter(new FileWriter(file));
+            JsonElement jsonObject = ImprovedVanillaConfig.serialize(new JsonObject());
+            JsonWriter writer = new JsonWriter(new FileWriter(CONFIG_FILE));
             writer.setIndent("\t");
             GSON.toJson(jsonObject, writer);
             writer.close();
         } catch (Exception e) {
-            Constants.LOGGER.error("There was an error writing the config to file: '{}'", FILE_NAME);
-            e.printStackTrace();
-        }
-    }
-
-    private static void loadConfigFromFile(File file) {
-        JsonObject json = null;
-        try {
-            JsonElement jsonElement = JsonParser.parseReader(new FileReader(file));
-            json = jsonElement.getAsJsonObject();
-        } catch (Exception e) {
-            Constants.LOGGER.error("There was an error loading the config file: '{}'", FILE_NAME);
-            e.printStackTrace();
-        }
-        if (json != null) {
-            ImprovedVanillaConfig.deserialize(json);
-            Constants.LOGGER.info("Config '{}' was successfully loaded.", FILE_NAME);
-        } else {
-            Constants.LOGGER.error("Error loading config '{}', config hasn't been loaded.", FILE_NAME);
+            ImprovedVanilla.LOGGER.error("There was an error writing the config to file: '{}'", FILE_NAME);
+            ImprovedVanilla.LOGGER.error(e.getMessage());
         }
     }
 
     public static void resetConfig() {
         ImprovedVanillaConfig.setToDefault();
-        File configFile = new File(CONFIG_DIR, FILE_NAME);
-        ConfigManager.writeConfigToFile(configFile);
-        Constants.LOGGER.info("Config '{}' was set to default.", FILE_NAME);
+        ConfigManager.writeConfigToFile();
+        ImprovedVanilla.LOGGER.info("Config '{}' was set to default.", FILE_NAME);
     }
 
     public static void reloadConfig() {
-        File configFile = new File(CONFIG_DIR, FILE_NAME);
-        if (configFile.exists()) {
-            ConfigManager.loadConfigFromFile(configFile);
-            ConfigManager.writeConfigToFile(configFile);
-            Constants.LOGGER.info("Saved the checked/corrected config: " + FILE_NAME);
+        if (CONFIG_FILE.exists()) {
+            try {
+                ConfigManager.loadConfigFromFile();
+                ImprovedVanilla.LOGGER.info("The config '{}' was successfully loaded.", FILE_NAME);
+            } catch (Exception e) {
+                ImprovedVanilla.LOGGER.error(e.getMessage());
+                ImprovedVanilla.LOGGER.error("Error loading config '{}', config hasn't been loaded. Using the default config.", FILE_NAME);
+                ImprovedVanillaConfig.setToDefault();
+            }
         } else {
-            ConfigManager.writeConfigToFile(configFile);
-            Constants.LOGGER.warn("No config '{}' was found, created a new one.", FILE_NAME);
+            ImprovedVanillaConfig.setToDefault();
+            ConfigManager.writeConfigToFile();
+            ImprovedVanilla.LOGGER.warn("No config '{}' found, created a new one.", FILE_NAME);
         }
     }
 
     public static String getConfigPath() {
-        File configFile = new File(CONFIG_DIR, FILE_NAME);
-        return configFile.getAbsolutePath();
+        return CONFIG_FILE.getAbsolutePath();
     }
 
     private static void createConfigFolder() {
@@ -91,5 +92,4 @@ public final class ConfigManager {
             }
         }
     }
-
 }

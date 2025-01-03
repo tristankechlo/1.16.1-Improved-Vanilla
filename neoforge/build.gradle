@@ -6,6 +6,7 @@ plugins {
 runs {
     configureEach {
         modSource project.sourceSets.main
+        workingDirectory file('run')
     }
     client {
         systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id

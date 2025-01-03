@@ -3,7 +3,7 @@ package com.tristankechlo.improvedvanilla.config.values;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.Constants;
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import net.minecraft.util.GsonHelper;
 
 import java.util.HashSet;
@@ -15,15 +15,15 @@ public class SetValue<T> implements IConfigValue<Set<T>> {
     private final String identifier;
     private final ImmutableSet<T> defaultValue;
     private final Set<T> value = new HashSet<>();
-    private final Function<T, String> toStringFunc;
-    private final Function<String, T> fromStringFunc;
+    private final Function<T, String> serialize;
+    private final Function<String, T> deserialize;
 
-    public SetValue(String identifier, ImmutableSet<T> defaultValue, Function<T, String> toStringFunc, Function<String, T> fromStringFunc) {
+    public SetValue(String identifier, ImmutableSet<T> defaultValue, Function<T, String> serialize, Function<String, T> deserialize) {
         this.identifier = identifier;
         this.defaultValue = defaultValue;
         this.value.addAll(defaultValue);
-        this.toStringFunc = toStringFunc;
-        this.fromStringFunc = fromStringFunc;
+        this.serialize = serialize;
+        this.deserialize = deserialize;
     }
 
     @Override
@@ -43,31 +43,31 @@ public class SetValue<T> implements IConfigValue<Set<T>> {
     }
 
     @Override
-    public void serialize(JsonObject jsonObject) {
+    public void serialize(JsonObject json) {
         JsonArray jsonArray = new JsonArray();
         for (T t : this.value) {
-            jsonArray.add(toStringFunc.apply(t));
+            jsonArray.add(serialize.apply(t));
         }
-        jsonObject.add(this.identifier, jsonArray);
+        json.add(this.identifier, jsonArray);
     }
 
     @Override
     public void deserialize(JsonObject json) {
         try {
             if (GsonHelper.isArrayNode(json, getIdentifier())) {
-                JsonArray jsonArray = GsonHelper.getAsJsonArray(json, getIdentifier());
+                JsonArray jsonArray = json.getAsJsonArray(getIdentifier());
                 this.value.clear();
                 for (int i = 0; i < jsonArray.size(); i++) {
                     String stringElement = jsonArray.get(i).getAsString();
-                    T element = fromStringFunc.apply(stringElement);
+                    T element = deserialize.apply(stringElement);
                     this.value.add(element);
                 }
                 return;
             } else {
-                Constants.LOGGER.warn("Config value '{}' was not found or is not an array, using default value instead", getIdentifier());
+                ImprovedVanilla.LOGGER.warn("Config value '{}' was not found or is not an array, using default value instead", getIdentifier());
             }
         } catch (Exception e) {
-            Constants.LOGGER.warn("Error while loading the config value '{}', using default value instead", getIdentifier());
+            ImprovedVanilla.LOGGER.warn("Error while loading the config value '{}', using default value instead", getIdentifier());
         }
         this.setToDefault();
     }
