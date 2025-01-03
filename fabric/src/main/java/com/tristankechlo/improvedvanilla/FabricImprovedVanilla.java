@@ -36,7 +36,7 @@ public class FabricImprovedVanilla implements ModInitializer {
 
     // drop spawner and spawn-eggs on block break
     private boolean onSpawnerBroken(Level world, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        SpawnerHandler.onSpawnerBreak(world, player, pos, state, 0, (xp) -> {});
+        SpawnerHandler.onSpawnerBreak(world, player, pos, state);
         return true; // always allow other event listeners to run
     }
 

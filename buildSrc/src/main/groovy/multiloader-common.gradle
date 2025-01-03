@@ -23,13 +23,9 @@ repositories {
         filter { includeGroupAndSubgroups("org.spongepowered") }
     }
     maven {
-        name = 'BlameJared'
-        url = 'https://maven.blamejared.com'
+        name = 'BlameJared Maven (JEI / CraftTweaker / Bookshelf /Patchouli )'
+        url = "https://maven.blamejared.com"
     }
-}
-
-dependencies {
-    implementation 'org.jetbrains:annotations:24.1.0'
 }
 
 // Declare capabilities on the outgoing configurations.

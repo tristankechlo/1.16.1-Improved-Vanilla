@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public final class SpawnerHandler {
 
@@ -49,24 +48,22 @@ public final class SpawnerHandler {
         return InteractionResult.PASS;
     }
 
-    public static void onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state, int xpToDrop, Consumer<Integer> setExpToDrop) {
+    public static void onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state) {
         final Block targetBlock = state.getBlock();
 
         if (level.isClientSide() || targetBlock != Blocks.SPAWNER) {
             return;
         }
         if (!(player.getMainHandItem().getItem() instanceof PickaxeItem)) {
-            setExpToDrop.accept(0);
             return;
         }
         if (player.isCreative() || player.isSpectator()) {
             return;
         }
-        final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
+        final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FORTUNE, player.getMainHandItem());
         final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
 
         if (silkTouchLevel >= 1) {
-            setExpToDrop.accept(0);
 
             // try dropping the spawner itself
             final int spawnerDropChance = ImprovedVanillaConfig.get().spawner().spawnerDropChance();
@@ -75,10 +72,6 @@ public final class SpawnerHandler {
                     ItemStack stack = new ItemStack(Items.SPAWNER, 1);
                     ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
                 }
-            } else {
-                int exp = xpToDrop;
-                exp += (exp + 1) * level.getRandom().nextInt(4) * level.getRandom().nextInt(4);
-                setExpToDrop.accept(exp);
             }
 
             // try dropping the monster egg
@@ -91,10 +84,6 @@ public final class SpawnerHandler {
 
             // if other mods prevent the block break, at least the spawner is disabled
             resetSpawner(level, pos);
-        } else if (silkTouchLevel == 0 && fortuneLevel >= 1) {
-            int exp = xpToDrop;
-            exp += (exp + 1) * level.getRandom().nextInt(fortuneLevel) * level.getRandom().nextInt(fortuneLevel);
-            setExpToDrop.accept(exp);
         }
     }
 
@@ -109,7 +98,7 @@ public final class SpawnerHandler {
         CompoundTag entity = new CompoundTag();
         entity.putString("id", "minecraft:area_effect_cloud");
 
-        SpawnData nextSpawnData = new SpawnData(entity, Optional.empty());
+        SpawnData nextSpawnData = new SpawnData(entity, Optional.empty(), Optional.empty());
         IPlatformHelper.INSTANCE.setNextSpawnData(tile.getSpawner(), world, pos, nextSpawnData);
         tile.setChanged();
         world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
@@ -133,7 +122,7 @@ public final class SpawnerHandler {
 
         // get the displayed entity
         if (nbt.contains("SpawnData")) {
-            SpawnData spawnData = new SpawnData(nbt.getCompound("SpawnData").getCompound("entity"), Optional.empty());
+            SpawnData spawnData = new SpawnData(nbt.getCompound("SpawnData").getCompound("entity"), Optional.empty(), Optional.empty());
             String id = spawnData.entityToSpawn().getString("id"); // should be the id of the entity
             return ImprovedVanilla.getMonsterEgg(id, 1);
         }
