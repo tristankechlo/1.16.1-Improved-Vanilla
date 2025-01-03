@@ -1,38 +1,17 @@
 package com.tristankechlo.improvedvanilla.config.categories;
 
-import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.config.values.BooleanValue;
-import com.tristankechlo.improvedvanilla.config.values.IntegerValue;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public final class SpawnerConfig {
+public record SpawnerConfig(boolean clearSpawner, int spawnerDropChance, int spawnEggDropChance) {
 
-    private static final String IDENTIFIER = "spawner";
-
-    public final BooleanValue clearSpawner = new BooleanValue("clear_spawner_when_placed", true);
-    public final IntegerValue spawnerDropChance = new IntegerValue("spawner_drop_chance", 100, 0, 100);
-    public final IntegerValue spawnEggDropChance = new IntegerValue("spawn_egg_drop_chance", 100, 0, 100);
-
-    public void setToDefault() {
-        clearSpawner.setToDefault();
-        spawnerDropChance.setToDefault();
-        spawnEggDropChance.setToDefault();
-    }
-
-    public void serialize(JsonObject json) {
-        JsonObject spawner = new JsonObject();
-        clearSpawner.serialize(spawner);
-        spawnerDropChance.serialize(spawner);
-        spawnEggDropChance.serialize(spawner);
-        json.add(IDENTIFIER, spawner);
-    }
-
-    public void deserialize(JsonObject json) {
-        if (json.has(IDENTIFIER)) {
-            JsonObject spawner = json.get(IDENTIFIER).getAsJsonObject();
-            clearSpawner.deserialize(spawner);
-            spawnerDropChance.deserialize(spawner);
-            spawnEggDropChance.deserialize(spawner);
-        }
-    }
+    public static final SpawnerConfig DEFAULT = new SpawnerConfig(true, 100, 100);
+    public static final Codec<SpawnerConfig> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.BOOL.fieldOf("clear_spawner_when_placed").forGetter(SpawnerConfig::clearSpawner),
+                    Codec.intRange(0, 100).fieldOf("spawner_drop_chance").forGetter(SpawnerConfig::spawnerDropChance),
+                    Codec.intRange(0, 100).fieldOf("spawn_egg_drop_chance").forGetter(SpawnerConfig::spawnEggDropChance)
+            ).apply(instance, SpawnerConfig::new)
+    );
 
 }

@@ -2,7 +2,7 @@ package com.tristankechlo.improvedvanilla.commands;
 
 
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
-import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
+import com.tristankechlo.improvedvanilla.config.ConfigManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.ClickEvent;
@@ -17,14 +17,16 @@ public final class ResponseHelper {
         sendMessage(source, message.withStyle(ChatFormatting.WHITE), false);
     }
 
-    public static void sendMessageConfigReload(CommandSourceStack source) {
-        MutableComponent message = Component.literal("Config was successfully reloaded.");
+    public static void sendMessageConfigReload(CommandSourceStack source, boolean success) {
+        String text = success ? "Config was successfully reloaded." : "Error while reloading config. Check the logs for further details.";
+        MutableComponent message = Component.literal(text).withStyle(ChatFormatting.WHITE);
         sendMessage(source, message.withStyle(ChatFormatting.WHITE), true);
     }
 
-    public static void sendMessageConfigReset(CommandSourceStack source) {
-        MutableComponent message = Component.literal("Config was successfully set to default.");
-        sendMessage(source, message.withStyle(ChatFormatting.WHITE), true);
+    public static void sendMessageConfigReset(CommandSourceStack source, boolean success) {
+        String text = success ? "Config was successfully reset." : "Error while saving the default config.";
+        MutableComponent message = Component.literal(text).withStyle(ChatFormatting.WHITE);
+        sendMessage(source, message, true);
     }
 
     public static MutableComponent start() {

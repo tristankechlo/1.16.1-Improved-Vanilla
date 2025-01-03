@@ -1,38 +1,17 @@
 package com.tristankechlo.improvedvanilla.config.categories;
 
-import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.config.values.BooleanValue;
-import com.tristankechlo.improvedvanilla.config.values.IntegerValue;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public final class MobDropConfig {
+public record MobDropConfig(boolean dropOnlyWhenKilledByPlayer, boolean lootingAffective, int mobSpawnEggDropChance) {
 
-    private static final String IDENTIFIER = "mob_drops";
-
-    public final BooleanValue dropOnlyWhenKilledByPlayer = new BooleanValue("drop_only_when_killed_by_player", true);
-    public final BooleanValue lootingAffective = new BooleanValue("looting_effective", true);
-    public final IntegerValue mobSpawnEggDropChance = new IntegerValue("spawn_egg_drop_chance", 2, 0, 100);
-
-    public void setToDefault() {
-        dropOnlyWhenKilledByPlayer.setToDefault();
-        lootingAffective.setToDefault();
-        mobSpawnEggDropChance.setToDefault();
-    }
-
-    public void serialize(JsonObject json) {
-        JsonObject mobDrop = new JsonObject();
-        dropOnlyWhenKilledByPlayer.serialize(mobDrop);
-        lootingAffective.serialize(mobDrop);
-        mobSpawnEggDropChance.serialize(mobDrop);
-        json.add(IDENTIFIER, mobDrop);
-    }
-
-    public void deserialize(JsonObject json) {
-        if (json.has(IDENTIFIER)) {
-            JsonObject mobDrop = json.get(IDENTIFIER).getAsJsonObject();
-            dropOnlyWhenKilledByPlayer.deserialize(mobDrop);
-            lootingAffective.deserialize(mobDrop);
-            mobSpawnEggDropChance.deserialize(mobDrop);
-        }
-    }
+    public static final MobDropConfig DEFAULT = new MobDropConfig(true, true, 2);
+    public static final Codec<MobDropConfig> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.BOOL.fieldOf("drop_only_when_killed_by_player").forGetter(MobDropConfig::dropOnlyWhenKilledByPlayer),
+                    Codec.BOOL.fieldOf("looting_effective").forGetter(MobDropConfig::lootingAffective),
+                    Codec.intRange(0, 100).fieldOf("spawn_egg_drop_chance").forGetter(MobDropConfig::mobSpawnEggDropChance)
+            ).apply(instance, MobDropConfig::new)
+    );
 
 }

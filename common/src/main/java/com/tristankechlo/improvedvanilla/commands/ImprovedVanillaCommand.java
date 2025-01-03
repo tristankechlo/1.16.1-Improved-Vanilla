@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
-import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
+import com.tristankechlo.improvedvanilla.config.ConfigManager;
 import net.minecraft.commands.CommandSourceStack;
 
 import static net.minecraft.commands.Commands.literal;
@@ -29,8 +29,8 @@ public final class ImprovedVanillaCommand {
 
     private static int configReload(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        ConfigManager.reloadConfig();
-        ResponseHelper.sendMessageConfigReload(source);
+        boolean success = ConfigManager.reloadConfig();
+        ResponseHelper.sendMessageConfigReload(source, success);
         return 1;
     }
 
@@ -42,8 +42,8 @@ public final class ImprovedVanillaCommand {
 
     private static int configReset(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        ConfigManager.resetConfig();
-        ResponseHelper.sendMessageConfigReset(source);
+        boolean success = ConfigManager.resetConfig();
+        ResponseHelper.sendMessageConfigReset(source, success);
         return 1;
     }
 

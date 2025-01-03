@@ -1,38 +1,50 @@
 package com.tristankechlo.improvedvanilla.config;
 
-import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.config.categories.EasyPlantingConfig;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.categories.CropRightClickConfig;
+import com.tristankechlo.improvedvanilla.config.categories.EasyPlantingConfig;
 import com.tristankechlo.improvedvanilla.config.categories.MobDropConfig;
 import com.tristankechlo.improvedvanilla.config.categories.SpawnerConfig;
 
-public final class ImprovedVanillaConfig {
+public record ImprovedVanillaConfig(
+        CropRightClickConfig cropRightClicking, EasyPlantingConfig easyPlanting, MobDropConfig mobDrop, SpawnerConfig spawner
+) {
 
-	public static final EasyPlantingConfig EASY_PLANTING = new EasyPlantingConfig();
-	public static final CropRightClickConfig CROP_RIGHT_CLICKING = new CropRightClickConfig();
-	public static final SpawnerConfig SPAWNER = new SpawnerConfig();
-	public static final MobDropConfig MOB_DROP = new MobDropConfig();
+    public static final Codec<ImprovedVanillaConfig> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    CropRightClickConfig.CODEC.fieldOf("right_click_to_harvest").forGetter(ImprovedVanillaConfig::cropRightClicking),
+                    EasyPlantingConfig.CODEC.fieldOf("easy_planting").forGetter(ImprovedVanillaConfig::easyPlanting),
+                    MobDropConfig.CODEC.fieldOf("mob_drops").forGetter(ImprovedVanillaConfig::mobDrop),
+                    SpawnerConfig.CODEC.fieldOf("spawner").forGetter(ImprovedVanillaConfig::spawner)
+            ).apply(instance, ImprovedVanillaConfig::new)
+    );
 
-	public static void setToDefault() {
-		CROP_RIGHT_CLICKING.setToDefault();
-		EASY_PLANTING.setToDefault();
-		SPAWNER.setToDefault();
-		MOB_DROP.setToDefault();
-	}
+    public static final ImprovedVanillaConfig DEFAULT = new ImprovedVanillaConfig(CropRightClickConfig.DEFAULT, EasyPlantingConfig.DEFAULT, MobDropConfig.DEFAULT, SpawnerConfig.DEFAULT);
+    private static ImprovedVanillaConfig INSTANCE = DEFAULT;
 
-	public static JsonObject serialize(JsonObject json) {
-		CROP_RIGHT_CLICKING.serialize(json);
-		EASY_PLANTING.serialize(json);
-		SPAWNER.serialize(json);
-		MOB_DROP.serialize(json);
-		return json;
-	}
+    public static ImprovedVanillaConfig get() {
+        return INSTANCE;
+    }
 
-	public static void deserialize(JsonObject json) {
-		CROP_RIGHT_CLICKING.deserialize(json);
-		EASY_PLANTING.deserialize(json);
-		SPAWNER.deserialize(json);
-		MOB_DROP.deserialize(json);
-	}
+    public static void setToDefault() {
+        INSTANCE = ImprovedVanillaConfig.DEFAULT;
+    }
+
+    public static JsonElement serialize() {
+        DataResult<JsonElement> result = ImprovedVanillaConfig.CODEC.encodeStart(JsonOps.INSTANCE, INSTANCE);
+        result.error().ifPresent((partial) -> ImprovedVanilla.LOGGER.error(partial.message()));
+        return result.result().orElseThrow();
+    }
+
+    public static void deserialize(JsonElement json) {
+        DataResult<ImprovedVanillaConfig> result = ImprovedVanillaConfig.CODEC.parse(JsonOps.INSTANCE, json);
+        result.error().ifPresent((partial) -> ImprovedVanilla.LOGGER.error(partial.message()));
+        INSTANCE = result.result().orElseThrow();
+    }
 
 }

@@ -1,41 +1,17 @@
 package com.tristankechlo.improvedvanilla.config.categories;
 
-import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.config.values.BooleanValue;
-import com.tristankechlo.improvedvanilla.config.values.IntegerValue;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public final class EasyPlantingConfig {
+public record EasyPlantingConfig(boolean activated, int radius, boolean makeCircle) {
 
-    private static final String IDENTIFIER = "easy_planting";
-
-    public final BooleanValue activated = new BooleanValue("activated", true);
-    public final IntegerValue radius = new IntegerValue("radius", 3, 1, 10);
-    public final BooleanValue makeCircle = new BooleanValue("make_circle", true);
-
-    public void setToDefault() {
-        activated.setToDefault();
-        radius.setToDefault();
-        makeCircle.setToDefault();
-    }
-
-    public void serialize(JsonObject json) {
-        JsonObject object = new JsonObject();
-
-        activated.serialize(object);
-        radius.serialize(object);
-        makeCircle.serialize(object);
-
-        json.add(IDENTIFIER, object);
-    }
-
-    public void deserialize(JsonObject json) {
-        if (json.has(IDENTIFIER)) {
-            JsonObject object = json.getAsJsonObject(IDENTIFIER);
-
-            activated.deserialize(object);
-            radius.deserialize(object);
-            makeCircle.deserialize(object);
-        }
-    }
+    public static final EasyPlantingConfig DEFAULT = new EasyPlantingConfig(true, 3, true);
+    public static final Codec<EasyPlantingConfig> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.BOOL.fieldOf("activated").forGetter(EasyPlantingConfig::activated),
+                    Codec.intRange(1, 10).fieldOf("radius").forGetter(EasyPlantingConfig::radius),
+                    Codec.BOOL.fieldOf("make_circle").forGetter(EasyPlantingConfig::makeCircle)
+            ).apply(instance, EasyPlantingConfig::new)
+    );
 
 }

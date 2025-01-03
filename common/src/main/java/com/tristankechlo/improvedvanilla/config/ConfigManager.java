@@ -1,9 +1,8 @@
-package com.tristankechlo.improvedvanilla.config.util;
+package com.tristankechlo.improvedvanilla.config;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
-import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 
 import java.io.File;
@@ -45,40 +44,46 @@ public final class ConfigManager {
         ImprovedVanillaConfig.deserialize(json);
     }
 
-    private static void writeConfigToFile() {
+    private static boolean writeConfigToFile() {
         try {
-            JsonElement jsonObject = ImprovedVanillaConfig.serialize(new JsonObject());
+            JsonElement jsonObject = ImprovedVanillaConfig.serialize();
             JsonWriter writer = new JsonWriter(new FileWriter(CONFIG_FILE));
             writer.setIndent("\t");
             GSON.toJson(jsonObject, writer);
             writer.close();
+            return true;
         } catch (Exception e) {
             ImprovedVanilla.LOGGER.error("There was an error writing the config to file: '{}'", FILE_NAME);
             ImprovedVanilla.LOGGER.error(e.getMessage());
         }
+        return false;
     }
 
-    public static void resetConfig() {
+    public static boolean resetConfig() {
         ImprovedVanillaConfig.setToDefault();
-        ConfigManager.writeConfigToFile();
+        boolean success = ConfigManager.writeConfigToFile();
         ImprovedVanilla.LOGGER.info("Config '{}' was set to default.", FILE_NAME);
+        return success;
     }
 
-    public static void reloadConfig() {
+    public static boolean reloadConfig() {
         if (CONFIG_FILE.exists()) {
             try {
                 ConfigManager.loadConfigFromFile();
                 ImprovedVanilla.LOGGER.info("The config '{}' was successfully loaded.", FILE_NAME);
+                return true;
             } catch (Exception e) {
                 ImprovedVanilla.LOGGER.error(e.getMessage());
                 ImprovedVanilla.LOGGER.error("Error loading config '{}', config hasn't been loaded. Using the default config.", FILE_NAME);
                 ImprovedVanillaConfig.setToDefault();
+                return false;
             }
         } else {
             ImprovedVanillaConfig.setToDefault();
             ConfigManager.writeConfigToFile();
             ImprovedVanilla.LOGGER.warn("No config '{}' found, created a new one.", FILE_NAME);
         }
+        return true;
     }
 
     public static String getConfigPath() {

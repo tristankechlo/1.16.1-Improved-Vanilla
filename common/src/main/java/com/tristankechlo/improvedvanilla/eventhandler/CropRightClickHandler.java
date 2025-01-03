@@ -31,7 +31,7 @@ public final class CropRightClickHandler {
         if (player.isShiftKeyDown() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
-        if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.activated.get()) {
+        if (!ImprovedVanillaConfig.get().cropRightClicking().activated()) {
             return InteractionResult.PASS;
         }
 
@@ -44,7 +44,7 @@ public final class CropRightClickHandler {
             }
             player.swing(hand, true);
         } else if (heldItem instanceof HoeItem) {
-            if (!ImprovedVanillaConfig.CROP_RIGHT_CLICKING.allowHoeUsageAsLootModifier.get()) {
+            if (!ImprovedVanillaConfig.get().cropRightClicking().allowHoeUsageAsLootModifier()) {
                 return InteractionResult.PASS;
             }
             float multiplier = getLootMultiplier((HoeItem) heldItem);
@@ -109,8 +109,8 @@ public final class CropRightClickHandler {
         });
 
         // if the blacklist is enabled, remove items from the loot
-        if (ImprovedVanillaConfig.CROP_RIGHT_CLICKING.blacklistEnabled.get()) {
-            Set<Item> itemsToRemove = ImprovedVanillaConfig.CROP_RIGHT_CLICKING.blacklistedDrops.get();
+        if (ImprovedVanillaConfig.get().cropRightClicking().blacklistEnabled()) {
+            List<Item> itemsToRemove = ImprovedVanillaConfig.get().cropRightClicking().blacklistedDrops();
             lootMap.keySet().removeIf(itemsToRemove::contains);
         }
 

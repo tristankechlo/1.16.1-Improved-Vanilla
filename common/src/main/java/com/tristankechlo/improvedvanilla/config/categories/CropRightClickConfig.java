@@ -1,57 +1,34 @@
 package com.tristankechlo.improvedvanilla.config.categories;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonObject;
-import com.tristankechlo.improvedvanilla.config.values.BooleanValue;
-import com.tristankechlo.improvedvanilla.config.values.SetValue;
+import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-import java.util.function.Function;
+import java.util.List;
 
-public final class CropRightClickConfig {
+public record CropRightClickConfig(
+        boolean activated, boolean allowHoeUsageAsLootModifier, boolean blacklistEnabled, List<Item> blacklistedDrops
+) {
 
-    private static final String IDENTIFIER = "right_click_to_harvest";
-    private static final Function<Item, String> ITEM_TO_STRING = (item) -> BuiltInRegistries.ITEM.getKey(item).toString();
-    private static final Function<String, Item> STRING_TO_ITEM = (string) -> {
-        ResourceLocation resourceLocation = new ResourceLocation(string);
-        return BuiltInRegistries.ITEM.get(resourceLocation);
-    };
-
-    public final BooleanValue activated = new BooleanValue("activated", true);
-    public final BooleanValue allowHoeUsageAsLootModifier = new BooleanValue("allow_hoe_usage_as_loot_modifier", true);
-    public final BooleanValue blacklistEnabled = new BooleanValue("enable_blacklist", false);
-    public final SetValue<Item> blacklistedDrops = new SetValue<>("blacklisted_drops", ImmutableSet.of(Items.WHEAT_SEEDS), ITEM_TO_STRING, STRING_TO_ITEM);
-
-    public void setToDefault() {
-        activated.setToDefault();
-        allowHoeUsageAsLootModifier.setToDefault();
-        blacklistEnabled.setToDefault();
-        blacklistedDrops.setToDefault();
-    }
-
-    public void serialize(JsonObject json) {
-        JsonObject object = new JsonObject();
-
-        activated.serialize(object);
-        allowHoeUsageAsLootModifier.serialize(object);
-        blacklistEnabled.serialize(object);
-        blacklistedDrops.serialize(object);
-
-        json.add(IDENTIFIER, object);
-    }
-
-    public void deserialize(JsonObject json) {
-        if (json.has(IDENTIFIER)) {
-            JsonObject object = json.getAsJsonObject(IDENTIFIER);
-
-            activated.deserialize(object);
-            allowHoeUsageAsLootModifier.deserialize(object);
-            blacklistEnabled.deserialize(object);
-            blacklistedDrops.deserialize(object);
-        }
-    }
+    public static final CropRightClickConfig DEFAULT = new CropRightClickConfig(true, true, false, ImmutableList.of(Items.WHEAT_SEEDS));
+    public static final Codec<Item> ITEM_CODEC = ResourceLocation.CODEC.comapFlatMap(
+            id -> BuiltInRegistries.ITEM.getOptional(id)
+                    .map(DataResult::success)
+                    .orElseGet(() -> DataResult.error(() -> "Unknown item: " + id)),
+            BuiltInRegistries.ITEM::getKey
+    );
+    public static final Codec<CropRightClickConfig> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.BOOL.fieldOf("activated").forGetter(CropRightClickConfig::activated),
+                    Codec.BOOL.fieldOf("allow_hoe_usage_as_loot_modifier").forGetter(CropRightClickConfig::allowHoeUsageAsLootModifier),
+                    Codec.BOOL.fieldOf("enable_blacklist").forGetter(CropRightClickConfig::blacklistEnabled),
+                    ITEM_CODEC.listOf().fieldOf("blacklisted_drops").forGetter(CropRightClickConfig::blacklistedDrops)
+            ).apply(instance, CropRightClickConfig::new)
+    );
 
 }

@@ -1,7 +1,7 @@
 package com.tristankechlo.improvedvanilla;
 
 import com.tristankechlo.improvedvanilla.commands.ImprovedVanillaCommand;
-import com.tristankechlo.improvedvanilla.config.util.ConfigManager;
+import com.tristankechlo.improvedvanilla.config.ConfigManager;
 import com.tristankechlo.improvedvanilla.eventhandler.CropRightClickHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.EasyPlantingHandler;
 import com.tristankechlo.improvedvanilla.eventhandler.MobDropHandler;

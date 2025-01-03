@@ -32,7 +32,7 @@ public final class SpawnerHandler {
         if (level == null || level.isClientSide()) {
             return InteractionResult.PASS;
         }
-        if (!ImprovedVanillaConfig.SPAWNER.clearSpawner.get()) {
+        if (!ImprovedVanillaConfig.get().spawner().clearSpawner()) {
             return InteractionResult.PASS;
         }
 
@@ -69,7 +69,7 @@ public final class SpawnerHandler {
             setExpToDrop.accept(0);
 
             // try dropping the spawner itself
-            final int spawnerDropChance = ImprovedVanillaConfig.SPAWNER.spawnerDropChance.get();
+            final int spawnerDropChance = ImprovedVanillaConfig.get().spawner().spawnerDropChance();
             if (spawnerDropChance >= 1 && spawnerDropChance <= 100) {
                 if (Math.random() < ((double) spawnerDropChance / 100)) {
                     ItemStack stack = new ItemStack(Items.SPAWNER, 1);
@@ -82,7 +82,7 @@ public final class SpawnerHandler {
             }
 
             // try dropping the monster egg
-            final int eggDropChance = ImprovedVanillaConfig.SPAWNER.spawnEggDropChance.get();
+            final int eggDropChance = ImprovedVanillaConfig.get().spawner().spawnEggDropChance();
             if (eggDropChance >= 1 && eggDropChance <= 100) {
                 if (Math.random() < ((double) eggDropChance / 100)) {
                     dropMonsterEggs(level, pos);

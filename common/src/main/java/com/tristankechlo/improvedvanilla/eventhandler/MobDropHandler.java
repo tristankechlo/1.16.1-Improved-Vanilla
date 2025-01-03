@@ -21,8 +21,8 @@ public final class MobDropHandler {
         }
 
         final String entityID = Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType())).toString();
-        final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.MOB_DROP.dropOnlyWhenKilledByPlayer.get();
-        final int dropChance = ImprovedVanillaConfig.MOB_DROP.mobSpawnEggDropChance.get();
+        final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.get().mobDrop().dropOnlyWhenKilledByPlayer();
+        final int dropChance = ImprovedVanillaConfig.get().mobDrop().mobSpawnEggDropChance();
         final Entity player = damageSource.getEntity();
         final BlockPos pos = entityKilled.blockPosition();
 
@@ -56,7 +56,7 @@ public final class MobDropHandler {
     }
 
     private static void handleKilledByPlayer(Level level, BlockPos pos, int dropChance, int lootingLevel, String id) {
-        final boolean lootingAffective = ImprovedVanillaConfig.MOB_DROP.lootingAffective.get();
+        final boolean lootingAffective = ImprovedVanillaConfig.get().mobDrop().lootingAffective();
         int count = 0;
         if (lootingAffective && lootingLevel >= 1) {
             // foreach lootingLevel there's an additional chance to drop the egg
