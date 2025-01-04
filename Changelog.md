@@ -4,7 +4,7 @@
 
 - port to 1.20.6
 - when spawners are mined, the dropped experience is no longer modified
-- tier levels are now hardcoded => potential less compatibility with other mods
+- tier levels are now hardcoded => potentially less compatibility with other mods
 
 ### Version 1.20.4 - 1.7.1
 
