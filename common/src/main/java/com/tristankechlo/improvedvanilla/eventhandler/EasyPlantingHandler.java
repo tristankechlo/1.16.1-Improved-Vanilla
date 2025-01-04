@@ -139,7 +139,7 @@ public final class EasyPlantingHandler {
         if (player.isCreative()) {
             return;
         }
-        int slot = player.getInventory().findSlotMatchingUnusedItem(new ItemStack(seed));
+        int slot = player.getInventory().findSlotMatchingItem(new ItemStack(seed));
         // remove one seed from player inv
         if (slot != -1) {
             player.getInventory().removeItem(slot, 1);

@@ -28,8 +28,8 @@ public final class ImprovedVanilla {
     }
 
     public static ItemStack getMonsterEgg(String id, int count) {
-        final ResourceLocation search = new ResourceLocation(id + "_spawn_egg");
-        Item item = BuiltInRegistries.ITEM.get(search);
+        final ResourceLocation search = ResourceLocation.tryParse(id + "_spawn_egg");
+        Item item = BuiltInRegistries.ITEM.getValue(search);
         if (item == null || item == Items.AIR) {
             LOGGER.warn("Did not find a spawn-egg for '{}', searched for '{}'", id, search);
             return ItemStack.EMPTY;

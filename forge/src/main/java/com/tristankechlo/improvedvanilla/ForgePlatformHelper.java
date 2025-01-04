@@ -28,6 +28,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public IntegerProperty getAgeProperty(CropBlock block) {
+        // made public with access transformers
         return block.getAgeProperty();
     }
 

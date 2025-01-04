@@ -4,6 +4,8 @@ import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BaseSpawner;
@@ -60,8 +63,8 @@ public final class SpawnerHandler {
         if (player.isCreative() || player.isSpectator()) {
             return;
         }
-        final int fortuneLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FORTUNE, player.getMainHandItem());
-        final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+        final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(registry.getOrThrow(Enchantments.SILK_TOUCH), player.getMainHandItem());
 
         if (silkTouchLevel >= 1) {
 

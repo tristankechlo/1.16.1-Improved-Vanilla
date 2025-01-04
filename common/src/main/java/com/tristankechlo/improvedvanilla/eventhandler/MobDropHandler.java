@@ -3,19 +3,24 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import java.util.Objects;
 
 public final class MobDropHandler {
 
-    public static void onMobDeath(Level level, LivingEntity entityKilled, DamageSource damageSource, int lootingLevel) {
+    public static void onMobDeath(Level level, LivingEntity entityKilled, DamageSource damageSource) {
         if (level.isClientSide()) {
             return;
         }
@@ -26,12 +31,16 @@ public final class MobDropHandler {
         final Entity player = damageSource.getEntity();
         final BlockPos pos = entityKilled.blockPosition();
 
+        // determine looting level
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+
         // killed by player and onlyWhenKilledByPlayer is true
         if ((player instanceof ServerPlayer) && onlyWhenKilledByPlayer) {
             // drop only when entity was killed by a player
             if (player.isSpectator()) {
                 return;
             }
+            int lootingLevel = EnchantmentHelper.getEnchantmentLevel(registry.getOrThrow(Enchantments.LOOTING), (ServerPlayer) player);
             handleKilledByPlayer(level, pos, dropChance, lootingLevel, entityID);
 
         } else if (!onlyWhenKilledByPlayer) {
@@ -41,6 +50,7 @@ public final class MobDropHandler {
                 if (player.isSpectator()) {
                     return;
                 }
+                int lootingLevel = EnchantmentHelper.getEnchantmentLevel(registry.getOrThrow(Enchantments.LOOTING), (ServerPlayer) player);
                 handleKilledByPlayer(level, pos, dropChance, lootingLevel, entityID);
             } else {
                 // not killed by player

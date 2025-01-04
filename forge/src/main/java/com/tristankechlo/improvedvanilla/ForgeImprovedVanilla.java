@@ -62,7 +62,7 @@ public class ForgeImprovedVanilla {
 
     // drop spawn egg on entity death
     private void mobDropHandler(final LivingDropsEvent event) {
-        MobDropHandler.onMobDeath(event.getEntity().level(), event.getEntity(), event.getSource(), event.getLootingLevel());
+        MobDropHandler.onMobDeath(event.getEntity().level(), event.getEntity(), event.getSource());
     }
 
     // modify spawner on placement

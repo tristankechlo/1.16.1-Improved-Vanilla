@@ -1,5 +1,10 @@
 # Changelog
 
+### Version 1.21.4 - 1.7.1
+
+- port to 1.21.4
+- use item mining speed as loot modifier when right-clicking crops with a hoe
+
 ### Version 1.20.6 - 1.7.1
 
 - port to 1.20.6

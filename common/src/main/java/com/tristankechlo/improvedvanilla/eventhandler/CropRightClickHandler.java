@@ -3,11 +3,14 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +24,6 @@ import java.util.function.Consumer;
 public final class CropRightClickHandler {
 
     private static final float BASE_MULTIPLIER = 1.0F;
-    public static final HashMap<Tier, Integer> TIERS = new HashMap<>();
 
     public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player == null || level == null) {
@@ -68,8 +70,8 @@ public final class CropRightClickHandler {
     }
 
     private static float getLootMultiplier(HoeItem item) {
-        int tierLevel = TIERS.getOrDefault(item.getTier(), 1);
-        return BASE_MULTIPLIER + (tierLevel * 0.55F);
+        float tierLevel = item.components().get(DataComponents.TOOL).defaultMiningSpeed();
+        return BASE_MULTIPLIER + (tierLevel * 0.33F);
     }
 
     private static void spawnDropsAndResetBlock(Level level, BlockPos pos, float multiplier, Runnable success) {
@@ -141,15 +143,6 @@ public final class CropRightClickHandler {
                 }
             }
         };
-    }
-
-    static {
-        TIERS.put(Tiers.WOOD, 0);
-        TIERS.put(Tiers.STONE, 1);
-        TIERS.put(Tiers.IRON, 2);
-        TIERS.put(Tiers.DIAMOND, 3);
-        TIERS.put(Tiers.GOLD, 2);
-        TIERS.put(Tiers.NETHERITE, 5);
     }
 
 }
