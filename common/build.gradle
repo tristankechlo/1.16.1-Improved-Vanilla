@@ -1,14 +1,15 @@
 plugins {
     id 'multiloader-common'
-    id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT'
+    id 'net.neoforged.moddev'
 }
 
-minecraft {
-    version(minecraft_version)
-}
-
-dependencies {
-    compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
+neoForge {
+    neoFormVersion = neo_form_version
+    // Automatically enable AccessTransformers if the file exists
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
 }
 
 configurations {

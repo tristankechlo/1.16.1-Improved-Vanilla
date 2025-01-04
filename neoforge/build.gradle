@@ -1,24 +1,36 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.neoforged.gradle.userdev' version '7.0.177'
+    id 'net.neoforged.moddev'
 }
 
-runs {
-    configureEach {
-        modSource project.sourceSets.main
-        workingDirectory file('run')
+neoForge {
+    version = neoforge_version
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
     }
-    client {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+    runs {
+        configureEach {
+            systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+            gameDirectory = project.file('runs')
+        }
+        client {
+            client()
+        }
+        server {
+            server()
+            programArguments = ["--nogui"]
+        }
     }
-    server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
     }
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neoforge_version}"
     compileOnly group: 'com.google.auto.service', name: 'auto-service', version: auto_service_version
     annotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: auto_service_version
 }
