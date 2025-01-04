@@ -6,12 +6,8 @@
         "GGG"
     ],
     "key": {
-        "G": {
-            "tag": "c:ingots/gold"
-        },
-        "S": {
-            "item": "minecraft:saddle"
-        }
+        "G": "#c:ingots/gold",
+        "S": "minecraft:saddle"
     },
     "result": {
         "id": "minecraft:golden_horse_armor"

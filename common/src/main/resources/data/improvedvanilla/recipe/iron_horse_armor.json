@@ -6,12 +6,8 @@
         "III"
     ],
     "key": {
-        "I": {
-            "tag": "c:ingots/iron"
-        },
-        "S": {
-            "item": "minecraft:saddle"
-        }
+        "I": "#c:ingots/iron",
+        "S": "minecraft:saddle"
     },
     "result": {
         "id": "minecraft:iron_horse_armor"

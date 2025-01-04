@@ -6,12 +6,8 @@
         "GGG"
     ],
     "key": {
-        "S": {
-            "item": "minecraft:blackstone"
-        },
-        "G": {
-            "item": "minecraft:gold_nugget"
-        }
+        "S": "minecraft:blackstone",
+        "G": "#c:nuggets/gold"
     },
     "result": {
         "id": "minecraft:gilded_blackstone"

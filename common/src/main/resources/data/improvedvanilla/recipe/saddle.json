@@ -6,15 +6,9 @@
         " I "
     ],
     "key": {
-        "L": {
-            "item": "minecraft:leather"
-        },
-        "S": {
-            "tag": "c:strings"
-        },
-        "I": {
-            "tag": "c:ingots/iron"
-        }
+        "L": "#c:leathers",
+        "S": "#c:strings",
+        "I": "#c:ingots/iron"
     },
     "result": {
         "id": "minecraft:saddle"

@@ -4,6 +4,7 @@
 
 - port to 1.21.4
 - use item mining speed as loot modifier when right-clicking crops with a hoe
+- recipes now use common tags (no more forge specific recipes)
 
 ### Version 1.20.6 - 1.7.1
 

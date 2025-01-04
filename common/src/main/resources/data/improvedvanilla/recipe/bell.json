@@ -6,15 +6,9 @@
         "GNG"
     ],
     "key": {
-        "S": {
-            "tag": "c:rods/wooden"
-        },
-        "G": {
-            "tag": "c:ingots/gold"
-        },
-        "N": {
-            "tag": "c:nuggets/gold"
-        }
+        "S": "#c:rods/wooden",
+        "G": "#c:ingots/gold",
+        "N": "#c:nuggets/gold"
     },
     "result": {
         "id": "minecraft:bell"

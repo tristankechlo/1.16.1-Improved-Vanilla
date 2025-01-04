@@ -6,12 +6,8 @@
         "DDD"
     ],
     "key": {
-        "D": {
-            "tag": "forge:gems/diamond"
-        },
-        "S": {
-            "item": "minecraft:saddle"
-        }
+        "D": "#c:gems/diamond",
+        "S": "minecraft:saddle"
     },
     "result": {
         "id": "minecraft:diamond_horse_armor"
