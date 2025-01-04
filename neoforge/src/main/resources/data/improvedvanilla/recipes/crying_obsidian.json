@@ -7,14 +7,14 @@
     ],
     "key": {
         "O": {
-            "tag": "forge:obsidian"
+            "tag": "c:obsidians"
         },
         "G": {
             "item": "minecraft:ghast_tear"
         }
     },
     "result": {
-        "item": "minecraft:crying_obsidian",
+        "id": "minecraft:crying_obsidian",
         "count": 8
     }
 }

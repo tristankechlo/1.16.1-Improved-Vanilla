@@ -5,10 +5,10 @@
             "item": "minecraft:vine"
         },
         {
-            "item": "minecraft:glowstone_dust"
+            "tag": "c:dusts/glowstone"
         }
     ],
     "result": {
-        "item": "minecraft:glow_lichen"
+        "id": "minecraft:glow_lichen"
     }
 }

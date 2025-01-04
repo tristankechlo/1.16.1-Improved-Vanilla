@@ -11,9 +11,7 @@
             "conditions": {
                 "items": [
                     {
-                        "items": [
-                            "minecraft:gold_nugget"
-                        ]
+                        "items": "minecraft:gold_nugget"
                     }
                 ]
             }
@@ -23,7 +21,7 @@
             "conditions": {
                 "items": [
                     {
-                        "tag": "c:gold_ingots"
+                        "items": "#c:ingots/gold"
                     }
                 ]
             }

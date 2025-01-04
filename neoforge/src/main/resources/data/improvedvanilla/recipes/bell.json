@@ -7,16 +7,16 @@
     ],
     "key": {
         "S": {
-            "tag": "forge:rods/wooden"
+            "tag": "c:rods/wooden"
         },
         "G": {
-            "tag": "forge:ingots/gold"
+            "tag": "c:ingots/gold"
         },
         "N": {
-            "tag": "forge:nuggets/gold"
+            "tag": "c:nuggets/gold"
         }
     },
     "result": {
-        "item": "minecraft:bell"
+        "id": "minecraft:bell"
     }
 }

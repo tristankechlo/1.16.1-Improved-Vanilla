@@ -10,13 +10,13 @@
             "item": "minecraft:leather"
         },
         "S": {
-            "item": "minecraft:string"
+            "tag": "c:strings"
         },
         "I": {
-            "tag": "c:iron_ingots"
+            "tag": "c:ingots/iron"
         }
     },
     "result": {
-        "item": "minecraft:saddle"
+        "id": "minecraft:saddle"
     }
 }

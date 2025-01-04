@@ -11,7 +11,7 @@
             "conditions": {
                 "items": [
                     {
-                        "tag": "forge:dusts/glowstone"
+                        "items": "#forge:dusts/glowstone"
                     }
                 ]
             }
@@ -21,9 +21,7 @@
             "conditions": {
                 "items": [
                     {
-                        "items": [
-                            "minecraft:vine"
-                        ]
+                        "items": "minecraft:vine"
                     }
                 ]
             }

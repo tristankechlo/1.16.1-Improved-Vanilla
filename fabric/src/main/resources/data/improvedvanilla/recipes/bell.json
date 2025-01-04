@@ -10,13 +10,13 @@
             "item": "minecraft:stick"
         },
         "G": {
-            "tag": "c:gold_ingots"
+            "tag": "c:ingots/gold"
         },
         "N": {
             "item": "minecraft:gold_nugget"
         }
     },
     "result": {
-        "item": "minecraft:bell"
+        "id": "minecraft:bell"
     }
 }

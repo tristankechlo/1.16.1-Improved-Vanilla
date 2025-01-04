@@ -10,10 +10,10 @@
             "item": "minecraft:blackstone"
         },
         "G": {
-            "tag": "forge:nuggets/gold"
+            "tag": "c:nuggets/gold"
         }
     },
     "result": {
-        "item": "minecraft:gilded_blackstone"
+        "id": "minecraft:gilded_blackstone"
     }
 }

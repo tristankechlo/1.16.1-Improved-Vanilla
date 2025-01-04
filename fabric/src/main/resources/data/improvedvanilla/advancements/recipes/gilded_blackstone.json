@@ -11,9 +11,7 @@
             "conditions": {
                 "items": [
                     {
-                        "items": [
-                            "minecraft:gold_nugget"
-                        ]
+                        "items": "minecraft:gold_nugget"
                     }
                 ]
             }
@@ -23,9 +21,7 @@
             "conditions": {
                 "items": [
                     {
-                        "items": [
-                            "minecraft:blackstone"
-                        ]
+                        "items": "minecraft:blackstone"
                     }
                 ]
             }

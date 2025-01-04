@@ -7,16 +7,16 @@
     ],
     "key": {
         "L": {
-            "tag": "forge:leather"
+            "tag": "c:leathers"
         },
         "S": {
-            "tag": "forge:string"
+            "tag": "c:strings"
         },
         "I": {
-            "tag": "forge:ingots/iron"
+            "tag": "c:ingots/iron"
         }
     },
     "result": {
-        "item": "minecraft:saddle"
+        "id": "minecraft:saddle"
     }
 }
