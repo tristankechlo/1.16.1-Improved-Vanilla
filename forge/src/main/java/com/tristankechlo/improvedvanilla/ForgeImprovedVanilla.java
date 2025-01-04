@@ -24,7 +24,6 @@ public class ForgeImprovedVanilla {
         MinecraftForge.EVENT_BUS.addListener(this::cropRightClicking);
         MinecraftForge.EVENT_BUS.addListener(this::easyPlanting);
         MinecraftForge.EVENT_BUS.addListener(this::mobDropHandler);
-        MinecraftForge.EVENT_BUS.addListener(this::onSpawnerPlaced);
         MinecraftForge.EVENT_BUS.addListener(this::onSpawnerBroken);
 
         // register commands
@@ -63,14 +62,6 @@ public class ForgeImprovedVanilla {
     // drop spawn egg on entity death
     private void mobDropHandler(final LivingDropsEvent event) {
         MobDropHandler.onMobDeath(event.getEntity().level(), event.getEntity(), event.getSource());
-    }
-
-    // modify spawner on placement
-    private void onSpawnerPlaced(final BlockEvent.EntityPlaceEvent event) {
-        InteractionResult result = SpawnerHandler.onSpawnerPlaced((Level) event.getLevel(), event.getPos());
-        if (result == InteractionResult.SUCCESS) {
-            event.setCanceled(true);
-        }
     }
 
     // drop spawner and spawn-eggs on block break

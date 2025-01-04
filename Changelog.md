@@ -1,10 +1,11 @@
 # Changelog
 
-### Version 1.21.4 - 1.7.1
+### Version 1.21.4 - 1.7.2
 
 - port to 1.21.4
 - use item mining speed as loot modifier when right-clicking crops with a hoe
 - recipes now use common tags (no more forge specific recipes)
+- remove option to clear spawners when placed (by default all spawners are empty when placed, since 1.19.3)
 
 ### Version 1.20.6 - 1.7.1
 

@@ -7,9 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,27 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Optional;
 
 public final class SpawnerHandler {
-
-    public static InteractionResult onSpawnerPlaced(Level level, BlockPos pos) {
-        if (level == null || level.isClientSide()) {
-            return InteractionResult.PASS;
-        }
-        if (!ImprovedVanillaConfig.get().spawner().clearSpawner()) {
-            return InteractionResult.PASS;
-        }
-
-        final Block targetBlock = level.getBlockState(pos).getBlock();
-
-        if (targetBlock == Blocks.SPAWNER) {
-            level.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            RandomSource random = level.getRandom();
-            ((SpawnerBlockEntity) tileEntity).getSpawner().setEntityId(EntityType.AREA_EFFECT_CLOUD, level, random, pos);
-            tileEntity.setChanged();
-            level.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), 3);
-        }
-        return InteractionResult.PASS;
-    }
 
     public static void onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state) {
         final Block targetBlock = state.getBlock();
@@ -127,6 +103,9 @@ public final class SpawnerHandler {
         if (nbt.contains("SpawnData")) {
             SpawnData spawnData = new SpawnData(nbt.getCompound("SpawnData").getCompound("entity"), Optional.empty(), Optional.empty());
             String id = spawnData.entityToSpawn().getString("id"); // should be the id of the entity
+            if (id.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
             return ImprovedVanilla.getMonsterEgg(id, 1);
         }
         return ItemStack.EMPTY;

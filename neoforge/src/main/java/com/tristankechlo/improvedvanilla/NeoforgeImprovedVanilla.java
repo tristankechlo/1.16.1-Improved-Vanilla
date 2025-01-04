@@ -24,7 +24,6 @@ public class NeoforgeImprovedVanilla {
         NeoForge.EVENT_BUS.addListener(this::cropRightClicking);
         NeoForge.EVENT_BUS.addListener(this::easyPlanting);
         NeoForge.EVENT_BUS.addListener(this::mobDropHandler);
-        NeoForge.EVENT_BUS.addListener(this::onSpawnerPlaced);
         NeoForge.EVENT_BUS.addListener(this::onSpawnerBroken);
 
         // register commands
@@ -63,14 +62,6 @@ public class NeoforgeImprovedVanilla {
     // drop spawn egg on entity death
     private void mobDropHandler(final LivingDropsEvent event) {
         MobDropHandler.onMobDeath(event.getEntity().level(), event.getEntity(), event.getSource());
-    }
-
-    // modify spawner on placement
-    private void onSpawnerPlaced(final BlockEvent.EntityPlaceEvent event) {
-        InteractionResult result = SpawnerHandler.onSpawnerPlaced((Level) event.getLevel(), event.getPos());
-        if (result == InteractionResult.SUCCESS) {
-            event.setCanceled(true);
-        }
     }
 
     // drop spawner and spawn-eggs on block break
