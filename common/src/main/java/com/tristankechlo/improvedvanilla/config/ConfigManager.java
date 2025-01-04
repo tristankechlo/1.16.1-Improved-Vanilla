@@ -14,7 +14,7 @@ public final class ConfigManager {
 
     private static final File CONFIG_DIR = IPlatformHelper.INSTANCE.getConfigDirectory().toFile();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-    public static final String FILE_NAME = ImprovedVanilla.MOD_ID + ".json";
+    private static final String FILE_NAME = ImprovedVanilla.MOD_ID + ".json";
     private static final File CONFIG_FILE = new File(CONFIG_DIR, FILE_NAME);
 
     public static void loadAndVerifyConfig() {
@@ -84,10 +84,6 @@ public final class ConfigManager {
             ImprovedVanilla.LOGGER.warn("No config '{}' found, created a new one.", FILE_NAME);
         }
         return true;
-    }
-
-    public static String getConfigPath() {
-        return CONFIG_FILE.getAbsolutePath();
     }
 
     private static void createConfigFolder() {

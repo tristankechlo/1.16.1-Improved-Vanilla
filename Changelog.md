@@ -5,6 +5,7 @@
 - port to 1.20.6
 - when spawners are mined, the dropped experience is no longer modified
 - tier levels are now hardcoded => potentially less compatibility with other mods
+- remove the command option to display the config file
 
 ### Version 1.20.4 - 1.7.1
 

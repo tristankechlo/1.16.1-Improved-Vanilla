@@ -15,7 +15,6 @@ public final class ImprovedVanillaCommand {
         LiteralArgumentBuilder<CommandSourceStack> command = literal(ImprovedVanilla.MOD_ID)
                 .then(literal("config").requires((source) -> source.hasPermission(3))
                         .then(literal("reload").executes(ImprovedVanillaCommand::configReload))
-                        .then(literal("show").executes(ImprovedVanillaCommand::configShow))
                         .then(literal("reset").executes(ImprovedVanillaCommand::configReset)))
                 .then(literal("github").executes(ProjectLinks.GITHUB::execute))
                 .then(literal("issue").executes(ProjectLinks.ISSUE::execute))
@@ -31,12 +30,6 @@ public final class ImprovedVanillaCommand {
         CommandSourceStack source = context.getSource();
         boolean success = ConfigManager.reloadConfig();
         ResponseHelper.sendMessageConfigReload(source, success);
-        return 1;
-    }
-
-    private static int configShow(CommandContext<CommandSourceStack> context) {
-        CommandSourceStack source = context.getSource();
-        ResponseHelper.sendMessageConfigShow(source);
         return 1;
     }
 

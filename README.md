@@ -6,10 +6,6 @@
 
 ### added some small features to Vanilla Minecraft to make the gameplay a little bit more pleasant/enjoyable
 
-> [!NOTE]
-> While this mod works when it's only installed on the server, it is recommended to install it on the client as well.  
-> This way the correct animations are played when placing/breaking blocks.
-
 ### things I changed
 
 - spawners are mineable with silk-touch pickaxes
