@@ -43,7 +43,7 @@ public final class ResponseHelper {
         String filePath = ConfigManager.getConfigPath();
         MutableComponent mutableComponent = Component.literal(fileName);
         mutableComponent.withStyle(ChatFormatting.GREEN, ChatFormatting.UNDERLINE);
-        mutableComponent.withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, filePath)));
+        mutableComponent.withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, filePath)));
         return mutableComponent;
     }
 
