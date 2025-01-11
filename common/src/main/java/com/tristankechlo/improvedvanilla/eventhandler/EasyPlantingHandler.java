@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.config.categories.EasyPlantingConfig;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.awt.*;
@@ -33,14 +35,14 @@ public final class EasyPlantingHandler {
     private static final List<Item> VANILLA_SEEDS = ImmutableList.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.CARROT, Items.POTATO);
 
     public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+        if (!ImprovedVanillaConfig.get().easyPlanting().activated()) {
+            return InteractionResult.PASS;
+        }
         final BlockPos pos = hitResult.getBlockPos();
         if (player == null || level == null) {
             return InteractionResult.PASS;
         }
         if (level.isClientSide() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
-        }
-        if (!ImprovedVanillaConfig.get().easyPlanting().activated()) {
             return InteractionResult.PASS;
         }
 
@@ -63,8 +65,10 @@ public final class EasyPlantingHandler {
     }
 
     private static void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerLevel level, ServerPlayer player) {
-        List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
-        Item seedItem = player.getMainHandItem().getItem();
+        final List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
+        final ItemStack mainHandItem = player.getMainHandItem();
+        final Item seedItem = player.getMainHandItem().getItem();
+        final BlockState blockFromSeed = ((BlockItem) seedItem).getBlock().defaultBlockState();
         final boolean makeCircle = ImprovedVanillaConfig.get().easyPlanting().placingPattern() == EasyPlantingConfig.PlacingPattern.CIRCLE;
         boolean playPlantingSound = false;
 
@@ -75,21 +79,22 @@ public final class EasyPlantingHandler {
             }
             // if player has seeds -> plant the seeds
             if (playerHasOneSeed(player, seedItem)) {
+                level.setBlockAndUpdate(pos.above(), blockFromSeed);
+                removeOneSeedFromPlayer(player, seedItem);
+                player.awardStat(Stats.ITEM_USED.get(seedItem)); // increase vanilla item-use-counter (scoreboard)
+                CriteriaTriggers.PLACED_BLOCK.trigger(player, pos.above(), mainHandItem); // award player statistic for items used
 
-                Block blockFromSeed = ((BlockItem) seedItem).getBlock(); // get the block to place
-                level.setBlockAndUpdate(pos.above(), blockFromSeed.defaultBlockState()); // set the block
-                removeOneSeedFromPlayer(player, seedItem); // shrink player inv
-                player.awardStat(Stats.ITEM_USED.get(seedItem)); // increase vanilla item-use-counter
-
-                // play sound when at least one seed was planted
                 playPlantingSound = true;
             }
         }
 
-        //play the planting sounds
-        if (player.getMainHandItem().getItem().equals(Items.NETHER_WART) && playPlantingSound) {
+        if (!playPlantingSound) {
+            return;
+        }
+        // play sound when at least one seed was planted
+        if (mainHandItem.is(Items.NETHER_WART)) {
             level.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.NETHER_WART_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
-        } else if (playPlantingSound) {
+        } else {
             level.playSound(null, startPos.getX(), startPos.getY(), startPos.getZ(), SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
@@ -136,12 +141,10 @@ public final class EasyPlantingHandler {
     }
 
     private static void removeOneSeedFromPlayer(ServerPlayer player, Item seed) {
-        // don't shrink player inv when in creative
         if (player.isCreative()) {
-            return;
+            return; // don't shrink player inv when in creative
         }
         int slot = player.getInventory().findSlotMatchingItem(new ItemStack(seed));
-        // remove one seed from player inv
         if (slot != -1) {
             player.getInventory().removeItem(slot, 1);
         }
@@ -152,7 +155,7 @@ public final class EasyPlantingHandler {
     }
 
     private static boolean isTargetBlock(ServerLevel level, BlockPos pos, Block target) {
-        return level.getBlockState(pos).getBlock().equals(target);
+        return level.getBlockState(pos).is(target);
     }
 
     private static boolean isSeedItemForCrop(Item item) {

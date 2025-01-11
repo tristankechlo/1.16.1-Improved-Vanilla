@@ -10,6 +10,7 @@
     - options are named more clearly
 - loot modifiers for right clicking crops with a hoe are now defined via a config
 - items removed from the loot when right clicking crops can now be defined via custom item tags
+- placing seeds with easy planting now also triggers advancements as expected
 
 ### Version 1.20.6 - 1.7.1
 

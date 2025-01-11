@@ -21,10 +21,10 @@ import java.util.Objects;
 public final class MobDropHandler {
 
     public static void onMobDeath(Level level, LivingEntity entityKilled, DamageSource damageSource) {
-        if (level.isClientSide()) {
+        if (!ImprovedVanillaConfig.get().mobDrop().activated()) {
             return;
         }
-        if (!ImprovedVanillaConfig.get().mobDrop().activated()) {
+        if (level.isClientSide()) {
             return;
         }
 

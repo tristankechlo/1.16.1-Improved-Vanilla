@@ -26,13 +26,13 @@ import java.util.function.Consumer;
 public final class CropRightClickHandler {
 
     public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+        if (!ImprovedVanillaConfig.get().cropRightClicking().activated()) {
+            return InteractionResult.PASS;
+        }
         if (player == null || level == null) {
             return InteractionResult.PASS;
         }
         if (player.isShiftKeyDown() || player.isSpectator() || hand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
-        }
-        if (!ImprovedVanillaConfig.get().cropRightClicking().activated()) {
             return InteractionResult.PASS;
         }
 
