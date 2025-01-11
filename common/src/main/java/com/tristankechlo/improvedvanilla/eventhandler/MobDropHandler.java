@@ -24,10 +24,13 @@ public final class MobDropHandler {
         if (level.isClientSide()) {
             return;
         }
+        if (!ImprovedVanillaConfig.get().mobDrop().activated()) {
+            return;
+        }
 
         final String entityID = Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(entityKilled.getType())).toString();
         final boolean onlyWhenKilledByPlayer = ImprovedVanillaConfig.get().mobDrop().dropOnlyWhenKilledByPlayer();
-        final int dropChance = ImprovedVanillaConfig.get().mobDrop().mobSpawnEggDropChance();
+        final double dropChance = ImprovedVanillaConfig.get().mobDrop().dropChance();
         final Entity player = damageSource.getEntity();
         final BlockPos pos = entityKilled.blockPosition();
 
@@ -54,29 +57,28 @@ public final class MobDropHandler {
                 handleKilledByPlayer(level, pos, dropChance, lootingLevel, entityID);
             } else {
                 // not killed by player
-                if (dropChance <= 0 || dropChance > 100) {
-                    return;
-                }
-                if (Math.random() < ((double) dropChance / 100)) {
-                    ItemStack stack = ImprovedVanilla.getMonsterEgg(entityID, 1);
-                    ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
+                if (dropChance > 0.0 && dropChance <= 100.0) {
+                    if (Math.random() < (dropChance / 100.0)) {
+                        ItemStack stack = ImprovedVanilla.getMonsterEgg(entityID, 1);
+                        ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
+                    }
                 }
             }
         }
     }
 
-    private static void handleKilledByPlayer(Level level, BlockPos pos, int dropChance, int lootingLevel, String id) {
+    private static void handleKilledByPlayer(Level level, BlockPos pos, double dropChance, int lootingLevel, String id) {
         final boolean lootingAffective = ImprovedVanillaConfig.get().mobDrop().lootingAffective();
         int count = 0;
         if (lootingAffective && lootingLevel >= 1) {
             // foreach lootingLevel there's an additional chance to drop the egg
             for (int i = 0; i < (1 + lootingLevel); i++) {
-                if (Math.random() < ((double) dropChance / 100)) {
+                if (Math.random() < (dropChance / 100.0)) {
                     count++;
                 }
             }
         } else {
-            if (Math.random() < ((double) dropChance / 100)) {
+            if (Math.random() < (dropChance / 100.0)) {
                 count++;
             }
         }

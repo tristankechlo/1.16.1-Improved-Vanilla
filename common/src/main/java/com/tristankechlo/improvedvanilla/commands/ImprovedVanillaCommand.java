@@ -28,7 +28,7 @@ public final class ImprovedVanillaCommand {
 
     private static int configReload(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        boolean success = ConfigManager.reloadConfig();
+        boolean success = ConfigManager.reloadConfig(context.getSource().registryAccess());
         ResponseHelper.sendMessageConfigReload(source, success);
         return 1;
     }

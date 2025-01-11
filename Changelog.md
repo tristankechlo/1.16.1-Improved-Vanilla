@@ -1,11 +1,15 @@
 # Changelog
 
-### Version 1.21.4 - 1.7.2
+### Version 1.21.4 - 1.8.0
 
 - port to 1.21.4
-- use item mining speed as loot modifier when right-clicking crops with a hoe
 - recipes now use common tags (no more forge specific recipes)
 - remove option to clear spawners when placed (by default all spawners are empty when placed, since 1.19.3)
+- complete rewrite of the config structure
+    - more options in the config file
+    - options are named more clearly
+- loot modifiers for right clicking crops with a hoe are now defined via a config
+- items removed from the loot when right clicking crops can now be defined via custom item tags
 
 ### Version 1.20.6 - 1.7.1
 
@@ -63,7 +67,7 @@
     - this way the config on forge and fabric has the same format
 - add command `/improvedvanilla`
     - `/improvedvanilla config show` - provides a clickable link, to find the config file easily (works only in
-      singleplayer)
+      single player)
     - `/improvedvanilla config reload` - reloads the config file from the file system
     - `/improvedvanilla config reset` - resets the config to the default values
 

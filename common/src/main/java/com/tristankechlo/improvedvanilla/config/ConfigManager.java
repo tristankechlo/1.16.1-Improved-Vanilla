@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
+import net.minecraft.core.RegistryAccess;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +18,7 @@ public final class ConfigManager {
     private static final String FILE_NAME = ImprovedVanilla.MOD_ID + ".json";
     private static final File CONFIG_FILE = new File(CONFIG_DIR, FILE_NAME);
 
-    public static void loadAndVerifyConfig() {
+    public static void loadAndVerifyConfig(RegistryAccess registryAccess) {
         ConfigManager.createConfigFolder();
 
         if (!CONFIG_FILE.exists()) {
@@ -28,7 +29,7 @@ public final class ConfigManager {
         }
 
         try {
-            ConfigManager.loadConfigFromFile();
+            ConfigManager.loadConfigFromFile(registryAccess);
             ImprovedVanilla.LOGGER.info("Config '{}' was successfully loaded.", FILE_NAME);
         } catch (Exception e) {
             ImprovedVanilla.LOGGER.error(e.getMessage());
@@ -37,11 +38,11 @@ public final class ConfigManager {
         }
     }
 
-    private static void loadConfigFromFile() throws FileNotFoundException {
+    private static void loadConfigFromFile(RegistryAccess registryAccess) throws FileNotFoundException {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(new FileReader(CONFIG_FILE));
         JsonObject json = jsonElement.getAsJsonObject();
-        ImprovedVanillaConfig.deserialize(json);
+        ImprovedVanillaConfig.deserialize(json, registryAccess);
     }
 
     private static boolean writeConfigToFile() {
@@ -66,10 +67,10 @@ public final class ConfigManager {
         return success;
     }
 
-    public static boolean reloadConfig() {
+    public static boolean reloadConfig(RegistryAccess registryAccess) {
         if (CONFIG_FILE.exists()) {
             try {
-                ConfigManager.loadConfigFromFile();
+                ConfigManager.loadConfigFromFile(registryAccess);
                 ImprovedVanilla.LOGGER.info("The config '{}' was successfully loaded.", FILE_NAME);
                 return true;
             } catch (Exception e) {

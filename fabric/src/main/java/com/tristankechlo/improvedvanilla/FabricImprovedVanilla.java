@@ -31,7 +31,7 @@ public class FabricImprovedVanilla implements ModInitializer {
         });
 
         // setup configs
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> ConfigManager.loadAndVerifyConfig());
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> ConfigManager.loadAndVerifyConfig(server.registryAccess()));
     }
 
     // drop spawner and spawn-eggs on block break

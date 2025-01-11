@@ -3,6 +3,7 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
+import com.tristankechlo.improvedvanilla.config.categories.EasyPlantingConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -64,7 +65,7 @@ public final class EasyPlantingHandler {
     private static void setCropsInRadius(int radius, BlockPos startPos, Block target, ServerLevel level, ServerPlayer player) {
         List<BlockPos> targetBlocks = getTargetBlocks(radius, level, startPos, target);
         Item seedItem = player.getMainHandItem().getItem();
-        final boolean makeCircle = ImprovedVanillaConfig.get().easyPlanting().makeCircle();
+        final boolean makeCircle = ImprovedVanillaConfig.get().easyPlanting().placingPattern() == EasyPlantingConfig.PlacingPattern.CIRCLE;
         boolean playPlantingSound = false;
 
         for (BlockPos pos : targetBlocks) {

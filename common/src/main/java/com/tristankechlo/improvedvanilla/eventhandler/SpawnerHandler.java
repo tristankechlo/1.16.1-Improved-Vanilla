@@ -2,7 +2,6 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 
 import com.tristankechlo.improvedvanilla.ImprovedVanilla;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
-import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +27,10 @@ import java.util.Optional;
 public final class SpawnerHandler {
 
     public static void onSpawnerBreak(Level level, Player player, BlockPos pos, BlockState state) {
+        if (!ImprovedVanillaConfig.get().spawner().activated()) {
+            return;
+        }
+
         final Block targetBlock = state.getBlock();
 
         if (level.isClientSide() || targetBlock != Blocks.SPAWNER) {
@@ -41,46 +44,27 @@ public final class SpawnerHandler {
         }
         Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         final int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(registry.getOrThrow(Enchantments.SILK_TOUCH), player.getMainHandItem());
+        final boolean needsSilkTouch = ImprovedVanillaConfig.get().spawner().needsSilkTouch();
 
-        if (silkTouchLevel >= 1) {
+        if (!needsSilkTouch || silkTouchLevel >= 1) { // if needs silktouch => check the enchantment level
 
             // try dropping the spawner itself
-            final int spawnerDropChance = ImprovedVanillaConfig.get().spawner().spawnerDropChance();
-            if (spawnerDropChance >= 1 && spawnerDropChance <= 100) {
-                if (Math.random() < ((double) spawnerDropChance / 100)) {
+            final double spawnerDropChance = ImprovedVanillaConfig.get().spawner().spawnerDropChance();
+            if (spawnerDropChance > 0.0 && spawnerDropChance <= 100.0) {
+                if (Math.random() < (spawnerDropChance / 100.0)) {
                     ItemStack stack = new ItemStack(Items.SPAWNER, 1);
                     ImprovedVanilla.dropItemStackInWorld(level, pos, stack);
                 }
             }
 
             // try dropping the monster egg
-            final int eggDropChance = ImprovedVanillaConfig.get().spawner().spawnEggDropChance();
-            if (eggDropChance >= 1 && eggDropChance <= 100) {
-                if (Math.random() < ((double) eggDropChance / 100)) {
+            final double eggDropChance = ImprovedVanillaConfig.get().spawner().spawnEggDropChance();
+            if (eggDropChance > 0.0 && eggDropChance <= 100.0) {
+                if (Math.random() < (eggDropChance / 100.0)) {
                     dropMonsterEggs(level, pos);
                 }
             }
-
-            // if other mods prevent the block break, at least the spawner is disabled
-            resetSpawner(level, pos);
         }
-    }
-
-    private static void resetSpawner(final Level world, final BlockPos pos) {
-        // remove old block-entity
-        world.removeBlockEntity(pos);
-
-        // create new block with new block-entity
-        world.setBlock(pos, Blocks.SPAWNER.defaultBlockState(), 2);
-        SpawnerBlockEntity tile = (SpawnerBlockEntity) world.getBlockEntity(pos);
-
-        CompoundTag entity = new CompoundTag();
-        entity.putString("id", "minecraft:area_effect_cloud");
-
-        SpawnData nextSpawnData = new SpawnData(entity, Optional.empty(), Optional.empty());
-        IPlatformHelper.INSTANCE.setNextSpawnData(tile.getSpawner(), world, pos, nextSpawnData);
-        tile.setChanged();
-        world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
     }
 
     private static void dropMonsterEggs(final Level world, final BlockPos pos) {

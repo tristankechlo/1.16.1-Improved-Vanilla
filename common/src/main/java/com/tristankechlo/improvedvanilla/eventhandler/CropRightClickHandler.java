@@ -3,14 +3,16 @@ package com.tristankechlo.improvedvanilla.eventhandler;
 import com.tristankechlo.improvedvanilla.config.ImprovedVanillaConfig;
 import com.tristankechlo.improvedvanilla.platform.IPlatformHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,8 +25,6 @@ import java.util.function.Consumer;
 
 public final class CropRightClickHandler {
 
-    private static final float BASE_MULTIPLIER = 1.0F;
-
     public static InteractionResult onPlayerRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player == null || level == null) {
             return InteractionResult.PASS;
@@ -36,42 +36,22 @@ public final class CropRightClickHandler {
             return InteractionResult.PASS;
         }
 
-        final Item heldItem = player.getMainHandItem().getItem();
+        final Holder<Item> heldItem = BuiltInRegistries.ITEM.wrapAsHolder(player.getMainHandItem().getItem());
         AtomicReference<InteractionResult> result = new AtomicReference<>(InteractionResult.PASS);
 
         if (player.getMainHandItem().isEmpty()) {
             if (!level.isClientSide()) {
-                spawnDropsAndResetBlock(level, hitResult.getBlockPos(), BASE_MULTIPLIER, () -> result.set(InteractionResult.SUCCESS));
+                spawnDropsAndResetBlock(level, hitResult.getBlockPos(), 1.0F, () -> result.set(InteractionResult.SUCCESS));
             }
             player.swing(hand, true);
-        } else if (heldItem instanceof HoeItem) {
-            if (!ImprovedVanillaConfig.get().cropRightClicking().allowHoeUsageAsLootModifier()) {
-                return InteractionResult.PASS;
-            }
-            float multiplier = getLootMultiplier((HoeItem) heldItem);
+        } else if (heldItem.is(ItemTags.HOES)) {
             if (!level.isClientSide()) {
+                float multiplier = ImprovedVanillaConfig.get().cropRightClicking().modifiers().getOrDefault(heldItem, 1.0F);
                 spawnDropsAndResetBlock(level, hitResult.getBlockPos(), multiplier, () -> result.set(InteractionResult.SUCCESS));
             }
             player.swing(hand, true);
         }
         return result.get();
-    }
-
-    private static IntegerProperty getAgeProperty(Block targetBlock) {
-        if (targetBlock instanceof CropBlock) {
-            return IPlatformHelper.INSTANCE.getAgeProperty((CropBlock) targetBlock);
-        } else if (targetBlock.equals(Blocks.COCOA)) {
-            return CocoaBlock.AGE;
-        } else if (targetBlock.equals(Blocks.NETHER_WART)) {
-            return NetherWartBlock.AGE;
-        } else {
-            return null;
-        }
-    }
-
-    private static float getLootMultiplier(HoeItem item) {
-        float tierLevel = item.components().get(DataComponents.TOOL).defaultMiningSpeed();
-        return BASE_MULTIPLIER + (tierLevel * 0.33F);
     }
 
     private static void spawnDropsAndResetBlock(Level level, BlockPos pos, float multiplier, Runnable success) {
@@ -96,24 +76,37 @@ public final class CropRightClickHandler {
 
         //get and modify loot
         List<ItemStack> oldLoot = Block.getDrops(blockState, (ServerLevel) level, pos, null);
-        List<ItemStack> newLoot = getLootModified(oldLoot, multiplier);
+        List<ItemStack> newLoot = modifyLoot(oldLoot, multiplier);
         newLoot.forEach(stack -> Block.popResource(level, pos, stack));
         success.run();
     }
 
-    private static List<ItemStack> getLootModified(List<ItemStack> loot, float multiplier) {
+    private static IntegerProperty getAgeProperty(Block targetBlock) {
+        if (targetBlock instanceof CropBlock) {
+            return IPlatformHelper.INSTANCE.getAgeProperty((CropBlock) targetBlock);
+        } else if (targetBlock.equals(Blocks.COCOA)) {
+            return CocoaBlock.AGE;
+        } else if (targetBlock.equals(Blocks.NETHER_WART)) {
+            return NetherWartBlock.AGE;
+        } else {
+            return null;
+        }
+    }
+
+    private static List<ItemStack> modifyLoot(List<ItemStack> loot, float multiplier) {
+        final boolean blacklistActive = ImprovedVanillaConfig.get().cropRightClicking().removeListEnabled();
+        List<Ingredient> blacklist = ImprovedVanillaConfig.get().cropRightClicking().removeList();
+
         Map<Item, Integer> lootMap = new HashMap<>();
         loot.forEach(stack -> {
+            // if the blacklist is enabled, remove items from the loot
+            if (blacklistActive && blacklist.stream().anyMatch(i -> i.test(stack))) {
+                return;
+            }
             Item item = stack.getItem();
             int amount = lootMap.getOrDefault(item, 0);
             lootMap.put(item, amount + stack.getCount());
         });
-
-        // if the blacklist is enabled, remove items from the loot
-        if (ImprovedVanillaConfig.get().cropRightClicking().blacklistEnabled()) {
-            List<Item> itemsToRemove = ImprovedVanillaConfig.get().cropRightClicking().blacklistedDrops();
-            lootMap.keySet().removeIf(itemsToRemove::contains);
-        }
 
         List<ItemStack> newLoot = new ArrayList<>();
         lootMap.forEach((item, amount) -> {

@@ -35,7 +35,7 @@ public class NeoforgeImprovedVanilla {
 
     // setup configs
     private void commonSetup(final ServerAboutToStartEvent event) {
-        ConfigManager.loadAndVerifyConfig();
+        ConfigManager.loadAndVerifyConfig(event.getServer().registryAccess());
     }
 
     // register commands
